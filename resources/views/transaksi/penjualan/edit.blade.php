@@ -19,7 +19,7 @@
                                     <div class="form-group">
                                         <label for="tanggal">Tanggal:</label>
                                         <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" onchange="onTanggalChange()" value="{{$penjualan->tanggal}}" id="tanggal" name="tanggal" class="form-control datetimepicker-input" data-target="#reservationdate" placeholder="Masukkan Tanggal" readonly/>
+                                            <input type="text" value="{{$tanggal}}" id="tanggal" name="tanggal" class="form-control datetimepicker-input" data-target="#reservationdate" placeholder="Masukkan Tanggal" readonly/>
                                             <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
@@ -32,7 +32,7 @@
                                     <div class="form-group">
                                         <label for="jatuh_tempo">Jatuh Tempo:</label>
                                         <div class="input-group date" id="reservationdate2" data-target-input="nearest">
-                                            <input type="text" value="{{$penjualan->jatuh_tempo}}" id="jatuh_tempo" name="jatuh_tempo" class="form-control datetimepicker-input" data-target="#reservationdate2" placeholder="Masukkan Tanggal Jatuh Tempo">
+                                            <input type="text" value="{{$jatuh_tempo}}" id="jatuh_tempo" name="jatuh_tempo" class="form-control datetimepicker-input" data-target="#reservationdate2" placeholder="Masukkan Tanggal Jatuh Tempo">
                                             <div class="input-group-append" data-target="#reservationdate2" data-toggle="datetimepicker">
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
@@ -42,19 +42,21 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="id_supplier">Customer:</label>
-                                        <select value="{{$penjualan->id_customer}}" class="form-control select2bs4" id="id_customer" name="id_customer" style="width: 100%;">
-                                            <option value="{{$penjualan->id_customer}}">{{$penjualan['customer']['nama']}}</option>
+                                        <input type="hidden" id="id_customer" name="id_customer" value="">
+                                        <select value="{{$penjualan->id_customer}}" class="form-control select2bs4" id="id_cus" name="id_cus" style="width: 100%;">
+                                            <option disabled value> -- select an customer -- </option>
                                             @foreach ($customers as $customer)
-                                            <option value="{{$customer->id}}">{{$customer->nama}}</option>
+                                            <option value="{{$customer->id}}"{{ $customer->id == $penjualan->id_customer ? 'selected' : ''}}>{{$customer->nama}}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="id_truk">Truk:</label>
-                                        <select value="{{$penjualan->id_truk}}" class="form-control select2bs4" id="id_truk" name="id_truk" style="width: 100%;">
-                                            <option value="{{$penjualan->id_truk}}">{{$penjualan['truk']['plat']}}</option>
+                                        <input type="hidden" id="id_truk" name="id_truk" value="">
+                                        <select value="{{$penjualan->id_truk}}" class="form-control select2bs4" id="id_tr" name="id_tr" style="width: 100%;">
+                                            <option disabled value> -- select an truk -- </option>
                                             @foreach ($truks as $truk)
-                                            <option value="{{$truk->id}}">{{$truk->plat}}</option>
+                                            <option value="{{$truk->id}}"{{ $truk->id == $penjualan->id_truk ? 'selected' : ''}}>{{$truk->plat}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -65,6 +67,7 @@
                                     <div class="form-group">
                                         <label for="barang">Barang:</label>
                                         <select class="form-control select2bs4" id="barang" name="barang" style="width: 100%;" onchange="updateUOM()">
+                                            <option disabled value> -- select an item -- </option>
                                             @foreach ($barangs as $barang)
                                                 <option data-uombesar="{{ $barang->uombesar }}" data-uomkecil="{{ $barang->uomkecil }}" value="{{ $barang->id }}">{{ $barang->nama }}</option>
                                             @endforeach
@@ -75,7 +78,7 @@
                                     <div class="form-group">
                                         <label for="uom">Uom:</label>
                                         <select class="form-control select2bs4" id="uom" name="uom" style="width: 100%;">
-
+                                            <option disabled value> ---- </option>
                                         </select>
                                     </div>
                                 </div>
@@ -131,7 +134,7 @@
                                             @endphp
                                             @foreach($detailPenjualans as $detailPenjualan)
                                                 <tr>
-                                                    <td style="display: none;">{{ $detailPenjualan->id }}</td>
+                                                    <td style="display: none;">{{ $detailPenjualan['barang']['id'] }}</td>
                                                     <td>{{ $detailPenjualan['barang']['nama'] }}</td>
                                                     <td>{{ $detailPenjualan->jumlah }}</td>
                                                     <td>{{ $detailPenjualan->uom }}</td>
@@ -208,6 +211,8 @@
         function prepareAndSubmitForm() {
         // Call the function to update tableData
         var data = getTableData();
+        document.getElementById("id_customer").value = document.getElementById('id_cus').value
+        document.getElementById("id_truk").value = document.getElementById('id_tr').value
         console.log(data);
         // Optionally, you can perform additional validations or actions here
 
@@ -270,10 +275,12 @@
             var cell9 = row.insertCell(8);
 
             // Disable the input fields after adding an item
+            document.getElementById("id_customer").value = document.getElementById('id_cus').value
+            document.getElementById("id_truk").value = document.getElementById('id_tr').value
             document.getElementById("tanggal").readOnly = true;
             document.getElementById("id_invoice").readOnly = true;
-            document.getElementById("id_customer").readOnly = true;
-            document.getElementById("id_truk").readOnly = true;
+            document.getElementById("id_cus").disabled = true;
+            document.getElementById("id_tr").disabled = true;
             document.getElementById("jatuh_tempo").readOnly = true;
 
             // Set the cell values
@@ -360,7 +367,7 @@
 
         // Set the UOM options in the UOM dropdown
         var uomSelect = document.getElementById("uom");
-        uomSelect.innerHTML = '<option>' + uombesar + '</option><option>' + uomkecil + '</option>';
+        uomSelect.innerHTML = '<option>'+'----'+'</option><option>' + uombesar + '</option><option>' + uomkecil + '</option>';
     }
         //Initialize totals
     // var totalBruto = 0;

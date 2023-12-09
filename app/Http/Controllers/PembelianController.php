@@ -101,8 +101,10 @@ class PembelianController extends Controller
         $barangs = Barang::all();
         $suppliers = Supplier::all();
         $pembelian = Pembelian::where('id',$id)->first();
+        $tanggal = \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y');
+        $jatuh_tempo = \Carbon\Carbon::parse($pembelian->jatuh_tempo)->format('d-m-Y');
         $detailPembelians =DetailPembelian::where('id_pembelian',$pembelian->id)->get();
-        return view('transaksi.pembelian.edit')->with('pembelian',$pembelian)->with('detailPembelians',$detailPembelians)->with('suppliers',$suppliers)->with('barangs',$barangs);
+        return view('transaksi.pembelian.edit')->with('pembelian',$pembelian)->with('detailPembelians',$detailPembelians)->with('suppliers',$suppliers)->with('barangs',$barangs)->with('tanggal',$tanggal)->with('jatuh_tempo',$jatuh_tempo);
     }
 
     /**
@@ -111,6 +113,47 @@ class PembelianController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $tanggal = \Carbon\Carbon::parse($request->tanggal);
+        $jatuh_tempo = \Carbon\Carbon::parse($request->jatuh_tempo);
+        $totalNetto = preg_replace('/[^0-9.]/', '', $request->totalNetto);
+        Pembelian::findOrFail($id)->update([
+            'tanggal'=>$tanggal,
+            'id_invoice'=>$request->id_invoice,
+            'id_supplier'=>$request->id_supplier,
+            'netto'=>$totalNetto,
+            'jatuh_tempo'=>$jatuh_tempo,
+            'status'=> 'N'
+        ]);
+
+
+        //get id pembelian yang di update
+        $pembelian = DB::table('pembelians')->where('id',$id)->first();
+
+
+        //delete detailpembelian sebelumnya
+        DetailPembelian::where('id_pembelian',$pembelian->id)->delete();
+
+
+        //tambah data ke detail pembelian
+        $tableData = json_decode($request->input('tableData'), true);
+        foreach ($tableData as $item) {
+            $harga = preg_replace('/[^0-9.]/', '', $item['harga']);
+            $bruto = $harga * $item['jumlah'];
+            $diskon = preg_replace('/[^0-9.]/', '', $item['diskon']);
+            $netto = $bruto-$diskon;
+            DetailPembelian::create([
+                'id_pembelian' => $pembelian->id,
+                'id_barang' => $item['id'],
+                'jumlah' => $item['jumlah'],
+                'uom' => $item['uom'],
+                'harga' => $harga,
+                'bruto' => $bruto,
+                'diskon' => $diskon,
+                'netto' => $netto
+            ]);
+        }
+
+        return redirect('/pembelian');
     }
 
     /**

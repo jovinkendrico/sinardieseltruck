@@ -25,6 +25,10 @@
   <link rel="stylesheet" href="/AdminLTE/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="/AdminLTE/plugins/summernote/summernote-bs4.min.css">
+  <link rel="stylesheet" href="/AdminLTE/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="/AdminLTE/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+
   <style>
     .invisible-cell {
         display: none;
@@ -157,7 +161,9 @@
         "responsive": true,
       });
       $('.select2').select2();
-
+      $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
       $('#reservationdate').datetimepicker({
         format: 'L'
     });

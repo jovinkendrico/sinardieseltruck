@@ -33,7 +33,9 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="id_supplier">Supplier</label>
-                                        <select class="form-control select2bs4" id="id_supplier" name="id_supplier" style="width: 100%;">
+                                        <input type="hidden" name="id_supplier" id="id_supplier" value="">
+                                        <select class="form-control select2bs4" id="id_supp" name="id_supp" style="width: 100%;">
+                                            <option disabled selected value> -- select an supplier -- </option>
                                             @foreach ($suppliers as $supplier)
                                             <option value="{{$supplier->id}}">{{$supplier->nama}}</option>
                                             @endforeach
@@ -55,6 +57,7 @@
                                     <div class="form-group">
                                         <label for="barang">Barang:</label>
                                         <select class="form-control select2bs4" id="barang" name="barang" style="width: 100%;" onchange="updateUOM()">
+                                            <option disabled selected value> -- select an item -- </option>
                                             @foreach ($barangs as $barang)
                                                 <option data-uombesar="{{ $barang->uombesar }}" data-uomkecil="{{ $barang->uomkecil }}" value="{{ $barang->id }}">{{ $barang->nama }}</option>
                                             @endforeach
@@ -64,7 +67,9 @@
                                 <div class="col-md-1">
                                     <div class="form-group">
                                         <label for="uom">Uom:</label>
+
                                         <select class="form-control select2bs4" id="uom" name="uom" style="width: 100%;">
+                                            <option disabled selected value> ---- </option>
 
                                         </select>
                                     </div>
@@ -234,9 +239,10 @@
             var cell9 = row.insertCell(8);
 
             // Disable the input fields after adding an item
+            document.getElementById("id_supplier").value = document.getElementById('id_supp').value
             document.getElementById("tanggal").readOnly = true;
             document.getElementById("id_invoice").readOnly = true;
-            document.getElementById("id_supplier").readOnly = true;
+            document.getElementById("id_supp").disabled = true;
             document.getElementById("jatuh_tempo").readOnly = true;
 
             // Set the cell values
@@ -323,7 +329,7 @@
 
         // Set the UOM options in the UOM dropdown
         var uomSelect = document.getElementById("uom");
-        uomSelect.innerHTML = '<option>' + uombesar + '</option><option>' + uomkecil + '</option>';
+        uomSelect.innerHTML = '<option>'+'----'+'</option><option>' + uombesar + '</option><option>' + uomkecil + '</option>';
     }
 
         function updateTotals() {

@@ -97,8 +97,10 @@ class PenjualanController extends Controller
         $customers = Customer::all();
         $truks = Truk::all();
         $penjualan = Penjualan::where('id',$id)->first();
+        $tanggal = \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y');
+        $jatuh_tempo = \Carbon\Carbon::parse($penjualan->jatuh_tempo)->format('d-m-Y');
         $detailPenjualans = DetailPenjualan::where('id_penjualan',$penjualan->id)->get();
-        return view('transaksi.penjualan.edit')->with('truks',$truks)->with('penjualan',$penjualan)->with('detailPenjualans',$detailPenjualans)->with('customers',$customers)->with('barangs',$barangs);
+        return view('transaksi.penjualan.edit')->with('truks',$truks)->with('penjualan',$penjualan)->with('detailPenjualans',$detailPenjualans)->with('customers',$customers)->with('barangs',$barangs)->with('tanggal',$tanggal)->with('jatuh_tempo',$jatuh_tempo);
     }
 
     /**
@@ -107,6 +109,43 @@ class PenjualanController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $tanggal = \Carbon\Carbon::parse($request->tanggal);
+        $jatuh_tempo = \Carbon\Carbon::parse($request->jatuh_tempo);
+        $totalNetto = preg_replace('/[^0-9.]/', '', $request->totalNetto);
+        Penjualan::findOrFail($id)->update([
+            'tanggal'=>$tanggal,
+            'id_invoice'=>$request->id_invoice,
+            'id_customer'=>$request->id_customer,
+            'id_truk'=>$request->id_truk,
+            'netto'=>$totalNetto,
+            'jatuh_tempo'=>$jatuh_tempo,
+            'status'=> 'N'
+        ]);
+
+        $penjualan = DB::table('penjualans')->where('id',$id)->first();
+
+        DetailPenjualan::where('id_penjualan',$penjualan->id)->delete();
+
+
+        $tableData = json_decode($request->input('tableData'), true);
+        foreach ($tableData as $item) {
+            $harga = preg_replace('/[^0-9.]/', '', $item['harga']);
+            $bruto = $harga * $item['jumlah'];
+            $diskon = preg_replace('/[^0-9.]/', '', $item['diskon']);
+            $netto = $bruto-$diskon;
+            DetailPenjualan::create([
+                'id_penjualan' => $penjualan->id,
+                'id_barang' => $item['id'],
+                'jumlah' => $item['jumlah'],
+                'uom' => $item['uom'],
+                'harga' => $harga,
+                'bruto' => $bruto,
+                'diskon' => $diskon,
+                'netto' => $netto
+            ]);
+        }
+
+        return redirect('/penjualan');
     }
 
     /**

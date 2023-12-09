@@ -42,7 +42,9 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="id_supplier">Customer:</label>
-                                        <select class="form-control select2bs4" id="id_customer" name="id_customer" style="width: 100%;">
+                                        <input type="hidden" id="id_customer" name="id_customer" value="">
+                                        <select class="form-control select2bs4" id="id_cus" name="id_cus" style="width: 100%;">
+                                            <option disabled selected value> -- select an customer -- </option>
                                             @foreach ($customers as $customer)
                                             <option value="{{$customer->id}}">{{$customer->nama}}</option>
                                             @endforeach
@@ -50,7 +52,9 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="id_truk">Truk:</label>
-                                        <select class="form-control select2bs4" id="id_truk" name="id_truk" style="width: 100%;">
+                                        <input type="hidden" id="id_truk" name="id_truk" value="">
+                                        <select class="form-control select2bs4" id="id_tr" name="id_tr" style="width: 100%;">
+                                            <option disabled selected value> -- select an truk -- </option>
                                             @foreach ($truks as $truk)
                                             <option value="{{$truk->id}}">{{$truk->plat}}</option>
                                             @endforeach
@@ -63,6 +67,7 @@
                                     <div class="form-group">
                                         <label for="barang">Barang:</label>
                                         <select class="form-control select2bs4" id="barang" name="barang" style="width: 100%;" onchange="updateUOM()">
+                                            <option disabled selected value> -- select an item -- </option>
                                             @foreach ($barangs as $barang)
                                                 <option data-uombesar="{{ $barang->uombesar }}" data-uomkecil="{{ $barang->uomkecil }}" value="{{ $barang->id }}">{{ $barang->nama }}</option>
                                             @endforeach
@@ -73,7 +78,7 @@
                                     <div class="form-group">
                                         <label for="uom">Uom:</label>
                                         <select class="form-control select2bs4" id="uom" name="uom" style="width: 100%;">
-
+                                            <option disabled selected value> ---- </option>
                                         </select>
                                     </div>
                                 </div>
@@ -242,10 +247,12 @@
             var cell9 = row.insertCell(8);
 
             // Disable the input fields after adding an item
+            document.getElementById("id_customer").value = document.getElementById('id_cus').value
+            document.getElementById("id_truk").value = document.getElementById('id_tr').value
             document.getElementById("tanggal").readOnly = true;
             document.getElementById("id_invoice").readOnly = true;
-            document.getElementById("id_customer").readOnly = true;
-            document.getElementById("id_truk").readOnly = true;
+            document.getElementById("id_cus").disabled = true;
+            document.getElementById("id_tr").disabled = true;
             document.getElementById("jatuh_tempo").readOnly = true;
 
             // Set the cell values
@@ -332,7 +339,7 @@
 
         // Set the UOM options in the UOM dropdown
         var uomSelect = document.getElementById("uom");
-        uomSelect.innerHTML = '<option>' + uombesar + '</option><option>' + uomkecil + '</option>';
+        uomSelect.innerHTML = '<option>'+'----'+'</option><option>' + uombesar + '</option><option>' + uomkecil + '</option>';
     }
         //Initialize totals
     // var totalBruto = 0;

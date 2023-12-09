@@ -19,7 +19,10 @@
                                     <div class="form-group">
                                         <label for="tanggal">Tanggal:</label>
                                         <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" onchange="onTanggalChange()" value="{{$pembelian->tanggal}}" id="tanggal" name="tanggal" class="form-control datetimepicker-input" data-target="#reservationdate" placeholder="Masukkan Tanggal" readonly/>
+                                            <input type="text" value="{{$tanggal}}"  id="tanggal" name="tanggal" class="form-control datetimepicker-input" data-target="#reservationdate" placeholder="Masukkan Tanggal"/>
+                                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -30,17 +33,18 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="id_supplier">Supplier:</label>
-                                        <select class="form-control select2bs4" value="{{$pembelian->id_supplier}}" id="id_supplier" name="id_supplier" style="width: 100%;">
-                                            <option value="{{$pembelian->id_supplier}}">{{$pembelian['supplier']['nama']}}</option>
+                                        <input type="hidden" name="id_supplier" id="id_supplier" value="{{$pembelian->id_supplier}}">
+                                        <select class="form-control select2bs4" value="{{$pembelian->id_supplier}}" id="id_supp" name="id_supp" style="width: 100%;">
+                                            <option disabled value> -- select an supplier -- </option>
                                             @foreach ($suppliers as $supplier)
-                                            <option value="{{$supplier->id}}">{{$supplier->nama}}</option>
+                                            <option value="{{$supplier->id}}"{{ $supplier->id == $pembelian->id_supplier ? 'selected' : ''}}>{{$supplier->nama}}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="jatuh_tempo">Jatuh Tempo:</label>
                                         <div class="input-group date" id="reservationdate2" data-target-input="nearest">
-                                            <input type="text" id="jatuh_tempo" value="{{$pembelian->jatuh_tempo}}" name="jatuh_tempo" class="form-control datetimepicker-input" data-target="#reservationdate2" placeholder="Masukkan Tanggal Jatuh Tempo">
+                                            <input type="text" id="jatuh_tempo" value="{{$jatuh_tempo}}" name="jatuh_tempo" class="form-control datetimepicker-input" data-target="#reservationdate2" placeholder="Masukkan Tanggal Jatuh Tempo">
                                             <div class="input-group-append" data-target="#reservationdate2" data-toggle="datetimepicker">
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
@@ -53,6 +57,7 @@
                                     <div class="form-group">
                                         <label for="barang">Barang:</label>
                                         <select class="form-control select2bs4" id="barang" name="barang" style="width: 100%;" onchange="updateUOM()">
+                                            <option disabled value> -- select an item -- </option>
                                             @foreach ($barangs as $barang)
                                                 <option data-uombesar="{{ $barang->uombesar }}" data-uomkecil="{{ $barang->uomkecil }}" value="{{ $barang->id }}">{{ $barang->nama }}</option>
                                             @endforeach
@@ -63,6 +68,7 @@
                                     <div class="form-group">
                                         <label for="uom">Uom:</label>
                                         <select class="form-control select2bs4" id="uom" name="uom" style="width: 100%;">
+                                            <option disabled value> ---- </option>
 
                                         </select>
                                     </div>
@@ -119,7 +125,7 @@
                                             @endphp
                                             @foreach($detailPembelians as $detailPembelian)
                                                 <tr>
-                                                    <td style="display: none;">{{ $detailPembelian->id }}</td>
+                                                    <td style="display: none;">{{ $detailPembelian['barang']['id'] }}</td>
                                                     <td>{{ $detailPembelian['barang']['nama'] }}</td>
                                                     <td>{{ $detailPembelian->jumlah }}</td>
                                                     <td>{{ $detailPembelian->uom }}</td>
@@ -195,6 +201,7 @@
     <script>
         function prepareAndSubmitForm() {
         // Call the function to update tableData
+        document.getElementById("id_supplier").value = document.getElementById('id_supp').value
         var data = getTableData();
         console.log(data);
         // Optionally, you can perform additional validations or actions here
@@ -258,9 +265,10 @@
             var cell9 = row.insertCell(8);
 
             // Disable the input fields after adding an item
+            document.getElementById("id_supplier").value = document.getElementById('id_supp').value
             document.getElementById("tanggal").readOnly = true;
             document.getElementById("id_invoice").readOnly = true;
-            document.getElementById("id_supplier").readOnly = true;
+            document.getElementById("id_supp").disabled = true;
             document.getElementById("jatuh_tempo").readOnly = true;
 
             // Set the cell values
@@ -347,7 +355,7 @@
 
         // Set the UOM options in the UOM dropdown
         var uomSelect = document.getElementById("uom");
-        uomSelect.innerHTML = '<option>' + uombesar + '</option><option>' + uomkecil + '</option>';
+        uomSelect.innerHTML = '<option>'+'----'+'</option><option>'+ uombesar + '</option><option>' + uomkecil + '</option>';
     }
     //     //Initialize totals
     // var totalBruto = 0;

@@ -30,7 +30,7 @@
                                         <input type="text" class="form-control" id="pemeriksa" name="pemeriksa">
                                     </div>
                                     <div class="form-group">
-                                        <label for="pemeriksa">Service:</label>
+                                        <label for="service">Service:</label>
                                         <input type="text" class="form-control" id="service" name="service">
                                     </div>
                                 </div>

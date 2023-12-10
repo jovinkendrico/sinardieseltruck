@@ -69,7 +69,7 @@
                                         <label for="uom">Uom:</label>
 
                                         <select class="form-control select2bs4" id="uom" name="uom" style="width: 100%;">
-                                            <option disabled selected value> ---- </option>
+                                            <option disabled value> ---- </option>
 
                                         </select>
                                     </div>

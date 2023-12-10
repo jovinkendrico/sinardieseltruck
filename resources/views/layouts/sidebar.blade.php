@@ -71,6 +71,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="/admin/perlengkapans" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Perlengkapan</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="/admin/pihakjasas" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Pihak Jasa</p>
@@ -119,7 +125,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="/" class="nav-link">
+                <a href="/pengecekan" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Pengecekan Mobil</p>
                 </a>

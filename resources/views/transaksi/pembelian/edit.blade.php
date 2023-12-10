@@ -57,7 +57,7 @@
                                     <div class="form-group">
                                         <label for="barang">Barang:</label>
                                         <select class="form-control select2bs4" id="barang" name="barang" style="width: 100%;" onchange="updateUOM()">
-                                            <option disabled value> -- select an item -- </option>
+                                            <option disabled selected value> -- select an item -- </option>
                                             @foreach ($barangs as $barang)
                                                 <option data-uombesar="{{ $barang->uombesar }}" data-uomkecil="{{ $barang->uomkecil }}" value="{{ $barang->id }}">{{ $barang->nama }}</option>
                                             @endforeach

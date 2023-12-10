@@ -3,10 +3,12 @@
 use App\Http\Controllers\Admin\BarangsController;
 use App\Http\Controllers\Admin\CustomersController;
 use App\Http\Controllers\Admin\JasasController;
+use App\Http\Controllers\Admin\PerlengkapansController;
 use App\Http\Controllers\Admin\PihakjasasController;
 use App\Http\Controllers\Admin\SuppliersController;
 use App\Http\Controllers\Admin\TruksController;
 use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\PengecekanController;
 use App\Http\Controllers\PenjualanController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +45,9 @@ Route::resource('/admin/jasas',JasasController::class)->middleware('auth');
 
 Route::resource('/admin/barangs',BarangsController::class)->middleware('auth');
 
+Route::resource('/admin/perlengkapans',PerlengkapansController::class)->middleware('auth');
+
+
 
 //transaksi
 
@@ -64,6 +69,16 @@ Route::controller(PembelianController::class)->group(function () {
     Route::get('/pembelian/edit/{id}','edit')->name('pembelian.edit')->middleware('auth');
     Route::post('/pembelian/update/{id}','update')->name('pembelian.update')->middleware('auth');
     Route::get('/pembelian/delete/{id}', 'destroy')->name('pembelian.delete')->middleware('auth');
+});
+
+Route::controller(PengecekanController::class)->group(function () {
+    Route::get('/pengecekan', 'index')->middleware('auth');
+    Route::get('/pengecekan/create','create')->name('pengecekan.create')->middleware('auth');
+    Route::post('/pengecekan/store','store')->name('pengecekan.store')->middleware('auth');
+    Route::get('/pengecekan/show/{id}','show')->name('pengecekan.show')->middleware('auth');
+    Route::get('/pengecekan/edit/{id}','edit')->name('pengecekan.edit')->middleware('auth');
+    Route::post('/pengecekan/update/{id}','update')->name('pengecekan.update')->middleware('auth');
+    Route::get('/pengecekan/delete/{id}', 'destroy')->name('pengecekan.delete')->middleware('auth');
 });
 
 

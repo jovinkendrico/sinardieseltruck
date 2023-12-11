@@ -125,14 +125,15 @@
                             <div class="row">
                                 <div class="col-md-8">
                                     <h2>History Pembelian Terdahulu</h2>
-                                    <table class="table" id="historyPembelian">
+                                    <table class="table" id="historyPembelian" id="example2" class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
+                                                <th>Nama Barang</th>
                                                 <th>No Faktur</th>
                                                 <th>Supplier</th>
-                                                <th>Nama Barang</th>
                                                 <th>QTY</th>
-                                                <th>Harga</th>
+                                                <th>UOM</th>
+                                                <th>Harga/UOM</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -248,7 +249,7 @@
             // Set the cell values
             cell1.innerHTML = barang.options[barang.selectedIndex].value;
             cell1.style.display = 'none'
-            cell2.innerHTML = barang.options[barang.selectedIndex].text;
+            cell2.innerHTML =  '<span class="clickable" onclick="fetchHistoryPembelian('+barang.options[barang.selectedIndex].value+')">' + barang.options[barang.selectedIndex].text + '</span>';
             cell3.innerHTML = jumlah.value;
             cell4.innerHTML = uom.value;
             cell5.innerHTML = 'Rp ' + harga.value;
@@ -362,5 +363,45 @@
     // document.addEventListener("DOMContentLoaded", function() {
     //     initializeTotals();
     // });
+    </script>
+    <script>
+
+function fetchHistoryPembelian(itemId) {
+    // Replace the URL with the actual endpoint to fetch history data
+    var url = '{{ route("historypembelian.get", ["itemId" => ":itemId"]) }}';
+        url = url.replace(':itemId', itemId);
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Update the historyPembelian table with the fetched data
+            updateHistoryTable(data);
+        })
+        .catch(error => {
+            console.error('Error fetching history data:', error);
+
+            // Optionally, log or display the response content
+            response.text().then(text => console.error('Response content:', text));
+        });
+}
+
+        function updateHistoryTable(data) {
+            // Clear the existing table rows
+            var historyTable = $('#historyPembelian').DataTable();
+    historyTable.clear().draw();
+
+    // Populate the table with the fetched data
+    data.forEach(rowData => {
+        const barangName = rowData.barang ? rowData.barang.nama : 'Unknown Barang';
+        const invoice = rowData.pembelian ? rowData.pembelian.id_invoice : 'Unknown Invoice';
+        const supplier = rowData.pembelian.supplier ? rowData.pembelian.supplier.nama : 'Unknown Supplier';
+        historyTable.row.add([barangName, invoice, supplier, rowData.jumlah, rowData.uom, "Rp " +  rowData.harga]).draw();
+    });
+        }
     </script>
 @endsection

@@ -126,7 +126,7 @@
                                             @foreach($detailPembelians as $detailPembelian)
                                                 <tr>
                                                     <td style="display: none;">{{ $detailPembelian['barang']['id'] }}</td>
-                                                    <td>{{ $detailPembelian['barang']['nama'] }}</td>
+                                                    <td><span class="clickable" onclick="fetchHistoryPembelian({{$detailPembelian['barang']['id']}})">{{ $detailPembelian['barang']['nama'] }}</span></td>
                                                     <td>{{ $detailPembelian->jumlah }}</td>
                                                     <td>{{ $detailPembelian->uom }}</td>
                                                     <td>{{ 'Rp ' . $detailPembelian->harga }}</td>
@@ -153,11 +153,12 @@
                                     <table class="table" id="historyPembelian">
                                         <thead>
                                             <tr>
-                                                <th>No Faktur</th>
-                                                <th>Supplier</th>
                                                 <th>Nama Barang</th>
+                                                <th>Invoice</th>
+                                                <th>Supplier</th>
                                                 <th>QTY</th>
-                                                <th>Harga</th>
+                                                <th>UOM</th>
+                                                <th>Harga/UOM</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -394,4 +395,44 @@
     //     initializeTotals();
     // });
     </script>
+    <script>
+
+        function fetchHistoryPembelian(itemId) {
+            // Replace the URL with the actual endpoint to fetch history data
+            var url = '{{ route("historypembelian.get", ["itemId" => ":itemId"]) }}';
+                url = url.replace(':itemId', itemId);
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Update the historyPembelian table with the fetched data
+                    updateHistoryTable(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching history data:', error);
+
+                    // Optionally, log or display the response content
+                    response.text().then(text => console.error('Response content:', text));
+                });
+        }
+
+        function updateHistoryTable(data) {
+            // Clear the existing table rows
+            var historyTable = $('#historyPembelian').DataTable();
+    historyTable.clear().draw();
+
+    // Populate the table with the fetched data
+    data.forEach(rowData => {
+        const barangName = rowData.barang ? rowData.barang.nama : 'Unknown Barang';
+        const invoice = rowData.pembelian ? rowData.pembelian.id_invoice : 'Unknown Invoice';
+        const supplier = rowData.pembelian.supplier ? rowData.pembelian.supplier.nama : 'Unknown Supplier';
+        historyTable.row.add([barangName, invoice, supplier, rowData.jumlah, rowData.uom, "Rp " +  rowData.harga]).draw();
+    });
+        }
+            </script>
 @endsection

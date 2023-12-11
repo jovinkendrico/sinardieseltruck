@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PerlengkapansController;
 use App\Http\Controllers\Admin\PihakjasasController;
 use App\Http\Controllers\Admin\SuppliersController;
 use App\Http\Controllers\Admin\TruksController;
+use App\Http\Controllers\HistoryPembelianController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PengecekanController;
 use App\Http\Controllers\PenjualanController;
@@ -81,5 +82,8 @@ Route::controller(PengecekanController::class)->group(function () {
     Route::get('/pengecekan/delete/{id}', 'destroy')->name('pengecekan.delete')->middleware('auth');
 });
 
+Route::controller(HistoryPembelianController::class)->group(function(){
+    Route::get('/history-pembelian/{itemId}','getHistory')->name('historypembelian.get');
+});
 
 

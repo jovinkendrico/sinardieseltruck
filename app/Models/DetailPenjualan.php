@@ -12,4 +12,8 @@ class DetailPenjualan extends Model
     public function barang(){
         return $this->belongsTo(Barang::class,'id_barang','id');
     }
+
+    public function penjualan(){
+        return $this->belongsTo(Penjualan::class,'id_penjualan','id');
+    }
 }

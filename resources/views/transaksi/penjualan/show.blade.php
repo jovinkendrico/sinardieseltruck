@@ -44,6 +44,11 @@
 
           <!-- Table row -->
           <div class="row">
+            <div class="col-md-12">
+                <h5>
+                    List Barang:
+                </h5>
+            </div>
             <div class="col-12 table-responsive">
               <table class="table table-striped">
                 <thead>
@@ -89,6 +94,42 @@
               </table>
             </div>
             <!-- /.col -->
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <h5>List Jasa:</h5>
+            </div>
+            <div class="col-12 table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Jasa</th>
+                    <th>Deskripsi</th>
+                    <th>Harga</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                      @php
+                          $i = 1;
+                      @endphp
+                      @foreach ($detailJasas as $detailJasa )
+                      <tr>
+                          <td>{{$i}}</td>
+                          <td>{{$detailJasa['jasa']['nama']}}</td>
+                          <td>{{$detailJasa->deskripsi}}</td>
+                          <td>Rp. {{$detailJasa->harga}}</td>
+                      </tr>
+                      @php
+                          $i++;
+                          $totalbruto+=$detailJasa->harga;
+                          $totalnetto+=$detailJasa->harga;
+                      @endphp
+                      @endforeach
+
+                  </tbody>
+                </table>
+              </div>
           </div>
           <!-- /.row -->
 

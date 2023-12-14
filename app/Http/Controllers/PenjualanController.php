@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\Customer;
+use App\Models\DetailJasa;
 use App\Models\DetailPenjualan;
+use App\Models\Jasa;
 use App\Models\Penjualan;
 use App\Models\Truk;
 use Illuminate\Http\Request;
@@ -31,7 +33,8 @@ class PenjualanController extends Controller
         $barangs = Barang::all();
         $customers = Customer::all();
         $truks = Truk::all();
-        return view('transaksi.penjualan.create')->with('customers',$customers)->with('barangs',$barangs)->with('truks',$truks);
+        $jasas = Jasa::all();
+        return view('transaksi.penjualan.create')->with('customers',$customers)->with('barangs',$barangs)->with('truks',$truks)->with('jasas',$jasas);
     }
 
     /**
@@ -71,7 +74,16 @@ class PenjualanController extends Controller
                 'netto' => $netto
             ]);
         }
-
+        $tableDataJasa = json_decode($request->input('tableDataJasa'),true);
+        foreach($tableDataJasa as $item){
+            $harga = preg_replace('/[^0-9.]/', '', $item['harga']);
+            DetailJasa::create([
+                'id_penjualan' => $penjualan->id,
+                'id_jasa' => $item['id'],
+                'harga' => $harga,
+                'deskripsi' => $item['deskripsi']
+            ]);
+        }
         return redirect('/penjualan');
     }
 
@@ -84,7 +96,8 @@ class PenjualanController extends Controller
         //
         $penjualan = Penjualan::where('id',$id)->first();
         $detailPenjualans = DetailPenjualan::where('id_penjualan',$penjualan->id)->get();
-        return view('transaksi.penjualan.show')->with('penjualan',$penjualan)->with('detailPenjualans',$detailPenjualans);
+        $detailJasas= DetailJasa::where('id_penjualan',$penjualan->id)->get();
+        return view('transaksi.penjualan.show')->with('penjualan',$penjualan)->with('detailPenjualans',$detailPenjualans)->with('detailJasas',$detailJasas);
     }
 
     /**
@@ -96,11 +109,13 @@ class PenjualanController extends Controller
         $barangs = Barang::all();
         $customers = Customer::all();
         $truks = Truk::all();
+        $jasas = Jasa::all();
         $penjualan = Penjualan::where('id',$id)->first();
-        $tanggal = \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y');
-        $jatuh_tempo = \Carbon\Carbon::parse($penjualan->jatuh_tempo)->format('d-m-Y');
+        $tanggal = \Carbon\Carbon::parse($penjualan->tanggal)->format('m-d-Y');
+        $jatuh_tempo = \Carbon\Carbon::parse($penjualan->jatuh_tempo)->format('m-d-Y');
         $detailPenjualans = DetailPenjualan::where('id_penjualan',$penjualan->id)->get();
-        return view('transaksi.penjualan.edit')->with('truks',$truks)->with('penjualan',$penjualan)->with('detailPenjualans',$detailPenjualans)->with('customers',$customers)->with('barangs',$barangs)->with('tanggal',$tanggal)->with('jatuh_tempo',$jatuh_tempo);
+        $detailJasas = DetailJasa::where('id_penjualan',$penjualan->id)->get();
+        return view('transaksi.penjualan.edit')->with('jasas',$jasas)->with('detailJasas',$detailJasas)->with('truks',$truks)->with('penjualan',$penjualan)->with('detailPenjualans',$detailPenjualans)->with('customers',$customers)->with('barangs',$barangs)->with('tanggal',$tanggal)->with('jatuh_tempo',$jatuh_tempo);
     }
 
     /**
@@ -145,6 +160,18 @@ class PenjualanController extends Controller
             ]);
         }
 
+        DetailJasa::where('id_penjualan',$penjualan->id)->delete();
+        $tableDataJasa = json_decode($request->input('tableDataJasa'),true);
+        foreach($tableDataJasa as $item){
+            $harga = preg_replace('/[^0-9.]/', '', $item['harga']);
+            DetailJasa::create([
+                'id_penjualan' => $penjualan->id,
+                'id_jasa' => $item['id'],
+                'harga' => $harga,
+                'deskripsi' => $item['deskripsi']
+            ]);
+        }
+
         return redirect('/penjualan');
     }
 
@@ -156,7 +183,7 @@ class PenjualanController extends Controller
         //
         Penjualan::where('id',$id)->delete();
         DB::table('detail_penjualans')->where('id_penjualan', $id)->delete();
-
+        DB::table('detail_jasas')->where('id_penjualan', $id)->delete();
         return redirect('/penjualan');
 
     }

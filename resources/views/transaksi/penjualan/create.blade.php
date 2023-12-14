@@ -13,6 +13,7 @@
                         <form method="POST" action="{{route('penjualan.store')}}" onsubmit="return prepareAndSubmitForm()" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="tableData" id="tableData" value="">
+                            <input type="hidden" name="tableDataJasa" id="tableDataJasa" value="">
                             <div class="row">
                                 <div class="col-md-6">
                                     <!-- Existing fields as per your design -->
@@ -63,7 +64,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="barang">Barang:</label>
                                         <select class="form-control select2bs4" id="barang" name="barang" style="width: 100%;" onchange="updateUOM()">
@@ -100,11 +101,16 @@
                                         <input type="number" class="form-control" id="diskon" name="diskon" placeholder="Masukkan diskon">
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <div class="form-group">
-                                        <label>Tambah</label>
-                                        <button type="button" class="btn btn-success" onclick="addRow()">Tambah Barang</button>
+                                        <label>Tambah</label><br>
+                                        <button type="button" class="btn btn-success" onclick="addRow()">Tambah</button>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>List Barang:</h4>
                                 </div>
                             </div>
                             <div class="row mt-4">
@@ -131,16 +137,71 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="jasa">Jasa:</label>
+                                        <select class="form-control select2bs4" id="jasa" name="jasa" style="width: 100%;">
+                                            <option disabled selected value> -- select an jasa -- </option>
+                                            @foreach ($jasas as $jasa)
+                                                <option value="{{ $jasa->id }}">{{ $jasa->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="hargajasa">Harga:</label>
+                                        <input type="number" class="form-control" id="hargajasa" name="hargajasa" placeholder="Masukkan Harga Jasa">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="deskripsi">Deskripsi:</label>
+                                        <input type="text" class="form-control" id="deskripsi" name="deskripsi" placeholder="Masukkan Deskripsi">
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Tambah</label><br>
+                                        <button type="button" class="btn btn-success" onclick="addRowJasa()">Tambah</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                <h4>
+                                    List Jasa:
+                                </h4>
+                                </div>
+                                <div class="col-md-12">
+                                <table class="table" id="jasaTable">
+                                    <thead>
+                                        <tr>
+                                            <th style="display: none;">ID</th>
+                                            <th>Jasa</th>
+                                            <th>Harga</th>
+                                            <th>Deskripsi</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-8">
                                     <h2>History Penjualan Terdahulu</h2>
-                                    <table class="table" id="historyPembelian">
+                                    <table class="table" id="historyPenjualan">
                                         <thead>
                                             <tr>
+                                                <th>Nama Barang</th>
                                                 <th>No Faktur</th>
                                                 <th>Customer</th>
-                                                <th>Nama Barang</th>
                                                 <th>QTY</th>
-                                                <th>Harga</th>
+                                                <th>UOM</th>
+                                                <th>Harga/UOM</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -217,7 +278,9 @@
     }
     function getTableData() {
         document.getElementById("tableData").value = tableToJSON(document.getElementById('itemTable'))
+        document.getElementById("tableDataJasa").value = tableToJSON(document.getElementById('jasaTable'))
         console.log(tableToJSON(document.getElementById('itemTable')))
+        console.log(tableToJSON(document.getElementById('jasaTable')))
     }
 
     function extractNumericValue(value) {
@@ -258,7 +321,7 @@
             // Set the cell values
             cell1.innerHTML = barang.options[barang.selectedIndex].value;
             cell1.style.display = 'none'
-            cell2.innerHTML = barang.options[barang.selectedIndex].text;
+            cell2.innerHTML = '<span class="clickable" onclick="fetchHistoryPenjualan('+barang.options[barang.selectedIndex].value+')">' + barang.options[barang.selectedIndex].text + '</span>';
             cell3.innerHTML = jumlah.value;
             cell4.innerHTML = uom.value;
             cell5.innerHTML = 'Rp ' + harga.value;
@@ -369,6 +432,20 @@
             totalNetto += netto;
         }
 
+        var table = document.getElementById("jasaTable");
+        for (var i = 0, row; row = table.rows[i]; i++) {
+            // Skip the header row
+            if (i === 0) {
+                continue;
+            }
+
+            var bruto = parseFloat(row.cells[2].innerText.replace('Rp ', ''));
+
+            totalBruto += bruto;
+            totalNetto += bruto;
+        }
+
+
         // Display totals
         document.getElementById("totalBruto").value = 'Rp ' + totalBruto.toFixed(2);
         document.getElementById("totalDiskon").value = 'Rp ' + totalDiskon.toFixed(2);
@@ -378,4 +455,92 @@
     //     initializeTotals();
     // });
     </script>
+    <script>
+        function addRowJasa(){
+            var jasa = document.getElementById("jasa");
+            var hargajasa = document.getElementById("hargajasa");
+            var deskripsi = document.getElementById("deskripsi");
+
+            // Create a new row in the table
+            var table = document.getElementById("jasaTable");
+            var row = table.insertRow(table.rows.length);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+
+            // Disable the input fields after adding an item
+            document.getElementById("id_customer").value = document.getElementById('id_cus').value
+            document.getElementById("id_truk").value = document.getElementById('id_tr').value
+            document.getElementById("tanggal").readOnly = true;
+            document.getElementById("id_invoice").readOnly = true;
+            document.getElementById("id_cus").disabled = true;
+            document.getElementById("id_tr").disabled = true;
+            document.getElementById("jatuh_tempo").readOnly = true;
+
+            // Set the cell values
+            cell1.innerHTML = jasa.options[jasa.selectedIndex].value;
+            cell1.style.display = 'none'
+            cell2.innerHTML = jasa.options[jasa.selectedIndex].text ;
+            cell3.innerHTML = 'Rp ' + hargajasa.value;
+            cell4.innerHTML = deskripsi.value;
+            cell5.innerHTML = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteRowJasa(this)">Delete</button>';
+
+            getTableData();
+            updateTotals();
+            // Clear input fields after adding a row
+            jasa.value = "";
+            hargajasa.value = "";
+            deskripsi.value = "";
+        }
+        function deleteRowJasa(btn) {
+            // Delete the row from the table
+            var row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            updateTotals();
+
+        }
+    </script>
+    <script>
+
+        function fetchHistoryPenjualan(itemId) {
+            // Replace the URL with the actual endpoint to fetch history data
+            var url = '{{ route("historypenjualan.get", ["itemId" => ":itemId"]) }}';
+                url = url.replace(':itemId', itemId);
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Update the historyPembelian table with the fetched data
+                    updateHistoryTable(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching history data:', error);
+
+                    // Optionally, log or display the response content
+                    response.text().then(text => console.error('Response content:', text));
+                });
+        }
+
+                function updateHistoryTable(data) {
+                    // Clear the existing table rows
+                    var historyTable = $('#historyPenjualan').DataTable();
+            historyTable.clear().draw();
+
+            // Populate the table with the fetched data
+            data.forEach(rowData => {
+                const barangName = rowData.barang ? rowData.barang.nama : 'Unknown Barang';
+                const invoice = rowData.penjualan ? rowData.penjualan.id_invoice : 'Unknown Invoice';
+                const customer = rowData.penjualan.customer ? rowData.penjualan.customer.nama : 'Unknown Customer';
+                historyTable.row.add([barangName, invoice, customer, rowData.jumlah, rowData.uom, "Rp " +  rowData.harga]).draw();
+            });
+                }
+            </script>
+
 @endsection

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PihakjasasController;
 use App\Http\Controllers\Admin\SuppliersController;
 use App\Http\Controllers\Admin\TruksController;
 use App\Http\Controllers\HistoryPembelianController;
+use App\Http\Controllers\HistoryPenjualanController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PengecekanController;
 use App\Http\Controllers\PenjualanController;
@@ -84,6 +85,11 @@ Route::controller(PengecekanController::class)->group(function () {
 
 Route::controller(HistoryPembelianController::class)->group(function(){
     Route::get('/history-pembelian/{itemId}','getHistory')->name('historypembelian.get');
+});
+
+
+Route::controller(HistoryPenjualanController::class)->group(function(){
+    Route::get('/history-penjualan/{itemId}','getHistory')->name('historypenjualan.get');
 });
 
 

@@ -89,7 +89,7 @@ class PengecekanController extends Controller
         $truks = Truk::all();
         $perlengkapans = Perlengkapan::all();
         $pengecekan = Pengecekan::where('id',$id)->first();
-        $tanggal = \Carbon\Carbon::parse($pengecekan->tanggal)->format('d-m-Y');
+        $tanggal = \Carbon\Carbon::parse($pengecekan->tanggal)->format('m-d-Y');
         $detailPengecekans = DetailPengecekan::where('id_pengecekan',$id)->get();
         return view('mobil.pengecekanmobil.edit')->with('tanggal',$tanggal)->with('truks',$truks)->with('perlengkapans',$perlengkapans)->with('pengecekan',$pengecekan)->with('detailPengecekans',$detailPengecekans);
     }

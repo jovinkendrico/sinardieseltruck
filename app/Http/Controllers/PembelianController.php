@@ -101,8 +101,8 @@ class PembelianController extends Controller
         $barangs = Barang::all();
         $suppliers = Supplier::all();
         $pembelian = Pembelian::where('id',$id)->first();
-        $tanggal = \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y');
-        $jatuh_tempo = \Carbon\Carbon::parse($pembelian->jatuh_tempo)->format('d-m-Y');
+        $tanggal = \Carbon\Carbon::parse($pembelian->tanggal)->format('m-d-Y');
+        $jatuh_tempo = \Carbon\Carbon::parse($pembelian->jatuh_tempo)->format('m-d-Y');
         $detailPembelians =DetailPembelian::where('id_pembelian',$pembelian->id)->get();
         return view('transaksi.pembelian.edit')->with('pembelian',$pembelian)->with('detailPembelians',$detailPembelians)->with('suppliers',$suppliers)->with('barangs',$barangs)->with('tanggal',$tanggal)->with('jatuh_tempo',$jatuh_tempo);
     }

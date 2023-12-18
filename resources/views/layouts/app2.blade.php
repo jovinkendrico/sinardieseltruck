@@ -66,7 +66,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
               <li class="breadcrumb-item active">@yield('title')</li>
             </ol>
           </div><!-- /.col -->
@@ -95,6 +95,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="/AdminLTE/plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="/AdminLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -146,7 +147,27 @@
 <script src="/AdminLTE/plugins/select2/js/select2.full.min.js"></script>
 
 <script>
+     $(document).ready(function () {
+        $('#modal-edit').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            console.log('Button Data:', button.data()); // Check if data is logged
+            var akunId = button.data('id');
+            var nomorAkun = button.data('nomorakun');
+            var namaAkun = button.data('nama');
+            console.log('ID:', akunId, 'Nomor Akun:', nomorAkun, 'Nama Akun:', namaAkun); // Check individual values
+            var modal = $(this);
+
+            // Populate the form fields dynamically
+            var editForm = modal.find('#editForm');
+            editForm.attr('action', editForm.attr('action').replace(':id', akunId));
+
+            // Use the data from the button to populate the form fields
+            modal.find('#edit_nomor_akun').val(nomorAkun);
+            modal.find('#edit_nama').val(namaAkun);
+        });
+    });
     $(function () {
+
       $("#example1").DataTable({
         "responsive": true, "lengthChange": false, "autoWidth": false,
         "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]

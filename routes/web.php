@@ -7,11 +7,14 @@ use App\Http\Controllers\Admin\PerlengkapansController;
 use App\Http\Controllers\Admin\PihakjasasController;
 use App\Http\Controllers\Admin\SuppliersController;
 use App\Http\Controllers\Admin\TruksController;
+use App\Http\Controllers\AkunsController;
+use App\Http\Controllers\CashMasukController;
 use App\Http\Controllers\HistoryPembelianController;
 use App\Http\Controllers\HistoryPenjualanController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PengecekanController;
 use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\SubAkunsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,6 +52,20 @@ Route::resource('/admin/barangs',BarangsController::class)->middleware('auth');
 
 Route::resource('/admin/perlengkapans',PerlengkapansController::class)->middleware('auth');
 
+route::controller(AkunsController::class)->group(function(){
+    Route::get('/admin/akuns', 'index')->middleware('auth');
+    Route::post('/admin/akuns/store','store')->name('akuns.store')->middleware('auth');
+    Route::post('/admin/akuns/update/{id}','update')->name('akuns.update')->middleware('auth');
+    Route::get('/admin/akuns/delete/{id}', 'destroy')->name('akuns.delete')->middleware('auth');
+});
+
+route::controller(SubAkunsController::class)->group(function(){
+    Route::get('/admin/subakuns/{id}', 'index')->name('subakuns.index')->middleware('auth');
+    Route::post('/admin/subakuns/store','store')->name('subakuns.store')->middleware('auth');
+    Route::get('/admin/subakuns/show/{id}','show')->name('subakuns.show')->middleware('auth');
+    Route::post('/admin/subakuns/update/{id}','update')->name('subakuns.update')->middleware('auth');
+    Route::get('/admin/subakuns/delete/{id}', 'destroy')->name('subakuns.delete')->middleware('auth');
+});
 
 
 //transaksi
@@ -83,6 +100,16 @@ Route::controller(PengecekanController::class)->group(function () {
     Route::get('/pengecekan/delete/{id}', 'destroy')->name('pengecekan.delete')->middleware('auth');
 });
 
+Route::controller(CashMasukController::class)->group(function(){
+    Route::get('/cashmasuk', 'index')->middleware('auth');
+    Route::get('/cashmasuk/create','create')->name('cashmasuk.create')->middleware('auth');
+    Route::post('/cashmasuk/store','store')->name('cashmasuk.store')->middleware('auth');
+    Route::get('/cashmasuk/show/{id}','show')->name('cashmasuk.show')->middleware('auth');
+    Route::get('/cashmasuk/edit/{id}','edit')->name('cashmasuk.edit')->middleware('auth');
+    Route::post('/cashmasuk/update/{id}','update')->name('cashmasuk.update')->middleware('auth');
+    Route::get('/cashmasuk/delete/{id}', 'destroy')->name('cashmasuk.delete')->middleware('auth');
+});
+
 Route::controller(HistoryPembelianController::class)->group(function(){
     Route::get('/history-pembelian/{itemId}','getHistory')->name('historypembelian.get');
 });
@@ -91,5 +118,8 @@ Route::controller(HistoryPembelianController::class)->group(function(){
 Route::controller(HistoryPenjualanController::class)->group(function(){
     Route::get('/history-penjualan/{itemId}','getHistory')->name('historypenjualan.get');
 });
+
+
+
 
 

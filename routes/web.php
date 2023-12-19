@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PihakjasasController;
 use App\Http\Controllers\Admin\SuppliersController;
 use App\Http\Controllers\Admin\TruksController;
 use App\Http\Controllers\AkunsController;
+use App\Http\Controllers\CashKeluarController;
 use App\Http\Controllers\CashMasukController;
 use App\Http\Controllers\HistoryPembelianController;
 use App\Http\Controllers\HistoryPenjualanController;
@@ -108,6 +109,16 @@ Route::controller(CashMasukController::class)->group(function(){
     Route::get('/cashmasuk/edit/{id}','edit')->name('cashmasuk.edit')->middleware('auth');
     Route::post('/cashmasuk/update/{id}','update')->name('cashmasuk.update')->middleware('auth');
     Route::get('/cashmasuk/delete/{id}', 'destroy')->name('cashmasuk.delete')->middleware('auth');
+});
+
+Route::controller(CashKeluarController::class)->group(function(){
+    Route::get('/cashkeluar', 'index')->middleware('auth');
+    Route::get('/cashkeluar/create','create')->name('cashkeluar.create')->middleware('auth');
+    Route::post('/cashkeluar/store','store')->name('cashkeluar.store')->middleware('auth');
+    Route::get('/cashkeluar/show/{id}','show')->name('cashkeluar.show')->middleware('auth');
+    Route::get('/cashkeluar/edit/{id}','edit')->name('cashkeluar.edit')->middleware('auth');
+    Route::post('/cashkeluar/update/{id}','update')->name('cashkeluar.update')->middleware('auth');
+    Route::get('/cashkeluar/delete/{id}', 'destroy')->name('cashkeluar.delete')->middleware('auth');
 });
 
 Route::controller(HistoryPembelianController::class)->group(function(){

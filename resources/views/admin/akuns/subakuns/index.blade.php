@@ -11,7 +11,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <a href="{{ url('/admin/barangs') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
+                <a href="{{ url('/admin/akuns') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
                 <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-lg">
                     <i class="fa fa-plus" aria-hidden="true"></i> Add New
                   </button>
@@ -62,7 +62,7 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
-<div class="container-fluid">
+</div>
 
 
     <div class="modal fade" id="modal-lg">

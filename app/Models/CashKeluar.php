@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DetailCashMasuk extends Model
+class CashKeluar extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id_cashmasuk','id_akunkeluar','deskripsi','jumlah'];
+    protected $fillable = ['tanggal','id_bukti','id_akunkeluar','deskripsi','total'];
 
     public function akunkeluar(){
         return $this->belongsTo(SubAkuns::class,'id_akunkeluar','id');

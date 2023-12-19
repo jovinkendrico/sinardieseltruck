@@ -63,8 +63,8 @@
           <!-- /.card -->
         </div>
         <!-- /.col -->
-      </div>
+    </div>
       <!-- /.row -->
-<div class="container-fluid">
+</div>
 
 @endsection

@@ -79,6 +79,6 @@ class SubAkunsController extends Controller
     public function destroy(string $id)
     {
         SubAkuns::findOrFail($id)->delete();
-        return redirect()->route('/admin/akuns');
+        return redirect()->back();
     }
 }

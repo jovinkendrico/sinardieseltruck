@@ -79,6 +79,12 @@ class CashMasukController extends Controller
     public function edit(string $id)
     {
         //
+
+        $subakuns = SubAkuns::all();
+        $cashmasuk = CashMasuk::where('id',$id)->first();
+        $tanggal = \Carbon\Carbon::parse($cashmasuk->tanggal)->format('m-d-Y');
+        $detailcashmasuks = DetailCashMasuk::where('id_cashmasuk',$cashmasuk->id)->get();
+        return view('cash.cashmasuk.edit')->with('tanggal',$tanggal)->with('cashmasuk',$cashmasuk)->with('detailcashmasuks',$detailcashmasuks)->with('subakuns',$subakuns);
     }
 
     /**
@@ -87,6 +93,31 @@ class CashMasukController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $tanggal = \Carbon\Carbon::parse($request->tanggal);
+        $total = preg_replace('/[^0-9.]/', '', $request->totalJumlah);
+        CashMasuk::findOrFail($id)->update([
+            'tanggal' => $tanggal,
+            'id_bukti' => $request->id_invoice,
+            'id_akunmasuk' => $request->akun_masuk,
+            'total' => $total
+        ]);
+
+        $cashmasuk = DB::table('cash_masuks')->where('id',$id)->first();
+
+        DetailCashMasuk::where('id_cashmasuk',$cashmasuk->id)->delete();
+
+        $tableData = json_decode($request->input('tableData'), true);
+        foreach($tableData as $item){
+            $jumlah = preg_replace('/[^0-9.]/', '', $item['jumlah']);
+            DetailCashMasuk::insert([
+                'id_cashmasuk' => $cashmasuk->id,
+                'id_akunkeluar' => $item['id'],
+                'deskripsi' => $item['deskripsi'],
+                'jumlah' => $jumlah
+            ]);
+        }
+
+        return redirect('/cashmasuk');
     }
 
     /**

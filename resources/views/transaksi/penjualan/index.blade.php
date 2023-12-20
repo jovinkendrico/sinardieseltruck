@@ -38,26 +38,36 @@
                       <td>{{$penjualan['customer']['nama']}}</td>
                       <td>{{$penjualan['truk']['plat']}}</td>
                       <td>Rp. {{$penjualan->netto}}</td>
-                      <td>{{$penjualan->status}}</td>
+                      <td class="text-center">
+                        @php
+                            $iconClass = ($penjualan->status == 'N') ? 'fas fa-times text-danger' : 'fas fa-check text-success';
+                            echo "<i class='$iconClass'></i>";
+                        @endphp
+                      </td>
                       <td>{{$penjualan->jatuh_tempo}}</td>
 
                       <td class="project-actions text-right">
-                          <a class="btn btn-primary btn-sm" href="{{route('penjualan.show',$penjualan->id)}}">
-                              <i class="fas fa-folder">
-                              </i>
-                              View
-                          </a>
-                          <a class="btn btn-info btn-sm" href="{{route('penjualan.edit',$penjualan->id)}}">
-                              <i class="fas fa-pencil-alt">
-                              </i>
-                              Edit
-                          </a>
-                          <a class="btn btn-danger btn-sm" href="{{route('penjualan.delete',$penjualan->id)}}">
-                              <i class="fas fa-trash">
-                              </i>
-                              Delete
-                          </a>
-                      </td>
+                        <a class="btn btn-primary btn-sm" href="{{ route('penjualan.show', $penjualan->id) }}">
+                            <i class="fas fa-folder"></i> View
+                        </a>
+
+                        @if($penjualan->status == 'N')
+                            <a class="btn btn-info btn-sm" href="{{ route('penjualan.edit', $penjualan->id) }}">
+                                <i class="fas fa-pencil-alt"></i> Edit
+                            </a>
+                            <a class="btn btn-danger btn-sm" href="{{ route('penjualan.delete', $penjualan->id) }}">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        @else
+                            <!-- If status is not 'N', show a disabled or alternative button -->
+                            <button class="btn btn-info btn-sm" disabled>
+                                <i class="fas fa-pencil-alt"></i> Edit
+                            </button>
+                            <button class="btn btn-danger btn-sm" disabled>
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        @endif
+                    </td>
 
                   </tr>
                   @endforeach

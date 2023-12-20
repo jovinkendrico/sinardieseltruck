@@ -35,27 +35,37 @@
                       <td>{{$pembelian->tanggal}}</td>
                       <td>{{$pembelian['supplier']['nama']}}</td>
                       <td>Rp. {{$pembelian->netto}}</td>
-                      <td>{{$pembelian->status}}</td>
+                      <td class="text-center">
+                        @php
+                            $iconClass = ($pembelian->status == 'N') ? 'fas fa-times text-danger' : 'fas fa-check text-success';
+                            echo "<i class='$iconClass'></i>";
+                        @endphp
+                      </td>
                       <td>{{$pembelian->jatuh_tempo}}</td>
 
 
                       <td class="project-actions text-right">
-                          <a class="btn btn-primary btn-sm" href="{{route('pembelian.show',$pembelian->id)}}">
-                              <i class="fas fa-folder">
-                              </i>
-                              View
-                          </a>
-                          <a class="btn btn-info btn-sm" href="{{route('pembelian.edit',$pembelian->id)}}">
-                              <i class="fas fa-pencil-alt">
-                              </i>
-                              Edit
-                          </a>
-                          <a class="btn btn-danger btn-sm" href="{{route('pembelian.delete',$pembelian->id)}}">
-                              <i class="fas fa-trash">
-                              </i>
-                              Delete
-                          </a>
-                      </td>
+                        <a class="btn btn-primary btn-sm" href="{{ route('pembelian.show', $pembelian->id) }}">
+                            <i class="fas fa-folder"></i> View
+                        </a>
+
+                        @if($pembelian->status == 'N')
+                            <a class="btn btn-info btn-sm" href="{{ route('pembelian.edit', $pembelian->id) }}">
+                                <i class="fas fa-pencil-alt"></i> Edit
+                            </a>
+                            <a class="btn btn-danger btn-sm" href="{{ route('pembelian.delete', $pembelian->id) }}">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        @else
+                            <!-- If status is not 'N', show a disabled or alternative button -->
+                            <button class="btn btn-info btn-sm" disabled>
+                                <i class="fas fa-pencil-alt"></i> Edit
+                            </button>
+                            <button class="btn btn-danger btn-sm" disabled>
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        @endif
+                    </td>
 
                   </tr>
                   @endforeach

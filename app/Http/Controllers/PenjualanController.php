@@ -73,6 +73,13 @@ class PenjualanController extends Controller
                 'diskon' => $diskon,
                 'netto' => $netto
             ]);
+            $barang = Barang::where('id',$item['id'])->first();
+            if($item['uom'] == $barang->uombesar){
+                $barang->decrement('stok',$item['jumlah']*$barang->satuankecil);
+            }
+            else{
+                $barang->decrement('stok',$item['jumlah']);
+            }
         }
         $tableDataJasa = json_decode($request->input('tableDataJasa'),true);
         foreach($tableDataJasa as $item){
@@ -139,8 +146,18 @@ class PenjualanController extends Controller
 
         $penjualan = DB::table('penjualans')->where('id',$id)->first();
 
-        DetailPenjualan::where('id_penjualan',$penjualan->id)->delete();
+        $detailPenjualans = DetailPenjualan::where('id_penjualan',$penjualan->id)->get();
+        foreach($detailPenjualans as $detailPenjualan){
+            $barang = Barang::where('id',$detailPenjualan->id_barang)->first();
+            if($detailPenjualan->uom == $barang->uombesar){
+                $barang->increment('stok',$detailPenjualan->jumlah * $barang->satuankecil);
+            }
+            else{
+                $barang->increment('stok',$detailPenjualan->jumlah);
+            }
+        }
 
+        DetailPenjualan::where('id_penjualan',$penjualan->id)->delete();
 
         $tableData = json_decode($request->input('tableData'), true);
         foreach ($tableData as $item) {
@@ -158,6 +175,13 @@ class PenjualanController extends Controller
                 'diskon' => $diskon,
                 'netto' => $netto
             ]);
+            $barang = Barang::where('id',$item['id'])->first();
+            if($item['uom'] == $barang->uombesar){
+                $barang->decrement('stok',$item['jumlah']*$barang->satuankecil);
+            }
+            else{
+                $barang->decrement('stok',$item['jumlah']);
+            }
         }
 
         DetailJasa::where('id_penjualan',$penjualan->id)->delete();
@@ -181,6 +205,20 @@ class PenjualanController extends Controller
     public function destroy(string $id)
     {
         //
+        $penjualan = DB::table('penjualans')->where('id',$id)->first();
+
+        $detailPenjualans = DetailPenjualan::where('id_penjualan',$penjualan->id)->get();
+
+        foreach($detailPenjualans as $detailPenjualan){
+            $barang = Barang::where('id',$detailPenjualan->id_barang)->first();
+            if($detailPenjualan->uom == $barang->uombesar){
+                $barang->increment('stok',$detailPenjualan->jumlah * $barang->satuankecil);
+            }
+            else{
+                $barang->increment('stok',$detailPenjualan->jumlah);
+            }
+        }
+
         Penjualan::where('id',$id)->delete();
         DB::table('detail_penjualans')->where('id_penjualan', $id)->delete();
         DB::table('detail_jasas')->where('id_penjualan', $id)->delete();

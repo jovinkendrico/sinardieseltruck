@@ -41,7 +41,7 @@
                       <td class="text-center">
                         @php
                             $iconClass = ($penjualan->status == 'N') ? 'fas fa-times text-danger' : 'fas fa-check text-success';
-                            echo "<i class='$iconClass'></i>";
+                            echo "<i class='$iconClass' ></i>";
                         @endphp
                       </td>
                       <td>{{$penjualan->jatuh_tempo}}</td>

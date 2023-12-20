@@ -76,6 +76,13 @@ class PembelianController extends Controller
                 'diskon' => $diskon,
                 'netto' => $netto
             ]);
+            $barang = Barang::where('id',$item['id'])->first();
+            if($item['uom'] == $barang->uombesar){
+                $barang->increment('stok',$item['jumlah']*$barang->satuankecil);
+            }
+            else{
+                $barang->increment('stok',$item['jumlah']);
+            }
         }
 
         return redirect('/pembelian');
@@ -129,6 +136,17 @@ class PembelianController extends Controller
         //get id pembelian yang di update
         $pembelian = DB::table('pembelians')->where('id',$id)->first();
 
+        $detailPembelians = DetailPembelian::where('id_pembelian',$pembelian->id)->get();
+
+        foreach($detailPembelians as $detailPembelian){
+            $barang = Barang::where('id',$detailPembelian->id_barang)->first();
+            if($detailPembelian->uom == $barang->uombesar){
+                $barang->decrement('stok',$detailPembelian->jumlah * $barang->satuankecil);
+            }
+            else{
+                $barang->decrement('stok',$detailPembelian->jumlah);
+            }
+        }
 
         //delete detailpembelian sebelumnya
         DetailPembelian::where('id_pembelian',$pembelian->id)->delete();
@@ -151,6 +169,13 @@ class PembelianController extends Controller
                 'diskon' => $diskon,
                 'netto' => $netto
             ]);
+            $barang = Barang::where('id',$item['id'])->first();
+            if($item['uom'] == $barang->uombesar){
+                $barang->increment('stok',$item['jumlah']*$barang->satuankecil);
+            }
+            else{
+                $barang->increment('stok',$item['jumlah']);
+            }
         }
 
         return redirect('/pembelian');
@@ -162,7 +187,22 @@ class PembelianController extends Controller
     public function destroy(string $id)
     {
         //
+        $pembelian = DB::table('pembelians')->where('id',$id)->first();
+
+        $detailPembelians = DetailPembelian::where('id_pembelian',$pembelian->id)->get();
+
+        foreach($detailPembelians as $detailPembelian){
+            $barang = Barang::where('id',$detailPembelian->id_barang)->first();
+            if($detailPembelian->uom == $barang->uombesar){
+                $barang->decrement('stok',$detailPembelian->jumlah * $barang->satuankecil);
+            }
+            else{
+                $barang->decrement('stok',$detailPembelian->jumlah);
+            }
+        }
+
         Pembelian::where('id',$id)->delete();
+
         DB::table('detail_pembelians')->where('id_pembelian', $id)->delete();
 
         return redirect('/pembelian');

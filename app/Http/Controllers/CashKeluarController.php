@@ -92,6 +92,32 @@ class CashKeluarController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $tanggal = \Carbon\Carbon::parse($request->tanggal);
+        $total = preg_replace('/[^0-9.]/', '', $request->totalJumlah);
+        CashKeluar::findOrFail($id)->update([
+            'tanggal' => $tanggal,
+            'id_bukti' => $request->id_invoice,
+            'deskripsi' => $request->keterangan,
+            'id_akunkeluar' => $request->akun_keluar,
+            'total' => $total
+        ]);
+
+        $cashkeluar = DB::table('cash_keluars')->where('id',$id)->first();
+
+        DetailCashKeluar::where('id_cashkeluar',$cashkeluar->id)->delete();
+
+        $tableData = json_decode($request->input('tableData'), true);
+        foreach($tableData as $item){
+            $jumlah = preg_replace('/[^0-9.]/', '', $item['jumlah']);
+            DetailCashKeluar::insert([
+                'id_cashkeluar' => $cashkeluar->id,
+                'id_akunmasuk' => $item['id'],
+                'deskripsi' => $item['deskripsi'],
+                'jumlah' => $jumlah
+            ]);
+        }
+
+        return redirect('/cashkeluar');
     }
 
     /**

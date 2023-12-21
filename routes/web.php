@@ -79,6 +79,7 @@ Route::controller(PenjualanController::class)->group(function () {
     Route::get('/penjualan/edit/{id}','edit')->name('penjualan.edit')->middleware('auth');
     Route::post('/penjualan/update/{id}','update')->name('penjualan.update')->middleware('auth');
     Route::get('/penjualan/delete/{id}', 'destroy')->name('penjualan.delete')->middleware('auth');
+    Route::get('/penjualan/cetak/{id}','cetakpdf')->name('penjualan.cetak')->middleware('auth');
 });
 
 Route::controller(PembelianController::class)->group(function () {
@@ -89,6 +90,7 @@ Route::controller(PembelianController::class)->group(function () {
     Route::get('/pembelian/edit/{id}','edit')->name('pembelian.edit')->middleware('auth');
     Route::post('/pembelian/update/{id}','update')->name('pembelian.update')->middleware('auth');
     Route::get('/pembelian/delete/{id}', 'destroy')->name('pembelian.delete')->middleware('auth');
+    route::get('/pembelian/cetak/{id}','cetakpdf')->name('pembelian.cetak')->middleware('auth');
 });
 
 Route::controller(PengecekanController::class)->group(function () {

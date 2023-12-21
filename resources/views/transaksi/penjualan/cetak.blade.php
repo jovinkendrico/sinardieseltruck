@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sinar Diesel Truck | Invoice Pembelian </title>
+  <title>Sinar Diesel Truck | Invoice Penjualan </title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -46,20 +46,21 @@
                   </div>
                 <div class="col-12">
                   <h4>
-                     {{$pembelian->id_invoice}}
+                     {{$penjualan->id_invoice}}
                   </h4>
                 </div>
 
                     <div class="col-12">
                         <h4>
-                            <small>Tanggal: {{$pembelian->tanggal}}</small>
-                            <small class="float-right">Jatuh Tempo: {{$pembelian->jatuh_tempo}}</small>
+                            <small>Tanggal: {{$penjualan->tanggal}}</small>
+                            <small class="float-right">Jatuh Tempo: {{$penjualan->jatuh_tempo}}</small>
 
                         </h4>
                     </div>
                 <div class="col-12">
                     <h4>
-                        <small>Supplier: {{$pembelian['supplier']['nama']}}</small>
+                        <small>Customer: {{$penjualan['customer']['nama']}}</small>
+                        <small>Plat: {{$penjualan['truk']['plat']}}</small>
                     </h4>
                   </div>
 
@@ -70,6 +71,11 @@
 
               <!-- Table row -->
               <div class="row">
+                <div class="col-md-12">
+                    <h5>
+                        List Barang:
+                    </h5>
+                </div>
                 <div class="col-12 table-responsive">
                   <table class="table table-striped">
                     <thead>
@@ -91,22 +97,22 @@
                             $totalnetto = 0;
                             $i = 1;
                         @endphp
-                        @foreach ($detailPembelians as $detailPembelian )
+                        @foreach ($detailPenjualans as $detailPenjualan )
                         <tr>
                             <td>{{$i}}</td>
-                            <td>{{$detailPembelian['barang']['nama']}}</td>
-                            <td>{{$detailPembelian->jumlah}}</td>
-                            <td>{{$detailPembelian->uom}}</td>
-                            <td>Rp. {{$detailPembelian->harga}}</td>
-                            <td>Rp. {{$detailPembelian->bruto}}</td>
-                            <td>Rp. {{$detailPembelian->diskon}}</td>
-                            <td>Rp. {{$detailPembelian->netto}}</td>
+                            <td>{{$detailPenjualan['barang']['nama']}}</td>
+                            <td>{{$detailPenjualan->jumlah}}</td>
+                            <td>{{$detailPenjualan->uom}}</td>
+                            <td>Rp. {{$detailPenjualan->harga}}</td>
+                            <td>Rp. {{$detailPenjualan->bruto}}</td>
+                            <td>Rp. {{$detailPenjualan->diskon}}</td>
+                            <td>Rp. {{$detailPenjualan->netto}}</td>
                         </tr>
                         @php
                             $i++;
-                            $totalbruto+=$detailPembelian->bruto;
-                            $totaldiskon+=$detailPembelian->diskon;
-                            $totalnetto+=$detailPembelian->netto;
+                            $totalbruto+=$detailPenjualan->bruto;
+                            $totaldiskon+=$detailPenjualan->diskon;
+                            $totalnetto+=$detailPenjualan->netto;
 
                         @endphp
                         @endforeach
@@ -115,6 +121,42 @@
                   </table>
                 </div>
                 <!-- /.col -->
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                    <h5>List Jasa:</h5>
+                </div>
+                <div class="col-12 table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                      <tr>
+                        <th style="width:5%">#</th>
+                        <th style="width:40%">Jasa</th>
+                        <th style="width:40%">Deskripsi</th>
+                        <th style="width:15%">Harga</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                          @php
+                              $i = 1;
+                          @endphp
+                          @foreach ($detailJasas as $detailJasa )
+                          <tr>
+                              <td>{{$i}}</td>
+                              <td>{{$detailJasa['jasa']['nama']}}</td>
+                              <td>{{$detailJasa->deskripsi}}</td>
+                              <td>Rp. {{$detailJasa->harga}}</td>
+                          </tr>
+                          @php
+                              $i++;
+                              $totalbruto+=$detailJasa->harga;
+                              $totalnetto+=$detailJasa->harga;
+                          @endphp
+                          @endforeach
+
+                      </tbody>
+                    </table>
+                  </div>
               </div>
               <!-- /.row -->
 
@@ -130,15 +172,15 @@
                   <div class="table-responsive">
                     <table class="table">
                         <tr>
-                        <th style="width:30%">Total Bruto:</th>
+                        <th style="width:40%">Total Bruto:</th>
                         <td>Rp. {{$totalbruto}}</td>
                       </tr>
                       <tr>
-                        <th style="width:30%">Total Diskon:</th>
+                        <th style="width:40%">Total Diskon:</th>
                         <td>Rp. {{$totaldiskon}}</td>
                       </tr>
                       <tr>
-                        <th style="width:30%">Total Netto:</th>
+                        <th style="width:40%">Total Netto:</th>
                         <td>Rp. {{$totalnetto}}</td>
                       </tr>
                     </table>
@@ -149,7 +191,16 @@
               <!-- /.row -->
 
               <!-- this row will not appear when printing -->
+              <div class="row no-print">
+                <div class="col-12">
+                    <form method="GET" target="_blank" action="">
+                            <input type="submit" class="btn btn-primary float-right" value="Generate PDF" style="margin-right: 5px;">
 
+                              </input>
+                    </form>
+
+                </div>
+              </div>
             </div>
             <!-- /.invoice -->
           </div><!-- /.col -->

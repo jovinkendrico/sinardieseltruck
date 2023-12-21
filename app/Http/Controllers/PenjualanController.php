@@ -225,4 +225,11 @@ class PenjualanController extends Controller
         return redirect('/penjualan');
 
     }
+
+    public function cetakpdf(string $id){
+        $penjualan = Penjualan::where('id',$id)->first();
+        $detailPenjualans = DetailPenjualan::where('id_penjualan',$penjualan->id)->get();
+        $detailJasas= DetailJasa::where('id_penjualan',$penjualan->id)->get();
+        return view('transaksi.penjualan.cetak')->with('penjualan',$penjualan)->with('detailPenjualans',$detailPenjualans)->with('detailJasas',$detailJasas);
+    }
 }

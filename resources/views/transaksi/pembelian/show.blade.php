@@ -124,7 +124,7 @@
           <!-- this row will not appear when printing -->
           <div class="row no-print">
             <div class="col-12">
-                <form method="GET" target="_blank" action="">
+                <form method="GET" target="_blank" action="{{route('pembelian.cetak',$pembelian->id)}}">
                         <input type="submit" class="btn btn-primary float-right" value="Generate PDF" style="margin-right: 5px;">
 
                           </input>

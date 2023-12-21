@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\DetailPembelian;
 use App\Models\Pembelian;
+use App\Models\SubAkuns;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,8 +27,9 @@ class PembelianController extends Controller
     public function index()
     {
         //
+        $subakuns = SubAkuns::where('id_akun',1)->get();
         $pembelians = Pembelian::all();
-        return view('transaksi.pembelian.index')->with('pembelians',$pembelians);
+        return view('transaksi.pembelian.index')->with('pembelians',$pembelians)->with('subakuns',$subakuns);
     }
 
     /**
@@ -207,5 +209,11 @@ class PembelianController extends Controller
 
         return redirect('/pembelian');
 
+    }
+
+    public function cetakpdf(string $id){
+        $pembelian = Pembelian::where('id',$id)->first();
+        $detailPembelians = DetailPembelian::where('id_pembelian',$pembelian->id)->get();
+        return view('transaksi.pembelian.cetak')->with('pembelian',$pembelian)->with('detailPembelians',$detailPembelians);
     }
 }

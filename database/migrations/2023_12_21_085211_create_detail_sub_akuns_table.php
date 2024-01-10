@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sub_akuns', function (Blueprint $table) {
+        Schema::create('detail_sub_akuns', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_akun');
-            $table->string('nomor_akun');
-            $table->string('nama');
+            $table->date('tanggal');
+            $table->integer('id_subakun');
+            $table->string('deskripsi');
             $table->bigInteger('debit');
             $table->bigInteger('kredit');
-            $table->bigInteger('saldo');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sub_akuns');
+        Schema::dropIfExists('detail_sub_akuns');
     }
 };

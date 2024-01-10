@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nomor_akun');
             $table->bigInteger('debit');
             $table->bigInteger('kredit');
+            $table->bigInteger('saldo');
             $table->timestamps();
         });
     }

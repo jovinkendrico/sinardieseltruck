@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\DetailHistorySubAkuns;
 use App\Models\DetailPembelian;
+use App\Models\DetailSubAkuns;
 use App\Models\Pembelian;
 use App\Models\SubAkuns;
 use App\Models\Supplier;
@@ -27,7 +29,7 @@ class PembelianController extends Controller
     public function index()
     {
         //
-        $subakuns = SubAkuns::where('id_akun',1)->get();
+        $subakuns = SubAkuns::where('id_akun','<=',2)->get();
         $pembelians = Pembelian::all();
         return view('transaksi.pembelian.index')->with('pembelians',$pembelians)->with('subakuns',$subakuns);
     }
@@ -215,5 +217,50 @@ class PembelianController extends Controller
         $pembelian = Pembelian::where('id',$id)->first();
         $detailPembelians = DetailPembelian::where('id_pembelian',$pembelian->id)->get();
         return view('transaksi.pembelian.cetak')->with('pembelian',$pembelian)->with('detailPembelians',$detailPembelians);
+    }
+
+
+    public function bayar(Request $request){
+        $selectedIds = $request->input('selectedIds');
+        $selectedIdsArray = explode(',', $selectedIds);
+
+
+        //create array for store array invoice
+
+        //Perubahan status transaksi
+        foreach($selectedIdsArray as $item){
+            Pembelian::where('id',$item)->update(['status' => 'Y']);
+        }
+
+
+        //Kurangi Saldo
+        $totalprice =    (int) (preg_replace('/[^\d]+/', '', $request->totalPrice))/100;
+        SubAkuns::where('id',$request->subakuns)->decrement('saldo',$totalprice);
+
+        //tambahin detail sub akun
+        DetailSubAkuns::insert([
+            'tanggal' => now(),
+            'id_subakun' => $request->subakuns,
+            'deskripsi' => "Pembelian Barang",
+            'debit' => 0,
+            'kredit' => $totalprice,
+        ]);
+
+
+        $detailsubakun = DB::table('detail_sub_akuns')->latest('id')->first();
+
+
+        //tambahin rincian detail sub akun
+        foreach($selectedIdsArray as $item){
+            $pembelian = Pembelian::where('id',$item)->first();
+            DetailHistorySubAkuns::insert([
+                'id_detailsubakun' => $detailsubakun->id,
+                'id_invoice' => $pembelian->id_invoice
+            ]);
+        }
+
+
+
+        return redirect('/pembelian');
     }
 }

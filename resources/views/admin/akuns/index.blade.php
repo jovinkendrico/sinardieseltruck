@@ -2,6 +2,7 @@
 
 @section('title','Akun')
 @section('content')
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -33,7 +34,8 @@
                       <td>{{$akun->nama}}</td>
                       <td>Rp. {{$akun->debit}}</td>
                       <td>Rp. {{$akun->kredit}}</td>
-                      <td class="project-actions text-right">
+                      <td class="project-actions text-right ">
+
                           <a class="btn btn-primary btn-sm" href="{{route('subakuns.index',$akun->id)}}">
                               <i class="fas fa-folder">
                               </i>

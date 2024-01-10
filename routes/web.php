@@ -29,9 +29,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->middleware('auth');
+Route::get('/', [App\Http\Controllers\DashboardController::class,'index'])->middleware('auth');
 
 Auth::routes();
 
@@ -66,6 +64,7 @@ route::controller(SubAkunsController::class)->group(function(){
     Route::get('/admin/subakuns/show/{id}','show')->name('subakuns.show')->middleware('auth');
     Route::post('/admin/subakuns/update/{id}','update')->name('subakuns.update')->middleware('auth');
     Route::get('/admin/subakuns/delete/{id}', 'destroy')->name('subakuns.delete')->middleware('auth');
+    Route::get('/fetch-detail-subakun-data/{id}','fetchDetailSubakunData')->name('fetch.detail.subakun');
 });
 
 
@@ -80,6 +79,7 @@ Route::controller(PenjualanController::class)->group(function () {
     Route::post('/penjualan/update/{id}','update')->name('penjualan.update')->middleware('auth');
     Route::get('/penjualan/delete/{id}', 'destroy')->name('penjualan.delete')->middleware('auth');
     Route::get('/penjualan/cetak/{id}','cetakpdf')->name('penjualan.cetak')->middleware('auth');
+    route::post('/penjualan/bayar','bayar')->name('penjualan.bayar')->middleware('auth');
 });
 
 Route::controller(PembelianController::class)->group(function () {
@@ -91,6 +91,8 @@ Route::controller(PembelianController::class)->group(function () {
     Route::post('/pembelian/update/{id}','update')->name('pembelian.update')->middleware('auth');
     Route::get('/pembelian/delete/{id}', 'destroy')->name('pembelian.delete')->middleware('auth');
     route::get('/pembelian/cetak/{id}','cetakpdf')->name('pembelian.cetak')->middleware('auth');
+    route::post('/pembelian/bayar','bayar')->name('pembelian.bayar')->middleware('auth');
+
 });
 
 Route::controller(PengecekanController::class)->group(function () {

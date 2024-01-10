@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Akun;
+use App\Models\Barang;
+use App\Models\Customer;
+use App\Models\Pembelian;
+use App\Models\Penjualan;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class AkunsController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,8 +17,12 @@ class AkunsController extends Controller
     public function index()
     {
         //
-        $akuns = Akun::all();
-        return view('admin.akuns.index')->with('akuns',$akuns);
+        $jumlahBarang = Barang::count();
+        $jumlahPembelian = Pembelian::count();
+        $jumlahPenjualan = Penjualan::count();
+        $jumlahCustomer = Customer::count();
+        $totalSale = Penjualan::sum('netto');
+        return view('welcome',compact('jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale'));
     }
 
     /**
@@ -23,7 +31,6 @@ class AkunsController extends Controller
     public function create()
     {
         //
-
     }
 
     /**
@@ -32,14 +39,6 @@ class AkunsController extends Controller
     public function store(Request $request)
     {
         //
-        Akun::insert([
-            'nama' => $request->nama,
-            'nomor_akun' => $request->nomor_akun,
-            'debit' => 0,
-            'kredit' => 0,
-            'saldo' =>0
-        ]);
-        return redirect('/admin/akuns');
     }
 
     /**
@@ -53,20 +52,17 @@ class AkunsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(string $id)
     {
+        //
     }
+
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
         //
-        Akun::findOrFail($id)->update([
-            'nama' => $request->edit_nama,
-            'nomor_akun' => $request->edit_nomor_akun
-        ]);
-        return redirect('/admin/akuns');
     }
 
     /**
@@ -75,7 +71,5 @@ class AkunsController extends Controller
     public function destroy(string $id)
     {
         //
-        Akun::findOrFail($id)->delete();
-        return redirect('/admin/akuns');
     }
 }

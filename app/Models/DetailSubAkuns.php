@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SubAkuns extends Model
+class DetailSubAkuns extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama','id_akun', 'nomor_akun', 'debit', 'kredit','saldo'];
-
+    public function subakun(){
+        return $this->belongsTo(SubAkuns::class,'id_subakun','id');
+    }
 }

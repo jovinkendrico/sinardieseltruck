@@ -24,6 +24,7 @@
                   <th>Tipe Akun</th>
                   <th>Debit</th>
                   <th>Kredit</th>
+                  <th>Saldo</th>
                   <th style="width: 20%">Action</th>
                 </tr>
                 </thead>
@@ -32,8 +33,9 @@
                   <tr>
                       <td>{{$subakun->nomor_akun}}</td>
                       <td>{{$subakun->nama}}</td>
-                      <td>Rp. {{$subakun->debit}}</td>
-                      <td>Rp. {{$subakun->kredit}}</td>
+                      <td>Rp. {{ number_format($subakun->debit, 0, ',', '.') }}</td>
+                      <td>Rp. {{ number_format($subakun->kredit, 0, ',', '.') }}</td>
+                      <td>Rp. {{ number_format($subakun->saldo, 0, ',', '.') }}</td>
                       <td class="project-actions text-right">
                           <a class="btn btn-primary btn-sm" href="{{route('subakuns.show',$subakun->id)}}">
                               <i class="fas fa-folder">
@@ -82,11 +84,15 @@
                             <div class="form-group">
                                 <label for="nomor_akun">Nomor Akun</label>
                                 <input type="hidden" class="form-control" id="id_akun" name="id_akun" value="{{$akun->id}}">
-                                <input type="text" class="form-control" id="nomor_akun" name="nomor_akun" placeholder="Masukkan Nomor Akun" value="{{ $latestSubAkun ? '0' . $latestSubAkun->nomor_akun + 1 : $akun->nomor_akun . '1' }}" readonly>
+                                <input type="text" class="form-control" id="nomor_akun" name="nomor_akun" placeholder="Masukkan Nomor Akun" value="{{ $latestSubAkun ?  $latestSubAkun->nomor_akun + 1 : $akun->nomor_akun . '1' }}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="nomor_akun">Nama Akun</label>
                                 <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama Akun">
+                            </div>
+                            <div class="form-group">
+                                <label for="saldo">Saldo</label>
+                                <input type="number" class="form-control" id="saldo" name="saldo" placeholder="Masukkan Saldo">
                             </div>
                         </div>
                     </div>

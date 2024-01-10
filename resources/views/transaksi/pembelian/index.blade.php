@@ -102,50 +102,51 @@
         <!-- /.col -->
     </div>
       <!-- /.row -->
-</div>
-
-<!-- Add this inside the <div class="container-fluid"> ... </div> -->
-<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <!-- Your Modal Content Here -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="paymentModalLabel">Confirm Payment</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="" id="paymentPembelian" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="selectedIds" id="selectedIds">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="totalPrice">Total Price:</label>
-                                <input type="text" class="form-control" id="totalPrice" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="subakun">Dari Akun:</label>
-                                <select class="form-control select2bs4" id="subakuns" name="subakuns" style="width: 100%;">
-                                    <option disabled selected value> -- select an akun -- </option>
-                                    @foreach ($subakuns as $subakun)
-                                        <option value="{{ $subakun->id }}"> {{$subakun->nomor_akun}}- {{ $subakun->nama }}</option>
-                                    @endforeach
-                                </select>
+      <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- Your Modal Content Here -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentModalLabel">Confirm Payment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{route('pembelian.bayar')}}" id="paymentPembelian" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="selectedIds" id="selectedIds">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="totalPrice">Total Price:</label>
+                                    <input type="text" class="form-control" id="totalPrice" name="totalPrice" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="subakun">Dari Akun:</label>
+                                    <select class="form-control select2bs4" id="subakuns" name="subakuns" style="width: 100%;">
+                                        <option disabled selected value> -- select an akun -- </option>
+                                        @foreach ($subakuns as $subakun)
+                                            <option value="{{ $subakun->id }}"> {{$subakun->nomor_akun}}- {{ $subakun->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="submit" class="btn btn-primary" value="Confirm Payment">
-                    </div>
-                </form>
-            </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Confirm Payment">
+                        </div>
+                    </form>
+                </div>
 
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Add this inside the <div class="container-fluid"> ... </div> -->
+
 
 
 <script>
@@ -177,11 +178,6 @@
         $('#paymentModal').modal('show');
     });
 
-    var paymentForm = document.getElementById('paymentPembelian');
-    paymentForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        handlePaymentConfirmation();
-    });
     var filterNButton = document.getElementById('filterN');
         var filterYButton = document.getElementById('filterY');
 
@@ -220,19 +216,6 @@
             }
         });
         return totalNetto;
-    }
-
-    function handlePaymentConfirmation() {
-        // Extract selected IDs from the hidden input
-        var selectedIds = selectedIdsInput.value.split(',').map(function (id) {
-            return parseInt(id, 10);
-        });
-        // Add your logic to handle the payment confirmation
-        // You can use AJAX to send the selected IDs and handle the payment on the server
-        console.log('Payment confirmed for IDs:', selectedIds);
-
-        // Close the modal after handling payment confirmation
-        $('#paymentModal').modal('hide');
     }
 
     function getSelectedIds() {

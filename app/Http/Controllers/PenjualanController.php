@@ -6,8 +6,10 @@ use App\Models\Barang;
 use App\Models\Customer;
 use App\Models\DetailJasa;
 use App\Models\DetailPenjualan;
+use App\Models\DetailSubAkuns;
 use App\Models\Jasa;
 use App\Models\Penjualan;
+use App\Models\SubAkuns;
 use App\Models\Truk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +23,8 @@ class PenjualanController extends Controller
     {
         //
         $penjualans = Penjualan::all();
-        return view('transaksi.penjualan.index')->with('penjualans',$penjualans);
+        $subakuns = SubAkuns::where('id_akun',1)->get();
+        return view('transaksi.penjualan.index')->with('penjualans',$penjualans)->with('subakuns',$subakuns);
     }
 
     /**
@@ -231,5 +234,34 @@ class PenjualanController extends Controller
         $detailPenjualans = DetailPenjualan::where('id_penjualan',$penjualan->id)->get();
         $detailJasas= DetailJasa::where('id_penjualan',$penjualan->id)->get();
         return view('transaksi.penjualan.cetak')->with('penjualan',$penjualan)->with('detailPenjualans',$detailPenjualans)->with('detailJasas',$detailJasas);
+    }
+
+    public function bayar(Request $request){
+
+        $selectedIds = $request->input('selectedIds');
+        $selectedIdsArray = explode(',', $selectedIds);
+
+
+        //perubahan status transaksi
+        foreach($selectedIdsArray as $item){
+            Penjualan::where('id',$item)->update(['status' => 'Y']);
+        }
+
+        //tambahi saldo
+        $totalprice =    (int) (preg_replace('/[^\d]+/', '', $request->totalPrice))/100;
+        SubAkuns::where('id',$request->subakuns)->increment('saldo',$totalprice);
+
+        //
+
+        DetailSubAkuns::insert([
+            'tanggal' => now(),
+            'id_subakun' => $request->subakuns,
+            'deskripsi' => "Penjualan Barang",
+            'debit' => $totalprice,
+            'kredit' => 0,
+        ]);
+
+
+        return redirect('/penjualan');
     }
 }

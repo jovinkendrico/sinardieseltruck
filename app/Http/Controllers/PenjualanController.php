@@ -23,7 +23,7 @@ class PenjualanController extends Controller
     {
         //
         $penjualans = Penjualan::all();
-        $subakuns = SubAkuns::where('id_akun',1)->get();
+        $subakuns = SubAkuns::where('id_akun','<=',2)->get();
         return view('transaksi.penjualan.index')->with('penjualans',$penjualans)->with('subakuns',$subakuns);
     }
 
@@ -241,10 +241,16 @@ class PenjualanController extends Controller
         $selectedIds = $request->input('selectedIds');
         $selectedIdsArray = explode(',', $selectedIds);
 
+        $subsementara = SubAkuns::where('id',$request->subakuns)->first();
 
         //perubahan status transaksi
         foreach($selectedIdsArray as $item){
             Penjualan::where('id',$item)->update(['status' => 'Y']);
+            if($subsementara->id_akun == 1){
+                Penjualan::where('id',$item)->update(['metode' => 'Non Cash']);
+            }else{
+                Penjualan::where('id',$item)->update(['metode' => 'Cash']);
+            }
         }
 
         //tambahi saldo

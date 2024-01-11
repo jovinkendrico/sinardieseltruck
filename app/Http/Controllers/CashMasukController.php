@@ -81,6 +81,7 @@ class CashMasukController extends Controller
                 'kredit' => $jumlah,
                 'debit' => 0
             ]);
+            SubAkuns::where('id',$item['id'])->decrement('saldo',$jumlah);
         }
         return redirect('/cashmasuk');
     }

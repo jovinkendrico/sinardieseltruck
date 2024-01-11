@@ -26,6 +26,7 @@
                   <th>Plat</th>
                   <th>Netto</th>
                   <th>Status</th>
+                  <th>Metode</th>
                   <th>Jatuh Tempo</th>
                   <th style="width: 20%">Action</th>
                   <th style="width: 5%">Select</th>
@@ -45,6 +46,7 @@
                             echo "<i class='$iconClass' ></i>";
                         @endphp
                       </td>
+                      <td>{{$penjualan->metode}}</td>
                       <td>{{$penjualan->jatuh_tempo}}</td>
 
                       <td class="project-actions text-right">

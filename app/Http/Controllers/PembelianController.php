@@ -224,12 +224,18 @@ class PembelianController extends Controller
         $selectedIds = $request->input('selectedIds');
         $selectedIdsArray = explode(',', $selectedIds);
 
+        $subsementara = SubAkuns::where('id',$request->subakuns)->first();
 
         //create array for store array invoice
 
         //Perubahan status transaksi
         foreach($selectedIdsArray as $item){
             Pembelian::where('id',$item)->update(['status' => 'Y']);
+            if($subsementara->id_akun == 1){
+                Pembelian::where('id',$item)->update(['metode' => 'Non Cash']);
+            }else{
+                Pembelian::where('id',$item)->update(['metode' => 'Cash']);
+            }
         }
 
 

@@ -24,6 +24,7 @@
                   <th>Supplier</th>
                   <th>Netto</th>
                   <th>Status</th>
+                  <th>Metode</th>
                   <th>Jatuh Tempo</th>
                   <th style="width: 20%">Action</th>
                   <th style="width: 5%">Select</th>
@@ -42,6 +43,7 @@
                             echo "<i class='$iconClass'></i>";
                         @endphp
                       </td>
+                      <td>{{$pembelian->metode}}</td>
                       <td>{{\Carbon\Carbon::parse($pembelian->jatuh_tempo)->format('Y-m-d')}}</td>
 
 

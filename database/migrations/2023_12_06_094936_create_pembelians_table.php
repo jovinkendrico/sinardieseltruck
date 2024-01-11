@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('netto');
             $table->date('jatuh_tempo');
             $table->string('status');
+            $table->string('metode')->nullable();
             $table->timestamps();
         });
     }

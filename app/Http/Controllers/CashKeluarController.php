@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CashKeluar;
 use App\Models\DetailCashKeluar;
+use App\Models\DetailSubAkuns;
 use App\Models\SubAkuns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,17 @@ class CashKeluarController extends Controller
         $cashkeluar = DB::table('cash_keluars')->latest('id')->first();
         $tableData = json_decode($request->input('tableData'), true);
 
+        //atur trasaksi akun cash keluar
+        DetailSubAkuns::insert([
+            'tanggal' => $tanggal,
+            'id_subakun' => $cashkeluar->id_akunkeluar,
+            'deskripsi' => $cashkeluar->id_bukti,
+            'kredit' => $total,
+            'debit' => 0
+        ]);
+        SubAkuns::where('id',$cashkeluar->id_akunkeluar)->decrement('saldo',$total);
+
+
         foreach($tableData as $item){
             $jumlah = preg_replace('/[^0-9.]/', '', $item['jumlah']);
             DetailCashKeluar::insert([
@@ -57,6 +69,16 @@ class CashKeluarController extends Controller
                 'deskripsi' => $item['deskripsi'],
                 'jumlah' => $jumlah
             ]);
+
+            //atur transaksi akun cash keluar untuk akun masuk
+            DetailSubAkuns::insert([
+                'tanggal' => $tanggal,
+                'id_subakun'=> $item['id'],
+                'deskripsi' => $item['deskripsi'],
+                'kredit' => 0,
+                'debit' => $jumlah
+            ]);
+            SubAkuns::where('id',$item['id'])->increment('saldo',$jumlah);
         }
 
         return redirect('/cashkeluar');

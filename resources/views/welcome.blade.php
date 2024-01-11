@@ -11,7 +11,7 @@
             <div class="inner">
               <h3>{{$jumlahBarang}}</h3>
 
-              <p>Total Barang</p>
+              <p>Barang</p>
             </div>
             <div class="icon">
               <i class="ion ion-bag"></i>
@@ -26,7 +26,7 @@
             <div class="inner">
               <h3>{{$jumlahPenjualan}}</h3>
 
-              <p>Total Penjualan</p>
+              <p>Penjualan</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
@@ -56,7 +56,7 @@
             <div class="inner">
               <h3>{{$jumlahPenjualan}}</h3>
 
-              <p>Total Pembelian</p>
+              <p>Pembelian</p>
             </div>
             <div class="icon">
               <i class="ion ion-pie-graph"></i>

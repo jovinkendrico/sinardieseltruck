@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('tanggal');
             $table->integer('id_subakun');
+            $table->string('id_bukti')->nullable();
             $table->string('deskripsi');
             $table->bigInteger('debit');
             $table->bigInteger('kredit');

@@ -56,6 +56,7 @@ class CashMasukController extends Controller
         DetailSubAkuns::insert([
             'tanggal' => $tanggal,
             'id_subakun' => $cashmasuk->id_akunmasuk,
+            'id_bukti' => $cashmasuk->id_bukti,
             'deskripsi' => $cashmasuk->id_bukti,
             'kredit' => 0,
             'debit' => $total
@@ -69,6 +70,7 @@ class CashMasukController extends Controller
             $jumlah = preg_replace('/[^0-9.]/', '', $item['jumlah']);
             DetailCashMasuk::insert([
                 'id_cashmasuk' => $cashmasuk->id,
+                'id_bukti' => $cashmasuk->id_bukti,
                 'id_akunkeluar' => $item['id'],
                 'deskripsi' => $item['deskripsi'],
                 'jumlah' => $jumlah
@@ -116,6 +118,14 @@ class CashMasukController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        //balikin saldo awal
+        $cashmasukawal = CashMasuk::where('id',$id)->first();
+        SubAkuns::where('id',$cashmasukawal->id_akunmasuk)->decrement('saldo',$cashmasukawal->total);
+
+        //delete detail subakuns
+        DetaiLSubAkuns::where('id_bukti',$cashmasukawal->id_bukti)->delete();
+
+
         //
         $tanggal = \Carbon\Carbon::parse($request->tanggal);
         $total = preg_replace('/[^0-9.]/', '', $request->totalJumlah);
@@ -130,6 +140,16 @@ class CashMasukController extends Controller
 
         DetailCashMasuk::where('id_cashmasuk',$cashmasuk->id)->delete();
 
+        DetailSubAkuns::insert([
+            'tanggal' => $tanggal,
+            'id_subakun' => $cashmasuk->id_akunmasuk,
+            'id_bukti' => $cashmasuk->id_bukti,
+            'deskripsi' => $cashmasuk->id_bukti,
+            'kredit' => 0,
+            'debit' => $total
+        ]);
+        SubAkuns::where('id',$cashmasuk->id_akunmasuk)->increment('saldo',$total);
+
         $tableData = json_decode($request->input('tableData'), true);
         foreach($tableData as $item){
             $jumlah = preg_replace('/[^0-9.]/', '', $item['jumlah']);
@@ -139,6 +159,15 @@ class CashMasukController extends Controller
                 'deskripsi' => $item['deskripsi'],
                 'jumlah' => $jumlah
             ]);
+            //atur transaksi akun cash keluar
+            DetailSubAkuns::insert([
+                'tanggal' => $tanggal,
+                'id_subakun'=> $item['id'],
+                'deskripsi' => $item['deskripsi'],
+                'kredit' => $jumlah,
+                'debit' => 0
+            ]);
+            SubAkuns::where('id',$item['id'])->decrement('saldo',$jumlah);
         }
 
         return redirect('/cashmasuk');

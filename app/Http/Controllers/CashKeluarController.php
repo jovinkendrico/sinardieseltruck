@@ -116,6 +116,11 @@ class CashKeluarController extends Controller
         $cashkeluarawal = CashKeluar::where('id',$id)->first();
         SubAkuns::where('id',$cashkeluarawal->id_akunkeluar)->increment('saldo',$cashkeluarawal->total);
 
+        DetailSubAkuns::where('deskripsi',$cashkeluarawal->id_bukti)->delete();
+        $delDetSubAkuns = DetailSubAkuns::where('id_bukti',$cashkeluarawal->id_bukti)->get();
+        foreach($delDetSubAkuns as $delDetSubAkun){
+            SubAkuns::where('id',$delDetSubAkun->id_subakun)->decrement('saldo',$delDetSubAkun->kredit);
+        }
         DetailSubAKuns::where('id_bukti',$cashkeluarawal->id_bukti)->delete();
         //
         $tanggal = \Carbon\Carbon::parse($request->tanggal);

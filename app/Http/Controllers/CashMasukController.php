@@ -122,8 +122,13 @@ class CashMasukController extends Controller
         $cashmasukawal = CashMasuk::where('id',$id)->first();
         SubAkuns::where('id',$cashmasukawal->id_akunmasuk)->decrement('saldo',$cashmasukawal->total);
 
+        DetailSubAkuns::where('deskripsi',$cashmasukawal->id_bukti)->delete();
         //delete detail subakuns
-        DetaiLSubAkuns::where('id_bukti',$cashmasukawal->id_bukti)->delete();
+        $delDetSubAkuns = DetailSubAkuns::where('id_bukti',$cashmasukawal->id_bukti)->get();
+        foreach($delDetSubAkuns as $delDetSubAkun){
+            SubAkuns::where('id',$delDetSubAkun->id_subakun)->decrement('saldo',$delDetSubAkun->kredit);
+        }
+        DetailSubAkuns::where('id_bukti',$cashmasukawal->id_bukti)->delete();
 
 
         //

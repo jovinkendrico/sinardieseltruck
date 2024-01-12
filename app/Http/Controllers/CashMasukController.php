@@ -78,6 +78,7 @@ class CashMasukController extends Controller
             //atur transaksi akun cash keluar
             DetailSubAkuns::insert([
                 'tanggal' => $tanggal,
+                'id_bukti' => $cashmasuk->id_bukti,
                 'id_subakun'=> $item['id'],
                 'deskripsi' => $item['deskripsi'],
                 'kredit' => $jumlah,
@@ -168,6 +169,7 @@ class CashMasukController extends Controller
             DetailSubAkuns::insert([
                 'tanggal' => $tanggal,
                 'id_subakun'=> $item['id'],
+                'id_bukti' => $cashmasuk->id_bukti,
                 'deskripsi' => $item['deskripsi'],
                 'kredit' => $jumlah,
                 'debit' => 0

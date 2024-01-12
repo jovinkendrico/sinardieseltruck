@@ -54,6 +54,7 @@ class CashKeluarController extends Controller
         DetailSubAkuns::insert([
             'tanggal' => $tanggal,
             'id_subakun' => $cashkeluar->id_akunkeluar,
+            'id_bukti' => $cashkeluar->id_bukti,
             'deskripsi' => $cashkeluar->id_bukti,
             'kredit' => $total,
             'debit' => 0
@@ -74,6 +75,7 @@ class CashKeluarController extends Controller
             DetailSubAkuns::insert([
                 'tanggal' => $tanggal,
                 'id_subakun'=> $item['id'],
+                'id_bukti' => $cashkeluar->id_bukti,
                 'deskripsi' => $item['deskripsi'],
                 'kredit' => 0,
                 'debit' => $jumlah
@@ -140,6 +142,7 @@ class CashKeluarController extends Controller
         DetailSubAkuns::insert([
             'tanggal' => $tanggal,
             'id_subakun' => $cashkeluar->id_akunkeluar,
+            'id_bukti' => $cashkeluar->id_bukti,
             'deskripsi' => $cashkeluar->id_bukti,
             'kredit' => $total,
             'debit' => 0
@@ -159,6 +162,7 @@ class CashKeluarController extends Controller
             DetailSubAkuns::insert([
                 'tanggal' => $tanggal,
                 'id_subakun'=> $item['id'],
+                'id_bukti' => $cashkeluar->id_bukti,
                 'deskripsi' => $item['deskripsi'],
                 'kredit' => 0,
                 'debit' => $jumlah

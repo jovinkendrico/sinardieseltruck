@@ -113,6 +113,10 @@ class CashKeluarController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $cashkeluarawal = CashKeluar::where('id',$id)->first();
+        SubAkuns::where('id',$cashkeluarawal->id_akunkeluar)->increment('saldo',$cashkeluarawal->total);
+
+        DetailSubAKuns::where('id_bukti',$cashkeluarawal->id_bukti)->delete();
         //
         $tanggal = \Carbon\Carbon::parse($request->tanggal);
         $total = preg_replace('/[^0-9.]/', '', $request->totalJumlah);
@@ -128,6 +132,16 @@ class CashKeluarController extends Controller
 
         DetailCashKeluar::where('id_cashkeluar',$cashkeluar->id)->delete();
 
+        DetailSubAkuns::insert([
+            'tanggal' => $tanggal,
+            'id_subakun' => $cashkeluar->id_akunkeluar,
+            'deskripsi' => $cashkeluar->id_bukti,
+            'kredit' => $total,
+            'debit' => 0
+        ]);
+        SubAkuns::where('id',$cashkeluar->id_akunkeluar)->decrement('saldo',$total);
+
+
         $tableData = json_decode($request->input('tableData'), true);
         foreach($tableData as $item){
             $jumlah = preg_replace('/[^0-9.]/', '', $item['jumlah']);
@@ -137,6 +151,14 @@ class CashKeluarController extends Controller
                 'deskripsi' => $item['deskripsi'],
                 'jumlah' => $jumlah
             ]);
+            DetailSubAkuns::insert([
+                'tanggal' => $tanggal,
+                'id_subakun'=> $item['id'],
+                'deskripsi' => $item['deskripsi'],
+                'kredit' => 0,
+                'debit' => $jumlah
+            ]);
+            SubAkuns::where('id',$item['id'])->increment('saldo',$jumlah);
         }
 
         return redirect('/cashkeluar');

@@ -121,7 +121,7 @@ class CashKeluarController extends Controller
         DetailSubAkuns::where('deskripsi',$cashkeluarawal->id_bukti)->delete();
         $delDetSubAkuns = DetailSubAkuns::where('id_bukti',$cashkeluarawal->id_bukti)->get();
         foreach($delDetSubAkuns as $delDetSubAkun){
-            SubAkuns::where('id',$delDetSubAkun->id_subakun)->decrement('saldo',$delDetSubAkun->kredit);
+            SubAkuns::where('id',$delDetSubAkun->id_subakun)->decrement('saldo',$delDetSubAkun->debit);
         }
         DetailSubAKuns::where('id_bukti',$cashkeluarawal->id_bukti)->delete();
         //

@@ -37,7 +37,9 @@ class PenjualanController extends Controller
         $customers = Customer::all();
         $truks = Truk::all();
         $jasas = Jasa::all();
-        return view('transaksi.penjualan.create')->with('customers',$customers)->with('barangs',$barangs)->with('truks',$truks)->with('jasas',$jasas);
+        $subakuns = SubAkuns::where('id_akun','<=',2)->get();
+
+        return view('transaksi.penjualan.create')->with('customers',$customers)->with('barangs',$barangs)->with('truks',$truks)->with('jasas',$jasas)->with('subakuns',$subakuns);
     }
 
     /**

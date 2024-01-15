@@ -123,23 +123,26 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-8">
-                                    <h2>History Pembelian Terdahulu</h2>
-                                    <table class="table" id="historyPembelian" id="example2" class="table table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Nama Barang</th>
-                                                <th>No Faktur</th>
-                                                <th>Supplier</th>
-                                                <th>QTY</th>
-                                                <th>UOM</th>
-                                                <th>Harga/UOM</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                        </tbody>
-                                    </table>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="pembayaran">Pembayaran: </label>
+                                        <select class="form-control select2bs4" id="pembayaran" name="pembayaran" style="width: 100%;">
+                                            <option disabled selected value> -- select an pembayaran -- </option>
+                                            <option value="1">Kontan</option>
+                                            <option value="2">Non Kontan</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group" id="terimaKeContainer" style="display: none;">
+                                        <label for="akunkeluar">Dari Akun: </label>
+                                        <select class="form-control select2bs4" name="akunkeluar" id="akunkeluar" style="width: 100%">
+                                            <option disabled selected value=""> -- select an akun -- </option>
+                                            @foreach ($subakuns as $subakun)
+                                            <option value="{{ $subakun->id }}"> {{$subakun->nomor_akun}}- {{ $subakun->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="table-responsive">
@@ -161,7 +164,25 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-8">
+                                    <h2>History Pembelian Terdahulu</h2>
+                                    <table class="table" id="historyPembelian" id="example2" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama Barang</th>
+                                                <th>No Faktur</th>
+                                                <th>Supplier</th>
+                                                <th>QTY</th>
+                                                <th>UOM</th>
+                                                <th>Harga/UOM</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-4">
                                     <div class="form-group float-right">
                                         <input class="btn btn-primary" type="submit" value="Create">
                                     </div>
@@ -175,6 +196,18 @@
     </div>
 
     <script>
+        function toggleTerimaKe() {
+            var pembayaranSelect = document.getElementById("pembayaran");
+            var terimaKeContainer = document.getElementById("terimaKeContainer");
+
+            if (pembayaranSelect.value === "1") {
+                // Show Terima ke field when Pembayaran is Kontan
+                terimaKeContainer.style.display = "block";
+            } else {
+                // Hide Terima ke field for other Pembayaran options
+                terimaKeContainer.style.display = "none";
+            }
+        }
         function prepareAndSubmitForm() {
         // Call the function to update tableData
         var data = getTableData();

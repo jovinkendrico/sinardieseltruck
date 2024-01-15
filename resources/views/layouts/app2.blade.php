@@ -189,6 +189,12 @@
     $('#reservationdate2').datetimepicker({
         format: 'L'
     });
+    $('#pembayaran').on('select2:select', function (e) {
+        toggleTerimaKe();
+    });
+
+    // Initial call to set the initial state
+    toggleTerimaKe();
     });
 
   </script>

@@ -40,9 +40,10 @@ class PembelianController extends Controller
     public function create()
     {
         //
+        $subakuns = SubAkuns::where('id_akun','<=',2)->get();
         $barangs = Barang::all();
         $suppliers = Supplier::all();
-        return view('transaksi.pembelian.create')->with('suppliers',$suppliers)->with('barangs',$barangs);
+        return view('transaksi.pembelian.create')->with('suppliers',$suppliers)->with('barangs',$barangs)->with('subakuns',$subakuns);
     }
 
     /**

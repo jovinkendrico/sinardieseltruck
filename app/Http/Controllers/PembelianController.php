@@ -171,6 +171,7 @@ class PembelianController extends Controller
         //
         $barangs = Barang::all();
         $suppliers = Supplier::all();
+        $subakuns = SubAkuns::where('id_akun','<=',2)->get();
         $pembelian = Pembelian::where('id',$id)->first();
         $tanggal = \Carbon\Carbon::parse($pembelian->tanggal)->format('m-d-Y');
         $jatuh_tempo = \Carbon\Carbon::parse($pembelian->jatuh_tempo)->format('m-d-Y');

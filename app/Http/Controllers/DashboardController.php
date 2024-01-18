@@ -24,7 +24,10 @@ class DashboardController extends Controller
         $totalSale = Penjualan::sum('netto');
         $penjualanjts = Penjualan::where('status', 'N')->where('jatuh_tempo', '>=', now())->orderBy('jatuh_tempo')->paginate(10);
         $penjualanjtls = Penjualan::where('status', 'N')->where('jatuh_tempo', '<=', now())->orderBy('jatuh_tempo')->paginate(10);
-        return view('welcome',compact('jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale','penjualanjts','penjualanjtls'));
+        $pembelianjts = Pembelian::where('status', 'N')->where('jatuh_tempo', '>=', now())->orderBy('jatuh_tempo')->paginate(10);
+        $pembelianjtls = Pembelian::where('status', 'N')->where('jatuh_tempo', '<=', now())->orderBy('jatuh_tempo')->paginate(10);
+
+        return view('welcome',compact('jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale','penjualanjts','penjualanjtls','pembelianjts','pembelianjtls'));
     }
 
     /**

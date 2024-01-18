@@ -71,6 +71,77 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
+                  <h3 class="card-title">Pembelian dengan Jatuh Tempo Terdekat</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Invoice ID</th>
+                        <th>Customer</th>
+                        <th>Netto</th>
+                        <th>Jatuh Tempo</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($pembelianjts as $pembelianjt)
+                        <tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$pembelianjt->id_invoice}}</td>
+                            <td>{{$pembelianjt['supplier']['nama']}}</td>
+                            <td>Rp {{number_format($pembelianjt->netto, 2, '.', ',')}}</td>
+                            <td>{{\Carbon\Carbon::parse($pembelianjt->jatuh_tempo)->format('d-m-Y')}}</td>
+                            <td><span class="badge bg-danger">Not Paid</span></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+                <!-- /.card-body -->
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Pembelian dengan Jatuh Tempo Terlewat</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Invoice ID</th>
+                        <th>Customer</th>
+                        <th>Netto</th>
+                        <th>Jatuh Tempo</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($pembelianjtls as $pembelianjtl)
+                        <tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$pembelianjtl->id_invoice}}</td>
+                            <td>{{$pembelianjtl['supplier']['nama']}}</td>
+                            <td>Rp {{number_format($pembelianjtl->netto, 2, '.', ',')}}</td>
+                            <td>{{\Carbon\Carbon::parse($pembelianjtl->jatuh_tempo)->format('d-m-Y')}}</td>
+                            <td><span class="badge bg-danger">Not Paid</span></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
                   <h3 class="card-title">Penjualan dengan Jatuh Tempo Terdekat</h3>
                 </div>
                 <!-- /.card-header -->

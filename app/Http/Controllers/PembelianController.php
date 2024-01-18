@@ -112,6 +112,17 @@ class PembelianController extends Controller
                 'debit' => 0,
                 'kredit' => $totalNetto
             ]);
+
+            $metode = '';
+            $subakuns = SubAkuns::where('id', $request->akunkeluar)->first();
+            if($subakuns->id_akun == 1){
+                $metode = 'Non Cash';
+            }
+            else{
+                $metode = 'Cash';
+            }
+
+            Pembelian::where('id_invoice', $request->id_invoice)->update(['status' => 'Y', 'metode' => $metode]);
         }
         else{
             SubAkuns::where('id', 15)->first()->increment('saldo', $totalNetto);
@@ -301,11 +312,30 @@ class PembelianController extends Controller
             'kredit' => $totalprice,
         ]);
 
-
         $detailsubakun = DB::table('detail_sub_akuns')->latest('id')->first();
 
 
         //tambahin rincian detail sub akun
+        foreach($selectedIdsArray as $item){
+            $pembelian = Pembelian::where('id',$item)->first();
+            DetailHistorySubAkuns::insert([
+                'id_detailsubakun' => $detailsubakun->id,
+                'id_invoice' => $pembelian->id_invoice
+            ]);
+        }
+
+        DetailSubAkuns::insert([
+            'tanggal' => now(),
+            //TODO GANTI
+            'id_subakun'=> 16,
+            'Deskripsi' => "Pelunasan Pembelian Barang",
+            'debit' => $totalprice,
+            'kredit' => 0
+        ]);
+
+        $detailsubakun = DB::table('detail_sub_akuns')->latest('id')->first();
+
+
         foreach($selectedIdsArray as $item){
             $pembelian = Pembelian::where('id',$item)->first();
             DetailHistorySubAkuns::insert([

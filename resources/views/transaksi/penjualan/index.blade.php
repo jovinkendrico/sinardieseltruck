@@ -18,24 +18,24 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Tanggal</th>
-                  <th>Invoice</th>
-                  <th>Customer</th>
-                  <th>Plat</th>
-                  <th>Netto</th>
-                  <th>Status</th>
-                  <th>Metode</th>
-                  <th>Jatuh Tempo</th>
-                  <th style="width: 11%">Action</th>
-                  <th style="width: 4%">Select</th>
+                  <th style="width: 5%">ID</th>
+                  <th style="widht: 10%">Tanggal</th>
+                  <th style="width: 10%">Invoice</th>
+                  <th style="width: 12%">Customer</th>
+                  <th style="width: 10%">Plat</th>
+                  <th style="width: 14%">Netto</th>
+                  <th style="width: 2%">Paid</th>
+                  <th style="width: 8%">Metode</th>
+                  <th style="width: 9%">Jatuh Tempo</th>
+                  <th style="width: 12%">Action</th>
+                  <th style="width: 3%"></th>
                 </tr>
                 </thead>
                 <tbody>
                   @foreach($penjualans as $penjualan)
                   <tr>
                       <td>{{$loop->iteration}}</td>
-                      <td>{{$penjualan->tanggal}}</td>
+                      <td>{{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y')}}</td>
                       <td>{{$penjualan->id_invoice}}</td>
                       <td>{{$penjualan['customer']['nama']}}</td>
                       <td>{{$penjualan['truk']['plat']}}</td>
@@ -47,7 +47,7 @@
                         @endphp
                       </td>
                       <td>{{$penjualan->metode}}</td>
-                      <td>{{$penjualan->jatuh_tempo}}</td>
+                      <td>{{\Carbon\Carbon::parse($penjualan->jatuh_tempo)->format('d-m-Y')}}</td>
 
                       <td class="project-actions text-right">
                         <a class="btn btn-primary btn-sm" href="{{ route('penjualan.show', $penjualan->id) }}">

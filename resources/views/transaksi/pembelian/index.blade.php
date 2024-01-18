@@ -21,12 +21,12 @@
                     <th style="width: 9%">Tanggal</th>
                   <th style="width: 10%">Invoice</th>
                   <th style="width: 15%">Supplier</th>
-                  <th style="width: 17%">Netto</th>
-                  <th style="width: 2%">Status</th>
+                  <th style="width: 18%">Netto</th>
+                  <th style="width: 2%">Paid</th>
                   <th style="width: 8%">Metode</th>
                   <th style="width: 9%">Jatuh Tempo</th>
                   <th style="width: 11%">Action</th>
-                  <th style="width: 4%">Select</th>
+                  <th style="width: 3%"></th>
                 </tr>
                 </thead>
                 <tbody>

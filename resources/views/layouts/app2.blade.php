@@ -27,7 +27,9 @@
   <link rel="stylesheet" href="/AdminLTE/plugins/summernote/summernote-bs4.min.css">
   <link rel="stylesheet" href="/AdminLTE/plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="/AdminLTE/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-
+  <link rel="stylesheet" href="/AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/AdminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="/AdminLTE/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
   <style>
     .invisible-cell {
@@ -167,9 +169,35 @@
     $(function () {
 
       $("#example1").DataTable({
+        "pageLength":25,
         "responsive": true, "lengthChange": false, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        "buttons": [
+            {
+                extend: 'csv',
+                text: '<i class="far fa-file-excel"></i> CSV',
+                className: 'btn btn-primary btn-sm',
+                titleAttr: 'Export as CSV'
+            },
+            {
+                extend: 'excel',
+                text: '<i class="far fa-file-excel"></i> Excel',
+                className: 'btn btn-success btn-sm',
+                titleAttr: 'Export as Excel'
+            },
+            {
+                extend: 'pdf',
+                text: '<i class="far fa-file-pdf"></i> PDF',
+                className: 'btn btn-danger btn-sm',
+                titleAttr: 'Export as PDF'
+            },
+            {
+                extend: 'colvis',
+                text: '<i class="far fa-eye"></i> Columns',
+                className: 'btn btn-secondary btn-sm',
+                titleAttr: 'Show/Hide Columns'
+            }
+        ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
       $('#example2').DataTable({
         "paging": true,
         "lengthChange": false,
@@ -192,9 +220,6 @@
     $('#pembayaran').on('select2:select', function (e) {
         toggleTerimaKe();
     });
-
-    // Initial call to set the initial state
-    toggleTerimaKe();
     });
 
   </script>

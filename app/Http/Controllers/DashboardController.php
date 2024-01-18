@@ -22,7 +22,9 @@ class DashboardController extends Controller
         $jumlahPenjualan = Penjualan::count();
         $jumlahCustomer = Customer::count();
         $totalSale = Penjualan::sum('netto');
-        return view('welcome',compact('jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale'));
+        $penjualanjts = Penjualan::where('status', 'N')->where('jatuh_tempo', '>=', now())->orderBy('jatuh_tempo')->paginate(10);
+        $penjualanjtls = Penjualan::where('status', 'N')->where('jatuh_tempo', '<=', now())->orderBy('jatuh_tempo')->paginate(10);
+        return view('welcome',compact('jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale','penjualanjts','penjualanjtls'));
     }
 
     /**

@@ -8,33 +8,33 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">Data Pembelian</h3>
+              <a href="{{ route('pembelian.create') }}" class="btn btn-success btn-sm float-right" title="Add New Pembelian">
+                <i class="fa fa-plus" aria-hidden="true"></i> Add New
+            </a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <a href="{{ route('pembelian.create') }}" class="btn btn-success btn-sm" title="Add New Pembelian">
-                  <i class="fa fa-plus" aria-hidden="true"></i> Add New
-              </a>
-              <br/>
-              <br/>
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Invoice</th>
-                  <th>Tanggal</th>
-                  <th>Supplier</th>
-                  <th>Netto</th>
-                  <th>Status</th>
-                  <th>Metode</th>
-                  <th>Jatuh Tempo</th>
-                  <th style="width: 20%">Action</th>
-                  <th style="width: 5%">Select</th>
+                    <th style="width: 5%">ID</th>
+                    <th style="width: 9%">Tanggal</th>
+                  <th style="width: 10%">Invoice</th>
+                  <th style="width: 15%">Supplier</th>
+                  <th style="width: 17%">Netto</th>
+                  <th style="width: 2%">Status</th>
+                  <th style="width: 8%">Metode</th>
+                  <th style="width: 9%">Jatuh Tempo</th>
+                  <th style="width: 11%">Action</th>
+                  <th style="width: 4%">Select</th>
                 </tr>
                 </thead>
                 <tbody>
                   @foreach($pembelians as $pembelian)
                   <tr>
+                    <td>{{$loop->iteration}}</td>
+                      <td>{{ \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y')}}</td>
                       <td>{{$pembelian->id_invoice}}</td>
-                      <td>{{ \Carbon\Carbon::parse($pembelian->tanggal)->format('Y-m-d')}}</td>
                       <td>{{$pembelian['supplier']['nama']}}</td>
                       <td>Rp. {{$pembelian->netto}}</td>
                       <td class="text-center">
@@ -44,28 +44,28 @@
                         @endphp
                       </td>
                       <td>{{$pembelian->metode}}</td>
-                      <td>{{\Carbon\Carbon::parse($pembelian->jatuh_tempo)->format('Y-m-d')}}</td>
+                      <td>{{\Carbon\Carbon::parse($pembelian->jatuh_tempo)->format('d-m-Y')}}</td>
 
 
                       <td class="project-actions text-right">
                         <a class="btn btn-primary btn-sm" href="{{ route('pembelian.show', $pembelian->id) }}">
-                            <i class="fas fa-folder"></i> View
+                            <i class="fas fa-folder"></i>
                         </a>
 
                         @if($pembelian->status == 'N')
                             <a class="btn btn-info btn-sm" href="{{ route('pembelian.edit', $pembelian->id) }}">
-                                <i class="fas fa-pencil-alt"></i> Edit
+                                <i class="fas fa-pencil-alt"></i>
                             </a>
                             <a class="btn btn-danger btn-sm" href="{{ route('pembelian.delete', $pembelian->id) }}">
-                                <i class="fas fa-trash"></i> Delete
+                                <i class="fas fa-trash"></i>
                             </a>
                         @else
                             <!-- If status is not 'N', show a disabled or alternative button -->
                             <button class="btn btn-info btn-sm" disabled>
-                                <i class="fas fa-pencil-alt"></i> Edit
+                                <i class="fas fa-pencil-alt"></i>
                             </button>
                             <button class="btn btn-danger btn-sm" disabled>
-                                <i class="fas fa-trash"></i> Delete
+                                <i class="fas fa-trash"></i>
                             </button>
                         @endif
                     </td>

@@ -9,34 +9,34 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">Data Penjualan</h3>
+              <a href="{{ route('penjualan.create') }}" class="btn btn-success btn-sm float-right" title="Add New Penjualan">
+                <i class="fa fa-plus" aria-hidden="true"></i> Add New
+            </a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <a href="{{ route('penjualan.create') }}" class="btn btn-success btn-sm" title="Add New Penjualan">
-                  <i class="fa fa-plus" aria-hidden="true"></i> Add New
-              </a>
-              <br/>
-              <br/>
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Invoice</th>
+                  <th>ID</th>
                   <th>Tanggal</th>
+                  <th>Invoice</th>
                   <th>Customer</th>
                   <th>Plat</th>
                   <th>Netto</th>
                   <th>Status</th>
                   <th>Metode</th>
                   <th>Jatuh Tempo</th>
-                  <th style="width: 20%">Action</th>
-                  <th style="width: 5%">Select</th>
+                  <th style="width: 11%">Action</th>
+                  <th style="width: 4%">Select</th>
                 </tr>
                 </thead>
                 <tbody>
                   @foreach($penjualans as $penjualan)
                   <tr>
-                      <td>{{$penjualan->id_invoice}}</td>
+                      <td>{{$loop->iteration}}</td>
                       <td>{{$penjualan->tanggal}}</td>
+                      <td>{{$penjualan->id_invoice}}</td>
                       <td>{{$penjualan['customer']['nama']}}</td>
                       <td>{{$penjualan['truk']['plat']}}</td>
                       <td>Rp. {{$penjualan->netto}}</td>
@@ -51,23 +51,23 @@
 
                       <td class="project-actions text-right">
                         <a class="btn btn-primary btn-sm" href="{{ route('penjualan.show', $penjualan->id) }}">
-                            <i class="fas fa-folder"></i> View
+                            <i class="fas fa-folder"></i>
                         </a>
 
                         @if($penjualan->status == 'N')
                             <a class="btn btn-info btn-sm" href="{{ route('penjualan.edit', $penjualan->id) }}">
-                                <i class="fas fa-pencil-alt"></i> Edit
+                                <i class="fas fa-pencil-alt"></i>
                             </a>
                             <a class="btn btn-danger btn-sm" href="{{ route('penjualan.delete', $penjualan->id) }}">
-                                <i class="fas fa-trash"></i> Delete
+                                <i class="fas fa-trash"></i>
                             </a>
                         @else
                             <!-- If status is not 'N', show a disabled or alternative button -->
                             <button class="btn btn-info btn-sm" disabled>
-                                <i class="fas fa-pencil-alt"></i> Edit
+                                <i class="fas fa-pencil-alt"></i>
                             </button>
                             <button class="btn btn-danger btn-sm" disabled>
-                                <i class="fas fa-trash"></i> Delete
+                                <i class="fas fa-trash"></i>
                             </button>
                         @endif
                     </td>

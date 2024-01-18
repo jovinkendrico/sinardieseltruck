@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
+use App\Models\Pembelian;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -53,9 +54,9 @@ class SuppliersController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $requestData = $request->all();
-        
+
         Supplier::create($requestData);
 
         return redirect('admin/suppliers')->with('flash_message', 'Supplier added!');
@@ -71,8 +72,9 @@ class SuppliersController extends Controller
     public function show($id)
     {
         $supplier = Supplier::findOrFail($id);
+        $pembelians = Pembelian::where('id_supplier',$id)->get();
 
-        return view('admin.suppliers.show', compact('supplier'));
+        return view('admin.suppliers.show', compact('supplier', 'pembelians'));
     }
 
     /**
@@ -99,9 +101,9 @@ class SuppliersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $requestData = $request->all();
-        
+
         $supplier = Supplier::findOrFail($id);
         $supplier->update($requestData);
 

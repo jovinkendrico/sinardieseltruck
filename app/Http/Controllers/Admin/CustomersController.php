@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
 use App\Models\Customer;
+use App\Models\Pembelian;
+use App\Models\Penjualan;
 use Illuminate\Http\Request;
 
 class CustomersController extends Controller
@@ -52,9 +54,9 @@ class CustomersController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $requestData = $request->all();
-        
+
         Customer::create($requestData);
 
         return redirect('admin/customers')->with('flash_message', 'Customer added!');
@@ -70,8 +72,8 @@ class CustomersController extends Controller
     public function show($id)
     {
         $customer = Customer::findOrFail($id);
-
-        return view('admin.customers.show', compact('customer'));
+        $penjualans = Penjualan::where('id_customer',$id)->get();
+        return view('admin.customers.show', compact('penjualans','customer'));
     }
 
     /**
@@ -98,9 +100,9 @@ class CustomersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $requestData = $request->all();
-        
+
         $customer = Customer::findOrFail($id);
         $customer->update($requestData);
 

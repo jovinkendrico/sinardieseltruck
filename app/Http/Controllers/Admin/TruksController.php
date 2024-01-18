@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
+use App\Models\Penjualan;
 use App\Models\Truk;
 use Illuminate\Http\Request;
 
@@ -50,9 +51,9 @@ class TruksController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $requestData = $request->all();
-        
+
         Truk::create($requestData);
 
         return redirect('admin/truks')->with('flash_message', 'Truk added!');
@@ -68,8 +69,8 @@ class TruksController extends Controller
     public function show($id)
     {
         $truk = Truk::findOrFail($id);
-
-        return view('admin.truks.show', compact('truk'));
+        $penjualans = Penjualan::where('id_truk',$id)->get();
+        return view('admin.truks.show', compact('truk','penjualans'));
     }
 
     /**
@@ -96,9 +97,9 @@ class TruksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $requestData = $request->all();
-        
+
         $truk = Truk::findOrFail($id);
         $truk->update($requestData);
 

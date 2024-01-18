@@ -355,6 +355,12 @@ class PembelianController extends Controller
         $pembelian = DB::table('pembelians')->where('id',$id)->first();
 
         $detailPembelians = DetailPembelian::where('id_pembelian',$pembelian->id)->get();
+        DetailBarang::where('id_invoice',$pembelian->id_invoice)->delete();
+        $detailSubAkunMasuk = DetailSubAkuns::where('id_bukti',$pembelian->id_invoice)->first();
+        $detailSubAkunKeluar = DetailSubAKuns::where('id_bukti',$pembelian->id_invoice)->latest('id')->first();
+        SubAkuns::where('id', 15)->first()->decrement('saldo', $detailSubAkunMasuk->debit);
+        SubAkuns::where('id', 16)->first()->increment('saldo', $detailSubAkunKeluar->kredit);
+        DetailSubAkuns::where('id_bukti',$pembelian->id_invoice)->delete();
 
         foreach($detailPembelians as $detailPembelian){
             $barang = Barang::where('id',$detailPembelian->id_barang)->first();

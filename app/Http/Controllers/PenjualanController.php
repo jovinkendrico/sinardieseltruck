@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\Customer;
+use App\Models\DetailBarang;
 use App\Models\DetailJasa;
 use App\Models\DetailPenjualan;
 use App\Models\DetailSubAkuns;
@@ -79,12 +80,27 @@ class PenjualanController extends Controller
                 'netto' => $netto
             ]);
             $barang = Barang::where('id',$item['id'])->first();
+
+            $stoktambahdetail = 0;
             if($item['uom'] == $barang->uombesar){
                 $barang->decrement('stok',$item['jumlah']*$barang->satuankecil);
+                $stoktambahdetail = $item['jumlah']*$barang->satuankecil;
             }
             else{
                 $barang->decrement('stok',$item['jumlah']);
+                $stoktambahdetail = $item['jumlah'];
             }
+
+            $barang = Barang::where('id',$item['id'])->first();
+            DetailBarang::create([
+                'tanggal' => $tanggal,
+                'id_barang' => $item['id'],
+                'id_invoice' => $penjualan->id_invoice,
+                'masuk' =>  0,
+                'keluar' => $stoktambahdetail,
+                'stokdetail' => 0,
+                'stokakhir' => $barang->stok,
+            ]);
         }
         $tableDataJasa = json_decode($request->input('tableDataJasa'),true);
         foreach($tableDataJasa as $item){
@@ -163,7 +179,7 @@ class PenjualanController extends Controller
         }
 
         DetailPenjualan::where('id_penjualan',$penjualan->id)->delete();
-
+        DetailBarang::where('id_invoice',$penjualan->id_invoice)->delete();
         $tableData = json_decode($request->input('tableData'), true);
         foreach ($tableData as $item) {
             $harga = preg_replace('/[^0-9.]/', '', $item['harga']);
@@ -181,12 +197,27 @@ class PenjualanController extends Controller
                 'netto' => $netto
             ]);
             $barang = Barang::where('id',$item['id'])->first();
+
+            $stoktambahdetail = 0;
             if($item['uom'] == $barang->uombesar){
                 $barang->decrement('stok',$item['jumlah']*$barang->satuankecil);
+                $stoktambahdetail = $item['jumlah']*$barang->satuankecil;
             }
             else{
                 $barang->decrement('stok',$item['jumlah']);
+                $stoktambahdetail = $item['jumlah'];
             }
+
+            $barang = Barang::where('id',$item['id'])->first();
+            DetailBarang::create([
+                'tanggal' => $tanggal,
+                'id_barang' => $item['id'],
+                'id_invoice' => $penjualan->id_invoice,
+                'masuk' =>  0,
+                'keluar' => $stoktambahdetail,
+                'stokdetail' => 0,
+                'stokakhir' => $barang->stok,
+            ]);
         }
 
         DetailJasa::where('id_penjualan',$penjualan->id)->delete();
@@ -213,6 +244,8 @@ class PenjualanController extends Controller
         $penjualan = DB::table('penjualans')->where('id',$id)->first();
 
         $detailPenjualans = DetailPenjualan::where('id_penjualan',$penjualan->id)->get();
+
+        DetailBarang::where('id_invoice',$penjualan->id_invoice)->delete();
 
         foreach($detailPenjualans as $detailPenjualan){
             $barang = Barang::where('id',$detailPenjualan->id_barang)->first();

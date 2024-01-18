@@ -21,6 +21,7 @@ class CreateBarangsTable extends Migration
             $table->integer('satuankecil')->nullable();
             $table->string('uombesar')->nullable();
             $table->string('uomkecil')->nullable();
+            $table->integer('stokawal')->nullable();
             $table->integer('stok')->nullable();
             });
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\DetailBarang;
 use App\Models\DetailHistorySubAkuns;
 use App\Models\DetailPembelian;
 use App\Models\DetailSubAkuns;
@@ -82,12 +83,28 @@ class PembelianController extends Controller
                 'netto' => $netto
             ]);
             $barang = Barang::where('id',$item['id'])->first();
+
+            $stoktambahdetail = 0;
             if($item['uom'] == $barang->uombesar){
                 $barang->increment('stok',$item['jumlah']*$barang->satuankecil);
+                $stoktambahdetail = $item['jumlah']*$barang->satuankecil;
             }
             else{
                 $barang->increment('stok',$item['jumlah']);
+                $stoktambahdetail = $item['jumlah'];
             }
+
+            //tambah detail barang
+            $barang = Barang::where('id',$item['id'])->first();
+            DetailBarang::create([
+                'tanggal' => $tanggal,
+                'id_barang' => $item['id'],
+                'id_invoice' => $pembelian->id_invoice,
+                'masuk' =>  $stoktambahdetail,
+                'keluar' => 0,
+                'stokdetail' => $stoktambahdetail,
+                'stokakhir' => $barang->stok,
+            ]);
         }
 
 
@@ -147,6 +164,8 @@ class PembelianController extends Controller
             ]);
 
         }
+
+
 
 
         return redirect('/pembelian');
@@ -214,6 +233,7 @@ class PembelianController extends Controller
         }
 
         //delete detailpembelian sebelumnya
+        DetailBarang::where('id_invoice',$pembelian->id_invoice)->delete();
         DetailPembelian::where('id_pembelian',$pembelian->id)->delete();
 
 
@@ -235,12 +255,28 @@ class PembelianController extends Controller
                 'netto' => $netto
             ]);
             $barang = Barang::where('id',$item['id'])->first();
+
+            $stoktambahdetail = 0;
             if($item['uom'] == $barang->uombesar){
                 $barang->increment('stok',$item['jumlah']*$barang->satuankecil);
+                $stoktambahdetail = $item['jumlah']*$barang->satuankecil;
             }
             else{
                 $barang->increment('stok',$item['jumlah']);
+                $stoktambahdetail = $item['jumlah'];
             }
+
+            //tambah detail barang
+            $barang = Barang::where('id',$item['id'])->first();
+            DetailBarang::create([
+                'tanggal' => $tanggal,
+                'id_barang' => $item['id'],
+                'id_invoice' => $pembelian->id_invoice,
+                'masuk' =>  $stoktambahdetail,
+                'keluar' => 0,
+                'stokdetail' => $stoktambahdetail,
+                'stokakhir' => $barang->stok,
+            ]);
         }
 
         //balikin saldo TODO

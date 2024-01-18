@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
 use App\Models\Barang;
+use App\Models\DetailBarang;
 use Illuminate\Http\Request;
 
 class BarangsController extends Controller
@@ -58,7 +59,7 @@ class BarangsController extends Controller
 
         $requestData = $request->all();
         Barang::create($requestData);
-
+        Barang::latest('id')->update(['stokawal' => 0]);
         return redirect('admin/barangs')->with('flash_message', 'Barang added!');
     }
 
@@ -72,8 +73,8 @@ class BarangsController extends Controller
     public function show($id)
     {
         $barang = Barang::findOrFail($id);
-
-        return view('admin.barangs.show', compact('barang'));
+        $detailbarangs = DetailBarang::where('id_barang',$id)->get();
+        return view('admin.barangs.show', compact('barang','detailbarangs'));
     }
 
     /**

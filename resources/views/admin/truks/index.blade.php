@@ -8,12 +8,13 @@
 
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Truk</div>
-                    <div class="card-body">
-                        <a href="{{ url('/admin/truks/create') }}" class="btn btn-success btn-sm" title="Add New Truk">
+                    <div class="card-header">
+                        <h3 class="card-title">Truk</h3>
+                        <a href="{{ url('/admin/truks/create') }}" class="btn btn-success btn-sm float-right" title="Add New Truk">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                         </a>
-
+                    </div>
+                    <div class="card-body">
                         <form method="GET" action="{{ url('/admin/truks') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">

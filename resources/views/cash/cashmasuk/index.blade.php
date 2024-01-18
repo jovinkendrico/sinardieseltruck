@@ -8,17 +8,16 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">Data Kas Masuk</h3>
+              <a href="{{ route('cashmasuk.create') }}" class="btn btn-success btn-sm float-right" title="Add New Cash Masuk">
+                <i class="fa fa-plus" aria-hidden="true"></i> Add New
+            </a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <a href="{{ route('cashmasuk.create') }}" class="btn btn-success btn-sm" title="Add New Cash Masuk">
-                  <i class="fa fa-plus" aria-hidden="true"></i> Add New
-              </a>
-              <br/>
-              <br/>
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
+                    <th>ID</th>
                   <th>Tanggal</th>
                   <th>Invoice</th>
                   <th>Akun</th>
@@ -29,6 +28,7 @@
                 <tbody>
                   @foreach($cashmasuks as $cashmasuk)
                   <tr>
+                        <td>{{$loop->iteration}}</td>
                       <td>{{$cashmasuk->tanggal}}</td>
                       <td>{{$cashmasuk->id_bukti}}</td>
                       <td>{{$cashmasuk['akunmasuk']['nomor_akun']}} - {{$cashmasuk['akunmasuk']['nama']}}</td>

@@ -9,14 +9,12 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">Data Akun</h3>
+              <button type="button" class="btn btn-success btn-sm float-right" data-toggle="modal" data-target="#modal-lg">
+                <i class="fa fa-plus" aria-hidden="true"></i> Add New
+              </button>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-lg">
-                    <i class="fa fa-plus" aria-hidden="true"></i> Add New
-                  </button>
-              <br/>
-              <br/>
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>

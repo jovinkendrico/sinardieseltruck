@@ -1,16 +1,21 @@
 @extends('layouts.app2')
 
+@section('title','Perlengkapan')
+
 @section('content')
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
 
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Perlengkapans</div>
-                    <div class="card-body">
-                        <a href="{{ url('/admin/perlengkapans/create') }}" class="btn btn-success btn-sm" title="Add New Perlengkapan">
+                    <div class="card-header">
+                        <h3 class="card-title">Perlengkapan</h3>
+                        <a href="{{ url('/admin/perlengkapans/create') }}" class="btn btn-success btn-sm float-right" title="Add New Perlengkapan">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                         </a>
+                    </div>
+                    <div class="card-body">
+
 
                         <form method="GET" action="{{ url('/admin/perlengkapans') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
                             <div class="input-group">

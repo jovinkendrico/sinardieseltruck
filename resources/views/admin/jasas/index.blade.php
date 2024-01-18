@@ -9,11 +9,14 @@
 
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Jasa</div>
-                    <div class="card-body">
-                        <a href="{{ url('/admin/jasas/create') }}" class="btn btn-success btn-sm" title="Add New Jasa">
+                    <div class="card-header">
+                        <h3 class="card-title">Jasa</h3>
+                        <a href="{{ url('/admin/jasas/create') }}" class="btn btn-success btn-sm float-right" title="Add New Jasa">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                         </a>
+                    </div>
+                    <div class="card-body">
+
 
                         <form method="GET" action="{{ url('/admin/jasas') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
                             <div class="input-group">

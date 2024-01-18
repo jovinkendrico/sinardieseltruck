@@ -7,16 +7,15 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Data {{$akun->nama}}</h3>
+                <a href="{{ url('/admin/akuns') }}" title="Back"><button class="btn btn-warning btn-sm float-left"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
+                <h3 class="card-title" style="margin-left: 10px">Data {{$akun->nama}}</h3>
+                <button type="button" class="btn btn-success btn-sm float-right" data-toggle="modal" data-target="#modal-lg">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add New
+                </button>
+
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <a href="{{ url('/admin/akuns') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
-                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-lg">
-                    <i class="fa fa-plus" aria-hidden="true"></i> Add New
-                  </button>
-              <br/>
-              <br/>
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>

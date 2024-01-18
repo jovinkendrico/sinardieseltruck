@@ -8,14 +8,12 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">Data Pengecekan Mobil</h3>
+              <a href="{{ route('pengecekan.create') }}" class="btn btn-success btn-sm float-right" title="Add New Pengecekan">
+                <i class="fa fa-plus" aria-hidden="true"></i> Add New
+            </a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <a href="{{ route('pengecekan.create') }}" class="btn btn-success btn-sm" title="Add New Pengecekan">
-                  <i class="fa fa-plus" aria-hidden="true"></i> Add New
-              </a>
-              <br/>
-              <br/>
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>

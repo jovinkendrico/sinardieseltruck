@@ -176,7 +176,7 @@ class PembelianController extends Controller
         $tanggal = \Carbon\Carbon::parse($pembelian->tanggal)->format('m-d-Y');
         $jatuh_tempo = \Carbon\Carbon::parse($pembelian->jatuh_tempo)->format('m-d-Y');
         $detailPembelians =DetailPembelian::where('id_pembelian',$pembelian->id)->get();
-        return view('transaksi.pembelian.edit')->with('pembelian',$pembelian)->with('detailPembelians',$detailPembelians)->with('suppliers',$suppliers)->with('barangs',$barangs)->with('tanggal',$tanggal)->with('jatuh_tempo',$jatuh_tempo);
+        return view('transaksi.pembelian.edit')->with('subakuns',$subakuns)->with('pembelian',$pembelian)->with('detailPembelians',$detailPembelians)->with('suppliers',$suppliers)->with('barangs',$barangs)->with('tanggal',$tanggal)->with('jatuh_tempo',$jatuh_tempo);
     }
 
     /**
@@ -243,6 +243,70 @@ class PembelianController extends Controller
             }
         }
 
+        //balikin saldo TODO
+        $detailSubAkunMasuk = DetailSubAkuns::where('id_bukti',$request->id_invoice)->first();
+        $detailSubAkunKeluar = DetailSubAKuns::where('id_bukti',$request->id_invoice)->latest('id')->first();
+        SubAkuns::where('id', 15)->first()->decrement('saldo', $detailSubAkunMasuk->debit);
+        SubAkuns::where('id', 16)->first()->increment('saldo', $detailSubAkunKeluar->kredit);
+
+        DetailSubAkuns::where('id_bukti',$request->id_invoice)->delete();
+
+        if($request->pembayaran == 1){
+            SubAkuns::where('id', 15)->first()->increment('saldo', $totalNetto);
+            SubAkuns::where('id',$request->akunkeluar)->first()->decrement('saldo', $totalNetto);
+
+            DetailSubAkuns::create([
+                'tanggal' => $tanggal,
+                'id_subakun' => 15,
+                'id_bukti' => $request->id_invoice,
+                'deskripsi' => $request->id_invoice,
+                'debit' => $totalNetto,
+                'kredit' => 0
+            ]);
+
+            DetailSubAkuns::create([
+                'tanggal' => $tanggal,
+                'id_subakun' => $request->akunkeluar,
+                'id_bukti' => $request->id_invoice,
+                'deskripsi' => $request->id_invoice,
+                'debit' => 0,
+                'kredit' => $totalNetto
+            ]);
+
+            $metode = '';
+            $subakuns = SubAkuns::where('id', $request->akunkeluar)->first();
+            if($subakuns->id_akun == 1){
+                $metode = 'Non Cash';
+            }
+            else{
+                $metode = 'Cash';
+            }
+
+            Pembelian::where('id_invoice', $request->id_invoice)->update(['status' => 'Y', 'metode' => $metode]);
+        }
+        else{
+            SubAkuns::where('id', 15)->first()->increment('saldo', $totalNetto);
+            SubAkuns::where('id', 16)->first()->decrement('saldo', $totalNetto);
+
+            DetailSubAkuns::create([
+                'tanggal' => $tanggal,
+                'id_subakun' => 15,
+                'id_bukti' => $request->id_invoice,
+                'deskripsi' => $request->id_invoice,
+                'debit' => $totalNetto,
+                'kredit' => 0
+            ]);
+
+            DetailSubAkuns::create([
+                'tanggal' => $tanggal,
+                'id_subakun' => 16,
+                'id_bukti' => $request->id_invoice,
+                'deskripsi' => $request->id_invoice,
+                'debit' => 0,
+                'kredit' => $totalNetto
+            ]);
+
+        }
         return redirect('/pembelian');
     }
 

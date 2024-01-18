@@ -221,6 +221,18 @@
     </div>
 
     <script>
+        function toggleTerimaKe() {
+            var pembayaranSelect = document.getElementById("pembayaran");
+            var terimaKeContainer = document.getElementById("terimaKeContainer");
+
+            if (pembayaranSelect.value === "1") {
+                // Show Terima ke field when Pembayaran is Kontan
+                terimaKeContainer.style.display = "block";
+            } else {
+                // Hide Terima ke field for other Pembayaran options
+                terimaKeContainer.style.display = "none";
+            }
+        }
         function prepareAndSubmitForm() {
         // Call the function to update tableData
         document.getElementById("id_supplier").value = document.getElementById('id_supp').value

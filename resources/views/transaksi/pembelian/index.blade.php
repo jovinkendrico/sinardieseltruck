@@ -56,9 +56,12 @@
                             <a class="btn btn-info btn-sm" href="{{ route('pembelian.edit', $pembelian->id) }}">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
-                            <a class="btn btn-danger btn-sm" href="{{ route('pembelian.delete', $pembelian->id) }}">
-                                <i class="fas fa-trash"></i>
-                            </a>
+                            <form method="post" action="{{route('pembelian.delete',$pembelian->id)}}" accept-charset="UTF-8" style="display:inline">
+                                @csrf
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         @else
                             <!-- If status is not 'N', show a disabled or alternative button -->
                             <button class="btn btn-info btn-sm" disabled>

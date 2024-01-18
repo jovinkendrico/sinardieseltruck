@@ -44,11 +44,12 @@
                               </i>
                               Edit
                           </a>
-                          <a class="btn btn-danger btn-sm" href="{{route('pengecekan.delete',$pengecekan->id)}}">
-                              <i class="fas fa-trash">
-                              </i>
-                              Delete
-                          </a>
+                          <form method="post" action="{{route('pengecekan.delete',$pengecekan->id)}}" accept-charset="UTF-8" style="display:inline">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>Delete
+                            </button>
+                        </form>
                       </td>
 
                   </tr>

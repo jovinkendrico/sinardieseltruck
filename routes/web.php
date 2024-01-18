@@ -55,7 +55,7 @@ route::controller(AkunsController::class)->group(function(){
     Route::get('/admin/akuns', 'index')->middleware('auth');
     Route::post('/admin/akuns/store','store')->name('akuns.store')->middleware('auth');
     Route::post('/admin/akuns/update/{id}','update')->name('akuns.update')->middleware('auth');
-    Route::get('/admin/akuns/delete/{id}', 'destroy')->name('akuns.delete')->middleware('auth');
+    Route::post('/admin/akuns/delete/{id}', 'destroy')->name('akuns.delete')->middleware('auth');
 });
 
 route::controller(SubAkunsController::class)->group(function(){
@@ -63,7 +63,7 @@ route::controller(SubAkunsController::class)->group(function(){
     Route::post('/admin/subakuns/store','store')->name('subakuns.store')->middleware('auth');
     Route::get('/admin/subakuns/show/{id}','show')->name('subakuns.show')->middleware('auth');
     Route::post('/admin/subakuns/update/{id}','update')->name('subakuns.update')->middleware('auth');
-    Route::get('/admin/subakuns/delete/{id}', 'destroy')->name('subakuns.delete')->middleware('auth');
+    Route::post('/admin/subakuns/delete/{id}', 'destroy')->name('subakuns.delete')->middleware('auth');
     Route::get('/fetch-detail-subakun-data/{id}','fetchDetailSubakunData')->name('fetch.detail.subakun');
 });
 
@@ -77,7 +77,7 @@ Route::controller(PenjualanController::class)->group(function () {
     Route::get('/penjualan/show/{id}','show')->name('penjualan.show')->middleware('auth');
     Route::get('/penjualan/edit/{id}','edit')->name('penjualan.edit')->middleware('auth');
     Route::post('/penjualan/update/{id}','update')->name('penjualan.update')->middleware('auth');
-    Route::get('/penjualan/delete/{id}', 'destroy')->name('penjualan.delete')->middleware('auth');
+    Route::post('/penjualan/delete/{id}', 'destroy')->name('penjualan.delete')->middleware('auth');
     Route::get('/penjualan/cetak/{id}','cetakpdf')->name('penjualan.cetak')->middleware('auth');
     route::post('/penjualan/bayar','bayar')->name('penjualan.bayar')->middleware('auth');
 });
@@ -89,7 +89,7 @@ Route::controller(PembelianController::class)->group(function () {
     Route::get('/pembelian/show/{id}','show')->name('pembelian.show')->middleware('auth');
     Route::get('/pembelian/edit/{id}','edit')->name('pembelian.edit')->middleware('auth');
     Route::post('/pembelian/update/{id}','update')->name('pembelian.update')->middleware('auth');
-    Route::get('/pembelian/delete/{id}', 'destroy')->name('pembelian.delete')->middleware('auth');
+    Route::post('/pembelian/delete/{id}', 'destroy')->name('pembelian.delete')->middleware('auth');
     route::get('/pembelian/cetak/{id}','cetakpdf')->name('pembelian.cetak')->middleware('auth');
     route::post('/pembelian/bayar','bayar')->name('pembelian.bayar')->middleware('auth');
 
@@ -102,7 +102,7 @@ Route::controller(PengecekanController::class)->group(function () {
     Route::get('/pengecekan/show/{id}','show')->name('pengecekan.show')->middleware('auth');
     Route::get('/pengecekan/edit/{id}','edit')->name('pengecekan.edit')->middleware('auth');
     Route::post('/pengecekan/update/{id}','update')->name('pengecekan.update')->middleware('auth');
-    Route::get('/pengecekan/delete/{id}', 'destroy')->name('pengecekan.delete')->middleware('auth');
+    Route::post('/pengecekan/delete/{id}', 'destroy')->name('pengecekan.delete')->middleware('auth');
 });
 
 Route::controller(CashMasukController::class)->group(function(){
@@ -112,7 +112,7 @@ Route::controller(CashMasukController::class)->group(function(){
     Route::get('/cashmasuk/show/{id}','show')->name('cashmasuk.show')->middleware('auth');
     Route::get('/cashmasuk/edit/{id}','edit')->name('cashmasuk.edit')->middleware('auth');
     Route::post('/cashmasuk/update/{id}','update')->name('cashmasuk.update')->middleware('auth');
-    Route::get('/cashmasuk/delete/{id}', 'destroy')->name('cashmasuk.delete')->middleware('auth');
+    Route::post('/cashmasuk/delete/{id}', 'destroy')->name('cashmasuk.delete')->middleware('auth');
 });
 
 Route::controller(CashKeluarController::class)->group(function(){
@@ -122,7 +122,7 @@ Route::controller(CashKeluarController::class)->group(function(){
     Route::get('/cashkeluar/show/{id}','show')->name('cashkeluar.show')->middleware('auth');
     Route::get('/cashkeluar/edit/{id}','edit')->name('cashkeluar.edit')->middleware('auth');
     Route::post('/cashkeluar/update/{id}','update')->name('cashkeluar.update')->middleware('auth');
-    Route::get('/cashkeluar/delete/{id}', 'destroy')->name('cashkeluar.delete')->middleware('auth');
+    Route::post('/cashkeluar/delete/{id}', 'destroy')->name('cashkeluar.delete')->middleware('auth');
 });
 
 Route::controller(HistoryPembelianController::class)->group(function(){

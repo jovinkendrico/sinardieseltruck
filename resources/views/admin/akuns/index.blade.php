@@ -42,11 +42,12 @@
                           <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-edit" data-id="{{ $akun->id }}" data-nama="{{$akun->nama}}" data-nomorakun="{{$akun->nomor_akun}}">
                             <i class="fas fa-pencil-alt"></i> Edit
                           </a>
-                          <a class="btn btn-danger btn-sm" href="{{route('akuns.delete',$akun->id)}}">
-                              <i class="fas fa-trash">
-                              </i>
-                              Delete
-                          </a>
+                          <form method="post" action="{{route('akuns.delete',$akun->id)}}" accept-charset="UTF-8" style="display:inline">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>Delete
+                            </button>
+                        </form>
                       </td>
 
                   </tr>

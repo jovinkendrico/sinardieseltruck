@@ -90,6 +90,54 @@ class PembelianController extends Controller
             }
         }
 
+
+        if($request->pembayaran == 1){
+            SubAkuns::where('id', 15)->first()->increment('saldo', $totalNetto);
+            SubAkuns::where('id',$request->akunkeluar)->first()->decrement('saldo', $totalNetto);
+
+            DetailSubAkuns::create([
+                'tanggal' => $tanggal,
+                'id_subakun' => 15,
+                'id_bukti' => $request->id_invoice,
+                'deskripsi' => $request->id_invoice,
+                'debit' => $totalNetto,
+                'kredit' => 0
+            ]);
+
+            DetailSubAkuns::create([
+                'tanggal' => $tanggal,
+                'id_subakun' => $request->akunkeluar,
+                'id_bukti' => $request->id_invoice,
+                'deskripsi' => $request->id_invoice,
+                'debit' => 0,
+                'kredit' => $totalNetto
+            ]);
+        }
+        else{
+            SubAkuns::where('id', 15)->first()->increment('saldo', $totalNetto);
+            SubAkuns::where('id', 16)->first()->decrement('saldo', $totalNetto);
+
+            DetailSubAkuns::create([
+                'tanggal' => $tanggal,
+                'id_subakun' => 15,
+                'id_bukti' => $request->id_invoice,
+                'deskripsi' => $request->id_invoice,
+                'debit' => $totalNetto,
+                'kredit' => 0
+            ]);
+
+            DetailSubAkuns::create([
+                'tanggal' => $tanggal,
+                'id_subakun' => 16,
+                'id_bukti' => $request->id_invoice,
+                'deskripsi' => $request->id_invoice,
+                'debit' => 0,
+                'kredit' => $totalNetto
+            ]);
+
+        }
+
+
         return redirect('/pembelian');
     }
 

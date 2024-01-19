@@ -30,7 +30,7 @@
                   @foreach($cashkeluars as $cashkeluar)
                   <tr>
                     <td>{{$loop->iteration}}</td>
-                      <td>{{$cashkeluar->tanggal}}</td>
+                      <td>{{ \Carbon\Carbon::parse($cashkeluar->tanggal)->format('d-m-Y')}}</td>
                       <td>{{$cashkeluar->id_bukti}}</td>
                       <td>{{$cashkeluar['akunkeluar']['nomor_akun']}} - {{$cashkeluar['akunkeluar']['nama']}}</td>
                       <td>{{$cashkeluar->deskripsi}}</td>

@@ -18,25 +18,26 @@ class CashKeluarController extends Controller
      private function generateInvoiceNumber($tanggal)
     {
         // Extract the month and year from the provided tanggal
-        $month = \Carbon\Carbon::createFromFormat('Y-m-d', $tanggal)->format('m');
-        $year = \Carbon\Carbon::createFromFormat('Y-m-d', $tanggal)->format('y');
+        $month = \Carbon\Carbon::parse($tanggal)->format('m');
+        $year = \Carbon\Carbon::parse($tanggal)->format('y');
+        $yearp = \Carbon\Carbon::parse($tanggal)->format('Y');
 
         // Get the last invoice in the given month and year
         $lastInvoice = CashKeluar::whereMonth('tanggal', $month)
-            ->whereYear('tanggal', $year)
-            ->orderBy('id', 'desc')
+            ->whereYear('tanggal', $yearp)
+            ->orderBy('id','desc')
             ->first();
 
         if ($lastInvoice) {
             // Extract the sequential number from the last invoice ID
-            $sequentialNumber = (int)substr($lastInvoice->id_invoice, -4);
+            $sequentialNumber = (int)substr($lastInvoice->id_bukti, -4) +1;
         } else {
             // If no previous invoice exists, start with 1
-            $sequentialNumber = 0;
+            $sequentialNumber = 1;
         }
 
         // Increment the sequential number and return the formatted invoice ID
-        return 'CK/' . $month . $year . '/' . sprintf('%04d', $sequentialNumber + 1);
+        return 'CK/' . $month . $year . '/' . sprintf('%04d', $sequentialNumber);
     }
 
     public function index()
@@ -66,7 +67,7 @@ class CashKeluarController extends Controller
         $total = preg_replace('/[^0-9.]/', '', $request->totalJumlah);
         CashKeluar::insert([
             'tanggal' => $tanggal,
-            'id_bukti' => $request->id_invoice,
+            'id_bukti' => $this->generateInvoiceNumber($request->tanggal),
             'deskripsi' => $request->keterangan,
             'id_akunkeluar' => $request->akun_keluar,
             'total' => $total
@@ -154,7 +155,6 @@ class CashKeluarController extends Controller
         $total = preg_replace('/[^0-9.]/', '', $request->totalJumlah);
         CashKeluar::findOrFail($id)->update([
             'tanggal' => $tanggal,
-            'id_bukti' => $request->id_invoice,
             'deskripsi' => $request->keterangan,
             'id_akunkeluar' => $request->akun_keluar,
             'total' => $total

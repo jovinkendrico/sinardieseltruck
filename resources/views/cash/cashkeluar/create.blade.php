@@ -10,26 +10,23 @@
                         <h3 class="card-title">Create New Cash Keluar</h3>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{route('cashkeluar.store')}}" onsubmit="return prepareAndSubmitForm()" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                        <form method="POST" id="form" action="{{route('cashkeluar.store')}}" onsubmit="return prepareAndSubmitForm()" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
                             @csrf
+                            <div class="form-group">
+
                             <input type="hidden" name="tableData" id="tableData" value="">
+                            </div>
                             <div class="row">
                                 <div class="col-md-4">
                                     <!-- Existing fields as per your design -->
                                     <div class="form-group">
                                         <label for="tanggal">Tanggal:</label>
                                         <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" onchange="onTanggalChange()" id="tanggal" name="tanggal" class="form-control datetimepicker-input" data-target="#reservationdate" placeholder="Masukkan Tanggal"/>
+                                            <input type="text"  id="tanggal" name="tanggal" class="form-control datetimepicker-input" data-target="#reservationdate" placeholder="Masukkan Tanggal"/>
                                             <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="id_invoice">No Invoice:</label>
-                                        <input type="text" class="form-control" id="id_invoice" name="id_invoice" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -142,8 +139,51 @@
         </div>
     </div>
 @endsection
+<script src="/AdminLTE/plugins/jquery/jquery.min.js"></script>
+
+<script src="/AdminLTE/plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="/AdminLTE/plugins/jquery-validation/additional-methods.min.js"></script>
 <script>
-            function updateTotals() {
+    $(document).ready(function () {
+  $('#form').validate({
+    rules: {
+      tanggal: {
+        required: true,
+      },
+      akun_keluar: {
+        required: true,
+      },
+      keterangan: {
+        required: true
+      },
+    },
+    messages: {
+      tanggal: {
+        required: "Please submit Tanggal",
+      },
+      akun_keluar: {
+        required: "Please submit Akun Keluar",
+      },
+      keterangan: "Please submit Keterangan",
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    },
+
+  });
+});
+</script>
+
+<script>
+        function updateTotals() {
         // Update totals
         var table = document.getElementById("itemTable");
         var totalJumlah = 0;
@@ -167,53 +207,11 @@
         return number.toString().padStart(length, '0');
     }
 
-    // Function to get or initialize the sequential number from local storage
-    function getSequentialNumber() {
-        var storedNumber = localStorage.getItem('sequentialNumber4');
-        return storedNumber ? parseInt(storedNumber) : 0;
-    }
-
-    // Function to save the updated sequential number to local storage
-    function saveSequentialNumber(number) {
-        localStorage.setItem('sequentialNumber4', number.toString());
-    }
-
-    // Function to generate the invoice number
-    function generateInvoice() {
-        // Get the selected date
-        var selectedDate = document.getElementById("tanggal").value;
-
-        // Extract month and year from the date (assuming dd/mm/yy format)
-        var mm = selectedDate.split('/')[0];
-        var yy = selectedDate.split('/')[2].slice(-2);
-
-        // Get the formatted sequential number with leading zeros
-        var sequentialNumber = getSequentialNumber();
-        var formattedSequentialNumber = formatNumberWithLeadingZeros(sequentialNumber, 4);
-
-        // Construct the invoice number
-        var invoiceNumber = 'CK/' + mm + yy + '/' + formattedSequentialNumber;
-
-        // Set the generated invoice number to the input field
-        document.getElementById("id_invoice").value = invoiceNumber;
-
-        // Increment the sequential number and save it
-        saveSequentialNumber(sequentialNumber + 1);
-        return invoiceNumber;
-    }
-
-    // Attach the generateInvoice function to the change event of the tanggal field
-    function onTanggalChange() {
-        // Generate and set the invoice number when Tanggal is changed
-        var generatedInvoice = generateInvoice();
-        document.getElementById("id_invoice").value = generatedInvoice;
-    }
     function prepareAndSubmitForm() {
         // Call the function to update tableData
         var data = getTableData();
-        console.log(data);
-        // Optionally, you can perform additional validations or actions here
 
+        // Optionally, you can perform additional validations or actions here
         // Allow the form to be submitted
         return true;
     }
@@ -262,7 +260,6 @@
 
             // Disable the input fields after adding an item
             document.getElementById("tanggal").readOnly = true;
-            document.getElementById("id_invoice").readOnly = true;
             document.getElementById("akun_keluar").readOnly = true;
 
             // Set the cell values

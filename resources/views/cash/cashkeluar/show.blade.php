@@ -25,7 +25,7 @@
 
                 <div class="col-12">
                     <h4>
-                        <small>Tanggal: {{$cashkeluar->tanggal}}</small>
+                        <small>Tanggal: {{ \Carbon\Carbon::parse($cashkeluar->tanggal)->format('d-m-Y')}}</small>
                     </h4>
                 </div>
             <div class="col-12">
@@ -61,7 +61,7 @@
                         <td>{{$i}}</td>
                         <td>{{$detailcashkeluar['akunmasuk']['nama']}}</td>
                         <td>{{$detailcashkeluar->deskripsi}}</td>
-                        <td>Rp {{$detailcashkeluar->jumlah}}</td>
+                        <td>Rp {{number_format($detailcashkeluar->jumlah, 2, '.', ',')}}</td>
                     </tr>
                     @php
                         $i++;
@@ -90,7 +90,7 @@
                 <table class="table">
                     <tr>
                     <th style="width:50%">Total Jumlah:</th>
-                    <td>Rp. {{$totaljumlah}}</td>
+                    <td>Rp {{number_format($totaljumlah, 2, '.', ',')}}</td>
                   </tr>
                 </table>
               </div>

@@ -116,6 +116,10 @@
 <script src="/AdminLTE/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
 <!-- jQuery Knob Chart -->
 <script src="/AdminLTE/plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- jQuery validate -->
+<script src="/AdminLTE/plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="/AdminLTE/plugins/jquery-validation/additional-methods.min.js"></script>
+
 <!-- daterangepicker -->
 <script src="/AdminLTE/plugins/moment/moment.min.js"></script>
 <script src="/AdminLTE/plugins/daterangepicker/daterangepicker.js"></script>

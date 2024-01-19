@@ -32,6 +32,9 @@
                                     <td>0</td>
                                     <td>{{$barang->stokawal}}</td>
                                 </tr>
+                                @php
+                                    $stok = $barang->stokawal;
+                                @endphp
                                 @foreach ($detailbarangs as $detailbarang)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
@@ -39,7 +42,10 @@
                                     <td>{{$detailbarang->id_invoice}}</td>
                                     <td>{{$detailbarang->masuk}}</td>
                                     <td>{{$detailbarang->keluar}}</td>
-                                    <td>{{$detailbarang->stokakhir}}</td>
+                                    @php
+                                        $stok = $stok + $detailbarang->masuk -$detailbarang->keluar;
+                                    @endphp
+                                    <td>{{$stok}}</td>
                                 </tr>
                                 @endforeach
 

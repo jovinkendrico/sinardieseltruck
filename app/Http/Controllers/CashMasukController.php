@@ -8,6 +8,8 @@ use App\Models\DetailSubAkuns;
 use App\Models\SubAkuns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+
 
 
 class CashMasukController extends Controller
@@ -15,6 +17,30 @@ class CashMasukController extends Controller
     /**
      * Display a listing of the resource.
      */
+    private function generateInvoiceNumber($tanggal)
+    {
+        // Extract the month and year from the provided tanggal
+        $month = \Carbon\Carbon::parse($tanggal)->format('m');
+        $year = \Carbon\Carbon::parse($tanggal)->format('y');
+        $yearp = \Carbon\Carbon::parse($tanggal)->format('Y');
+
+        // Get the last invoice in the given month and year
+        $lastInvoice = CashMasuk::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $yearp)
+            ->orderBy('id','desc')
+            ->first();
+
+        if ($lastInvoice) {
+            // Extract the sequential number from the last invoice ID
+            $sequentialNumber = (int)substr($lastInvoice->id_bukti, -4) +1;
+        } else {
+            // If no previous invoice exists, start with 1
+            $sequentialNumber = 1;
+        }
+
+        // Increment the sequential number and return the formatted invoice ID
+        return 'CM/' . $month . $year . '/' . sprintf('%04d', $sequentialNumber);
+    }
     public function index()
     {
         //
@@ -43,7 +69,7 @@ class CashMasukController extends Controller
         $total = preg_replace('/[^0-9.]/', '', $request->totalJumlah);
         CashMasuk::insert([
             'tanggal' => $tanggal,
-            'id_bukti' => $request->id_invoice,
+            'id_bukti' => $this->generateInvoiceNumber($request->tanggal),
             'id_akunmasuk' => $request->akun_masuk,
             'total' => $total
         ]);
@@ -86,6 +112,8 @@ class CashMasukController extends Controller
             ]);
             SubAkuns::where('id',$item['id'])->decrement('saldo',$jumlah);
         }
+        Session::flash('success', 'Data has been successfully stored.');
+
         return redirect('/cashmasuk');
     }
 
@@ -127,7 +155,7 @@ class CashMasukController extends Controller
         //delete detail subakuns
         $delDetSubAkuns = DetailSubAkuns::where('id_bukti',$cashmasukawal->id_bukti)->get();
         foreach($delDetSubAkuns as $delDetSubAkun){
-            SubAkuns::where('id',$delDetSubAkun->id_subakun)->decrement('saldo',$delDetSubAkun->kredit);
+            SubAkuns::where('id',$delDetSubAkun->id_subakun)->increment('saldo',$delDetSubAkun->kredit);
         }
         DetailSubAkuns::where('id_bukti',$cashmasukawal->id_bukti)->delete();
 
@@ -137,7 +165,7 @@ class CashMasukController extends Controller
         $total = preg_replace('/[^0-9.]/', '', $request->totalJumlah);
         CashMasuk::findOrFail($id)->update([
             'tanggal' => $tanggal,
-            'id_bukti' => $request->id_invoice,
+            'id_bukti' => $this->generateInvoiceNumber($tanggal),
             'id_akunmasuk' => $request->akun_masuk,
             'total' => $total
         ]);
@@ -162,6 +190,7 @@ class CashMasukController extends Controller
             DetailCashMasuk::insert([
                 'id_cashmasuk' => $cashmasuk->id,
                 'id_akunkeluar' => $item['id'],
+                'id_bukti' => $cashmasuk->id_bukti,
                 'deskripsi' => $item['deskripsi'],
                 'jumlah' => $jumlah
             ]);
@@ -177,6 +206,8 @@ class CashMasukController extends Controller
             SubAkuns::where('id',$item['id'])->decrement('saldo',$jumlah);
         }
 
+        Session::flash('success', 'Data has been successfully updated.');
+
         return redirect('/cashmasuk');
     }
 
@@ -186,8 +217,21 @@ class CashMasukController extends Controller
     public function destroy(string $id)
     {
         //
+        $cashmasukawal = CashMasuk::where('id',$id)->first();
+        SubAkuns::where('id',$cashmasukawal->id_akunmasuk)->decrement('saldo',$cashmasukawal->total);
+
+        DetailSubAkuns::where('deskripsi',$cashmasukawal->id_bukti)->delete();
+        //delete detail subakuns
+        $delDetSubAkuns = DetailSubAkuns::where('id_bukti',$cashmasukawal->id_bukti)->get();
+        foreach($delDetSubAkuns as $delDetSubAkun){
+            SubAkuns::where('id',$delDetSubAkun->id_subakun)->increment('saldo',$delDetSubAkun->kredit);
+        }
+
         CashMasuk::where('id',$id)->delete();
         DB::table('detail_cash_masuks')->where('id_cashmasuk', $id)->delete();
+
+        Session::flash('success', 'Data has been successfully deleted.');
+
         return redirect('/cashmasuk');
 
     }

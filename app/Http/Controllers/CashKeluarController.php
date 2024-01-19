@@ -209,8 +209,19 @@ class CashKeluarController extends Controller
     public function destroy(string $id)
     {
         //
+        $cashkeluarawal = CashKeluar::where('id',$id)->first();
+        SubAkuns::where('id',$cashkeluarawal->id_akunkeluar)->increment('saldo',$cashkeluarawal->total);
+
+        DetailSubAkuns::where('deskripsi',$cashkeluarawal->id_bukti)->delete();
+        $delDetSubAkuns = DetailSubAkuns::where('id_bukti',$cashkeluarawal->id_bukti)->get();
+        foreach($delDetSubAkuns as $delDetSubAkun){
+            SubAkuns::where('id',$delDetSubAkun->id_subakun)->decrement('saldo',$delDetSubAkun->debit);
+        }
+        DetailSubAKuns::where('id_bukti',$cashkeluarawal->id_bukti)->delete();
+
         CashKeluar::where('id',$id)->delete();
         DB::table('detail_cash_keluars')->where('id_cashkeluar', $id)->delete();
+        Session::flash('success', 'Data has been successfully deleted.');
         return redirect('/cashkeluar');
     }
 }

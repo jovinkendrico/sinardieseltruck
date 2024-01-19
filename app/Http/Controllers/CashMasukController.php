@@ -165,7 +165,6 @@ class CashMasukController extends Controller
         $total = preg_replace('/[^0-9.]/', '', $request->totalJumlah);
         CashMasuk::findOrFail($id)->update([
             'tanggal' => $tanggal,
-            'id_bukti' => $this->generateInvoiceNumber($tanggal),
             'id_akunmasuk' => $request->akun_masuk,
             'total' => $total
         ]);
@@ -226,6 +225,7 @@ class CashMasukController extends Controller
         foreach($delDetSubAkuns as $delDetSubAkun){
             SubAkuns::where('id',$delDetSubAkun->id_subakun)->increment('saldo',$delDetSubAkun->kredit);
         }
+        DetailSubAKuns::where('id_bukti',$cashmasukawal->id_bukti)->delete();
 
         CashMasuk::where('id',$id)->delete();
         DB::table('detail_cash_masuks')->where('id_cashmasuk', $id)->delete();

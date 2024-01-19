@@ -8,6 +8,7 @@ use App\Models\DetailSubAkuns;
 use App\Models\SubAkuns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class CashKeluarController extends Controller
 {
@@ -109,6 +110,9 @@ class CashKeluarController extends Controller
             SubAkuns::where('id',$item['id'])->increment('saldo',$jumlah);
         }
 
+        Session::flash('success', 'Data has been successfully stored.');
+
+
         return redirect('/cashkeluar');
     }
 
@@ -195,6 +199,7 @@ class CashKeluarController extends Controller
             SubAkuns::where('id',$item['id'])->increment('saldo',$jumlah);
         }
 
+        Session::flash('success', 'Data has been successfully updated.');
         return redirect('/cashkeluar');
     }
 

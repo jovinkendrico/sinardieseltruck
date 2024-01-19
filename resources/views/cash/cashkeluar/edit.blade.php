@@ -10,7 +10,7 @@
                         <h3 class="card-title">Edit Cash Keluar</h3>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{route('cashkeluar.update',$cashkeluar->id)}}" onsubmit="return prepareAndSubmitForm()" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                        <form method="POST" id="form" action="{{route('cashkeluar.update',$cashkeluar->id)}}" onsubmit="return prepareAndSubmitForm()" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="tableData" id="tableData" value="">
                             <div class="row">
@@ -140,7 +140,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group float-right">
-                                        <input class="btn btn-primary" type="submit" value="Create">
+                                        <input class="btn btn-primary" type="submit" value="Update">
                                     </div>
                                 </div>
                             </div>
@@ -151,6 +151,48 @@
         </div>
     </div>
 @endsection
+<script src="/AdminLTE/plugins/jquery/jquery.min.js"></script>
+
+<script src="/AdminLTE/plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="/AdminLTE/plugins/jquery-validation/additional-methods.min.js"></script>
+<script>
+    $(document).ready(function () {
+  $('#form').validate({
+    rules: {
+      tanggal: {
+        required: true,
+      },
+      akun_keluar: {
+        required: true,
+      },
+      keterangan: {
+        required: true
+      },
+    },
+    messages: {
+      tanggal: {
+        required: "Please submit Tanggal",
+      },
+      akun_keluar: {
+        required: "Please submit Akun Keluar",
+      },
+      keterangan: "Please submit Keterangan",
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    },
+
+  });
+});
+</script>
 <script>
             function updateTotals() {
         // Update totals

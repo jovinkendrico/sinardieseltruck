@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('id_cashmasuk');
             $table->integer('id_akunkeluar');
+            $table->string('id_bukti');
             $table->string('deskripsi');
             $table->bigInteger('jumlah');
             $table->timestamps();

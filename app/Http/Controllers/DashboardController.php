@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\CashKeluar;
+use App\Models\CashMasuk;
 use App\Models\Customer;
 use App\Models\Pembelian;
 use App\Models\Penjualan;
@@ -26,8 +28,13 @@ class DashboardController extends Controller
         $penjualanjtls = Penjualan::where('status', 'N')->where('jatuh_tempo', '<=', now())->orderBy('jatuh_tempo')->paginate(10);
         $pembelianjts = Pembelian::where('status', 'N')->where('jatuh_tempo', '>=', now())->orderBy('jatuh_tempo')->paginate(10);
         $pembelianjtls = Pembelian::where('status', 'N')->where('jatuh_tempo', '<=', now())->orderBy('jatuh_tempo')->paginate(10);
-
-        return view('welcome',compact('jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale','penjualanjts','penjualanjtls','pembelianjts','pembelianjtls'));
+        $penjualanlatest = Penjualan::where('tanggal', '<=', now())->orderBy('tanggal','DESC')->paginate(10);
+        $kasmasuk = CashMasuk::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('total');
+        $kaskeluar = CashKeluar::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('total');
+        $pembeliankas = Pembelian::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('netto');
+        $penjualankas = Penjualan::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('netto');
+        $bulan = now()->translatedFormat('F');;
+        return view('welcome',compact('jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale','penjualanjts','penjualanjtls','pembelianjts','pembelianjtls','penjualanlatest','kasmasuk','kaskeluar','pembeliankas','penjualankas','bulan'));
     }
 
     /**

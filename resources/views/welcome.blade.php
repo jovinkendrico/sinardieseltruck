@@ -68,10 +68,110 @@
       </div>
       <!-- /.row -->
       <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header border-transparent">
+                  <h3 class="card-title">Penjualan Terakhir</h3>
+
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table m-0">
+                      <thead>
+                      <tr>
+                        <th>Tanggal</th>
+                        <th>Invoice ID</th>
+                        <th>Customer</th>
+                        <th>Netto</th>
+                        <th>Status</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        @foreach ($penjualanlatest as $penjualan)
+                            <tr>
+
+                                <td>{{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y')}}</td>
+                                <td><a href={{route('penjualan.show',$penjualan->id)}}>{{$penjualan->id_invoice}}</a></td>
+                                <td>{{$penjualan['customer']['nama']}}</td>
+                                <td>Rp {{number_format($penjualan->netto, 2, '.', ',')}}</td>
+                                @if ($penjualan->status =='N')
+                                    <td><span class="badge bg-danger">Not Paid</span></td>
+                                @else
+                                    <td><span class="badge bg-success">Paid</span></td>
+                                @endif
+                            </tr>
+                        @endforeach
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.table-responsive -->
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer clearfix">
+                  <a href="{{route('penjualan.create')}}" class="btn btn-sm btn-info float-left">Tambah Penjualan</a>
+                  <a href="/penjualan" class="btn btn-sm btn-secondary float-right">Lihat Penjualan</a>
+                </div>
+                <!-- /.card-footer -->
+              </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-box mb-3 bg-warning">
+                <span class="info-box-icon"><i class="fas fa-tag"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Kas Masuk {{$bulan}}</span>
+                  <span class="info-box-number">Rp {{number_format($kasmasuk, 2, '.', ',')}}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+              <div class="info-box mb-3 bg-success">
+                <span class="info-box-icon"><i class="far fa-heart"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Kas Keluar {{$bulan}}</span>
+                  <span class="info-box-number">Rp {{number_format($kaskeluar, 2, '.', ',')}}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+              <div class="info-box mb-3 bg-danger">
+                <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Pembelian {{$bulan}}</span>
+                  <span class="info-box-number">Rp {{number_format($pembeliankas, 2, '.', ',')}}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+              <div class="info-box mb-3 bg-info">
+                <span class="info-box-icon"><i class="far fa-comment"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Penjualan {{$bulan}}</span>
+                  <span class="info-box-number">Rp {{number_format($penjualankas, 2, '.', ',')}}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                   <h3 class="card-title">Pembelian dengan Jatuh Tempo Terdekat</h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body p-0">
@@ -80,7 +180,7 @@
                       <tr>
                         <th style="width: 10px">#</th>
                         <th>Invoice ID</th>
-                        <th>Customer</th>
+                        <th>Supplier</th>
                         <th>Netto</th>
                         <th>Jatuh Tempo</th>
                         <th>Status</th>
@@ -107,6 +207,11 @@
             <div class="card">
                 <div class="card-header">
                   <h3 class="card-title">Pembelian dengan Jatuh Tempo Terlewat</h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body p-0">
@@ -115,7 +220,7 @@
                       <tr>
                         <th style="width: 10px">#</th>
                         <th>Invoice ID</th>
-                        <th>Customer</th>
+                        <th>Supplier</th>
                         <th>Netto</th>
                         <th>Jatuh Tempo</th>
                         <th>Status</th>
@@ -143,6 +248,11 @@
             <div class="card">
                 <div class="card-header">
                   <h3 class="card-title">Penjualan dengan Jatuh Tempo Terdekat</h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body p-0">
@@ -178,6 +288,11 @@
             <div class="card">
                 <div class="card-header">
                   <h3 class="card-title">Penjualan dengan Jatuh Tempo Terlewat</h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body p-0">

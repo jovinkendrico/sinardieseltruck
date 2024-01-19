@@ -14,6 +14,31 @@ class CashKeluarController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     private function generateInvoiceNumber($tanggal)
+    {
+        // Extract the month and year from the provided tanggal
+        $month = \Carbon\Carbon::createFromFormat('Y-m-d', $tanggal)->format('m');
+        $year = \Carbon\Carbon::createFromFormat('Y-m-d', $tanggal)->format('y');
+
+        // Get the last invoice in the given month and year
+        $lastInvoice = CashKeluar::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($lastInvoice) {
+            // Extract the sequential number from the last invoice ID
+            $sequentialNumber = (int)substr($lastInvoice->id_invoice, -4);
+        } else {
+            // If no previous invoice exists, start with 1
+            $sequentialNumber = 0;
+        }
+
+        // Increment the sequential number and return the formatted invoice ID
+        return 'CK/' . $month . $year . '/' . sprintf('%04d', $sequentialNumber + 1);
+    }
+
     public function index()
     {
         //

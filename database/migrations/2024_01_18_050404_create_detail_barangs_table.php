@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('id_barang');
             $table->string('id_invoice');
             $table->integer('masuk');
+            $table->bigInteger('harga_masuk');
             $table->integer('keluar');
             $table->integer('stokdetail');
             $table->integer('stokakhir')->nullable();

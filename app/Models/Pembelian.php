@@ -12,7 +12,7 @@ class Pembelian extends Model
         'tanggal' => 'datetime',
         'jatuh_tempo' =>'datetime'
     ];
-    protected $fillable = ['tanggal','id_supplier','id_invoice','jatuh_tempo','netto','status'];
+    protected $fillable = ['tanggal','id_supplier','id_invoice','jatuh_tempo','netto','status','id_akunmasuk'];
 
     public function supplier(){
         return $this->belongsTo(Supplier::class,'id_supplier','id');

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('jatuh_tempo');
             $table->string('status');
             $table->string('metode')->nullable();
+            $table->integer('id_akunmasuk');
             $table->timestamps();
         });
     }

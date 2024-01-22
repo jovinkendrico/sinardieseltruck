@@ -214,7 +214,7 @@
             if (checkbox.checked) {
                 var rowIndex = checkbox.closest('tr').rowIndex;
                 // Extract the "Netto" value from the corresponding column (adjust index as needed)
-                var nettoValue = document.querySelector('#example1').rows[rowIndex].cells[3].textContent;
+                var nettoValue = document.querySelector('#example1').rows[rowIndex].cells[4].textContent;
                 // Extract numeric part and convert to a number
                 var numericNetto = parseFloat(nettoValue.replace(/\D/g, ''));
                 totalNetto += numericNetto;
@@ -259,7 +259,7 @@
             var rows = document.querySelector('#example1').querySelectorAll('tbody tr');
 
             rows.forEach(function (row) {
-                var rowStatusIcon = row.cells[4].querySelector('i').className;
+                var rowStatusIcon = row.cells[5].querySelector('i').className;
 
                 if (status === 'all' || (status === 'N' && rowStatusIcon.includes('times')) || (status === 'Y' && rowStatusIcon.includes('check'))) {
                     // Show rows with the specified status or show all rows if 'all' is selected

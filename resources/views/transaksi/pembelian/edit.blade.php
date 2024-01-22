@@ -10,7 +10,7 @@
                         <h3 class="card-title">Edit Pembelian</h3>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{route('pembelian.update',$pembelian->id)}}" onsubmit="return prepareAndSubmitForm()" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                        <form method="POST" id="form" action="{{route('pembelian.update',$pembelian->id)}}" onsubmit="return prepareAndSubmitForm()" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="tableData" id="tableData" value="">
                             <div class="row">
@@ -26,8 +26,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="id_invoice">No Invoice:</label>
-                                        <input type="text" class="form-control" value="{{$pembelian->id_invoice}}" id="id_invoice" name="id_invoice" readonly>
+                                        <label for="jatuh_tempo">Jatuh Tempo:</label>
+                                        <div class="input-group date" id="reservationdate2" data-target-input="nearest">
+                                            <input type="text" id="jatuh_tempo" value="{{$jatuh_tempo}}" name="jatuh_tempo" class="form-control datetimepicker-input" data-target="#reservationdate2" placeholder="Masukkan Tanggal Jatuh Tempo">
+                                            <div class="input-group-append" data-target="#reservationdate2" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -41,15 +46,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="jatuh_tempo">Jatuh Tempo:</label>
-                                        <div class="input-group date" id="reservationdate2" data-target-input="nearest">
-                                            <input type="text" id="jatuh_tempo" value="{{$jatuh_tempo}}" name="jatuh_tempo" class="form-control datetimepicker-input" data-target="#reservationdate2" placeholder="Masukkan Tanggal Jatuh Tempo">
-                                            <div class="input-group-append" data-target="#reservationdate2" data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                             <div class="row">
@@ -157,10 +154,21 @@
                                             <option value="2">Non Kontan</option>
                                         </select>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="akunmasuk">Terima Akun: </label>
+                                        <select class="form-control select2bs4" id="akunmasuk" name="akunmasuk" style="width: 100%;">
+                                            <option disabled selected value> -- select an akun -- </option>
+                                            @foreach ($subakunterimas as $subakunterima)
+                                            <option value="{{ $subakunterima->id }}"> {{$subakunterima->nomor_akun}}- {{ $subakunterima->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group" id="terimaKeContainer" style="display: none;">
                                         <label for="akunkeluar">Dari Akun: </label>
+                                        <input type="hidden" name="id_supplier" id="id_supplier" value="{{$pembelian->id_supplier}}">
+
                                         <select class="form-control select2bs4" name="akunkeluar" id="akunkeluar" style="width: 100%">
                                             <option disabled selected value=""> -- select an akun -- </option>
                                             @foreach ($subakuns as $subakun)
@@ -219,7 +227,56 @@
             </div>
         </div>
     </div>
+    <script src="/AdminLTE/plugins/jquery/jquery.min.js"></script>
 
+    <script src="/AdminLTE/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="/AdminLTE/plugins/jquery-validation/additional-methods.min.js"></script>
+    <script>
+        $(document).ready(function () {
+      $('#form').validate({
+        rules: {
+          tanggal: {
+            required: true,
+          },
+          jatuh_tempo: {
+            required: true,
+          },
+          id_supp: {
+            required: true
+          },
+          pembayaran: {
+            required: true
+          },
+          'akunmasuk':{
+            required: true
+          }
+        },
+        messages: {
+          tanggal: {
+            required: "Please submit Tanggal",
+          },
+          jatuh_tempo: {
+            required: "Please submit Jatuh Tempo",
+          },
+          id_supp: "Please submit Supplier",
+          pembayaran: "Please submit Pembayaran",
+          akunmasuk: "Please submit Akunmasuk"
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },
+
+      });
+    });
+    </script>
     <script>
         function toggleTerimaKe() {
             var pembayaranSelect = document.getElementById("pembayaran");
@@ -301,7 +358,6 @@
             // Disable the input fields after adding an item
             document.getElementById("id_supplier").value = document.getElementById('id_supp').value
             document.getElementById("tanggal").readOnly = true;
-            document.getElementById("id_invoice").readOnly = true;
             document.getElementById("id_supp").disabled = true;
             document.getElementById("jatuh_tempo").readOnly = true;
 
@@ -339,47 +395,6 @@
         return number.toString().padStart(length, '0');
     }
 
-    // Function to get or initialize the sequential number from local storage
-    function getSequentialNumber() {
-        var storedNumber = localStorage.getItem('sequentialNumber');
-        return storedNumber ? parseInt(storedNumber) : 0;
-    }
-
-    // Function to save the updated sequential number to local storage
-    function saveSequentialNumber(number) {
-        localStorage.setItem('sequentialNumber', number.toString());
-    }
-
-    // Function to generate the invoice number
-    function generateInvoice() {
-        // Get the selected date
-        var selectedDate = document.getElementById("tanggal").value;
-
-        // Extract month and year from the date (assuming dd/mm/yy format)
-        var mm = selectedDate.split('/')[1];
-        var yy = selectedDate.split('/')[2].slice(-2);
-
-        // Get the formatted sequential number with leading zeros
-        var sequentialNumber = getSequentialNumber();
-        var formattedSequentialNumber = formatNumberWithLeadingZeros(sequentialNumber, 4);
-
-        // Construct the invoice number
-        var invoiceNumber = 'PB/' + mm + yy + '/' + formattedSequentialNumber;
-
-        // Set the generated invoice number to the input field
-        document.getElementById("id_invoice").value = invoiceNumber;
-
-        // Increment the sequential number and save it
-        saveSequentialNumber(sequentialNumber + 1);
-        return invoiceNumber;
-    }
-
-    // Attach the generateInvoice function to the change event of the tanggal field
-    function onTanggalChange() {
-        // Generate and set the invoice number when Tanggal is changed
-        var generatedInvoice = generateInvoice();
-        document.getElementById("id_invoice").value = generatedInvoice;
-    }
     function updateUOM() {
         var selectedBarang = document.getElementById("barang");
         var selectedBarangIndex = selectedBarang.selectedIndex;

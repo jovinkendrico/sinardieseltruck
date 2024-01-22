@@ -9,5 +9,5 @@ class DetailBarang extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tanggal','id_barang','id_invoice','masuk','keluar','stokakhir','stokdetail'];
+    protected $fillable = ['tanggal','id_barang','id_invoice','masuk','harga_masuk','keluar','stokakhir','stokdetail'];
 }

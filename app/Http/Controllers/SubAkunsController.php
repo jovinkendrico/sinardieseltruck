@@ -42,6 +42,7 @@ class SubAkunsController extends Controller
             'nama'=>$request->nama,
             'debit'=>0,
             'kredit'=>0,
+            'saldo_awal' => $request->saldo,
             'saldo' => $request->saldo
         ]);
         return redirect()->route('subakuns.index',$request->id_akun);

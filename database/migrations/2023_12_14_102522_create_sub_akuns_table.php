@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nama');
             $table->bigInteger('debit');
             $table->bigInteger('kredit');
+            $table->bigInteger('saldo_awal');
             $table->bigInteger('saldo');
             $table->timestamps();
         });

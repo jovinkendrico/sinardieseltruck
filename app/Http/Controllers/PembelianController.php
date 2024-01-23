@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
-use App\Models\DetailBarang;
-use App\Models\DetailHistorySubAkuns;
-use App\Models\DetailPembelian;
-use App\Models\DetailSubAkuns;
-use App\Models\Pembelian;
 use App\Models\SubAkuns;
 use App\Models\Supplier;
+use App\Models\Pembelian;
+use App\Models\DetailBarang;
 use Illuminate\Http\Request;
+use App\Models\DetailSubAkuns;
+use App\Models\DetailPembelian;
 use Illuminate\Support\Facades\DB;
+use App\Models\DetailHistorySubAkuns;
 
 
 class PembelianController extends Controller
@@ -128,7 +128,7 @@ class PembelianController extends Controller
                 'id_barang' => $item['id'],
                 'id_invoice' => $pembelian->id_invoice,
                 'masuk' =>  $stoktambahdetail,
-                'harga_masuk' => $harga,
+                'harga_masuk' => $harga - ($diskon-$item['jumlah']),
                 'keluar' => 0,
                 'stokdetail' => $stoktambahdetail,
                 'stokakhir' => $barang->stok,
@@ -171,7 +171,7 @@ class PembelianController extends Controller
         }
         else{
             SubAkuns::where('id', $request->akunmasuk)->first()->increment('saldo', $totalNetto);
-            SubAkuns::where('id', 16)->first()->decrement('saldo', $totalNetto);
+            SubAkuns::where('id', 2)->first()->decrement('saldo', $totalNetto);
 
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
@@ -184,7 +184,7 @@ class PembelianController extends Controller
 
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
-                'id_subakun' => 16,
+                'id_subakun' => 2,
                 'id_bukti' => $pembelian->id_invoice,
                 'deskripsi' => $pembelian->id_invoice,
                 'debit' => 0,
@@ -305,7 +305,7 @@ class PembelianController extends Controller
                 'id_barang' => $item['id'],
                 'id_invoice' => $pembelian->id_invoice,
                 'masuk' =>  $stoktambahdetail,
-                'harga_masuk' => $harga,
+                'harga_masuk' => $harga -($diskon-$item['jumlah']),
                 'keluar' => 0,
                 'stokdetail' => $stoktambahdetail,
                 'stokakhir' => $barang->stok,
@@ -316,7 +316,7 @@ class PembelianController extends Controller
         $detailSubAkunMasuk = DetailSubAkuns::where('id_bukti',$pembelian->id_invoice)->first();
         $detailSubAkunKeluar = DetailSubAKuns::where('id_bukti',$pembelian->id_invoice)->latest('id')->first();
         SubAkuns::where('id', $id_akunmasuk)->first()->decrement('saldo', $detailSubAkunMasuk->debit);
-        SubAkuns::where('id', 16)->first()->increment('saldo', $detailSubAkunKeluar->kredit);
+        SubAkuns::where('id', 2)->first()->increment('saldo', $detailSubAkunKeluar->kredit);
 
         DetailSubAkuns::where('id_bukti',$pembelian->id_invoice)->delete();
 
@@ -355,7 +355,7 @@ class PembelianController extends Controller
         }
         else{
             SubAkuns::where('id', $request->akunmasuk)->first()->increment('saldo', $totalNetto);
-            SubAkuns::where('id', 16)->first()->decrement('saldo', $totalNetto);
+            SubAkuns::where('id', 2)->first()->decrement('saldo', $totalNetto);
 
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
@@ -368,7 +368,7 @@ class PembelianController extends Controller
 
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
-                'id_subakun' => 16,
+                'id_subakun' => 2,
                 'id_bukti' => $pembelian->id_invoice,
                 'deskripsi' => $pembelian->id_invoice,
                 'debit' => 0,
@@ -392,7 +392,7 @@ class PembelianController extends Controller
         $detailSubAkunMasuk = DetailSubAkuns::where('id_bukti',$pembelian->id_invoice)->first();
         $detailSubAkunKeluar = DetailSubAKuns::where('id_bukti',$pembelian->id_invoice)->latest('id')->first();
         SubAkuns::where('id', $pembelian->id_akunmasuk)->first()->decrement('saldo', $detailSubAkunMasuk->debit);
-        SubAkuns::where('id', 16)->first()->increment('saldo', $detailSubAkunKeluar->kredit);
+        SubAkuns::where('id', 2)->first()->increment('saldo', $detailSubAkunKeluar->kredit);
         DetailSubAkuns::where('id_bukti',$pembelian->id_invoice)->delete();
 
         foreach($detailPembelians as $detailPembelian){
@@ -467,14 +467,14 @@ class PembelianController extends Controller
         DetailSubAkuns::insert([
             'tanggal' => now(),
             //TODO GANTI
-            'id_subakun'=> 16,
+            'id_subakun'=> 2,
             'Deskripsi' => "Pelunasan Pembelian Barang",
             'debit' => $totalprice,
             'kredit' => 0
         ]);
 
         $detailsubakun = DB::table('detail_sub_akuns')->latest('id')->first();
-        SubAkuns::where('id',16)->increment('saldo',$totalprice);
+        SubAkuns::where('id',2)->increment('saldo',$totalprice);
 
 
         foreach($selectedIdsArray as $item){

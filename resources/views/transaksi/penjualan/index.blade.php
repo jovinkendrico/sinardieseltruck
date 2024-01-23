@@ -189,7 +189,7 @@
                  if (checkbox.checked) {
                      var rowIndex = checkbox.closest('tr').rowIndex;
                      // Extract the "Netto" value from the corresponding column (adjust index as needed)
-                     var nettoValue = document.querySelector('#example1').rows[rowIndex].cells[4].textContent;
+                     var nettoValue = document.querySelector('#example1').rows[rowIndex].cells[5].textContent;
                      // Extract numeric part and convert to a number
                      var numericNetto = parseFloat(nettoValue.replace(/\D/g, ''));
                      totalNetto += numericNetto;

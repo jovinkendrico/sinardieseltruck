@@ -10,7 +10,7 @@
                         <h3 class="card-title">Create New Penjualan</h3>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{route('penjualan.store')}}" onsubmit="return prepareAndSubmitForm()" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+                        <form method="POST" id="form" action="{{route('penjualan.store')}}" onsubmit="return prepareAndSubmitForm()" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="tableData" id="tableData" value="">
                             <input type="hidden" name="tableDataJasa" id="tableDataJasa" value="">
@@ -25,10 +25,6 @@
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="id_invoice">No Invoice:</label>
-                                        <input type="text" class="form-control" id="id_invoice" name="id_invoice" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="jatuh_tempo">Jatuh Tempo:</label>
@@ -137,7 +133,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="jasa">Jasa:</label>
                                         <select class="form-control select2bs4" id="jasa" name="jasa" style="width: 100%;">
@@ -148,13 +144,30 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="pihakjasa">Pihak Jasa:</label>
+                                        <select class="form-control select2bs4" id="pihakjasa" name="pihakjasa" style="width: 100%;">
+                                            <option disabled selected value> -- select an pihak -- </option>
+                                            @foreach ($pihakjasas as $pihakjasa)
+                                                <option value="{{ $pihakjasa->id }}">{{ $pihakjasa->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="hargajasamodal">Modal:</label>
+                                        <input type="number" class="form-control" id="hargajasamodal" name="hargajasamodal" placeholder="Masukkan Harga Modal">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="hargajasa">Harga:</label>
                                         <input type="number" class="form-control" id="hargajasa" name="hargajasa" placeholder="Masukkan Harga Jasa">
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="deskripsi">Deskripsi:</label>
                                         <input type="text" class="form-control" id="deskripsi" name="deskripsi" placeholder="Masukkan Deskripsi">
@@ -179,6 +192,9 @@
                                         <tr>
                                             <th style="display: none;">ID</th>
                                             <th>Jasa</th>
+                                            <th style="display:none">IDp</th>
+                                            <th>Pihak Jasa</th>
+                                            <th>Modal</th>
                                             <th>Harga</th>
                                             <th>Deskripsi</th>
                                             <th>Action</th>
@@ -200,6 +216,15 @@
                                             <option value="2">Non Kontan</option>
                                         </select>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="akunkeluar">Dari Akun: </label>
+                                        <select class="form-control select2bs4" id="akunkeluar" name="akunkeluar" style="width: 100%;">
+                                            <option disabled selected value> -- select an akun -- </option>
+                                            @foreach ($subakundaris as $subakundari)
+                                            <option value="{{ $subakundari->id }}"> {{$subakundari->nomor_akun}}- {{ $subakundari->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group" id="terimaKeContainer" style="display: none;">
@@ -208,6 +233,15 @@
                                             <option disabled selected value=""> -- select an akun -- </option>
                                             @foreach ($subakuns as $subakun)
                                             <option value="{{ $subakun->id }}"> {{$subakun->nomor_akun}}- {{ $subakun->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group"  style="width: 100%;">
+                                        <label for="akunkeluarjasa">Dari Akun Jasa : </label>
+                                        <select class="form-control select2bs4" name="akunkeluarjasa" id="akunkeluarjasa" style="width: 100%">
+                                            <option disabled selected value=""> -- select an akun -- </option>
+                                            @foreach ($subakunslengkap as $sublengkap)
+                                            <option value="{{ $sublengkap->id }}"> {{$sublengkap->nomor_akun}}- {{ $sublengkap->nama }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -263,7 +297,60 @@
             </div>
         </div>
     </div>
+    <script src="/AdminLTE/plugins/jquery/jquery.min.js"></script>
 
+    <script src="/AdminLTE/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="/AdminLTE/plugins/jquery-validation/additional-methods.min.js"></script>
+    <script>
+        $(document).ready(function () {
+      $('#form').validate({
+        rules: {
+          tanggal: {
+            required: true,
+          },
+          jatuh_tempo: {
+            required: true,
+          },
+          id_cus: {
+            required: true
+          },
+          id_tr: {
+            required: true
+          },
+          pembayaran: {
+            required: true
+          },
+          akunkeluar: {
+            required: true
+          }
+        },
+        messages: {
+          tanggal: {
+            required: "Please submit Tanggal",
+          },
+          jatuh_tempo: {
+            required: "Please submit Jatuh Tempo",
+          },
+          id_cus: "Please submit Customer",
+          id_tr: "Please submit Truk",
+          pembayaran: "Please submit Pembayaran",
+          akunkeluar: "Please submit Akun Keluar"
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        },
+
+      });
+    });
+    </script>
     <script>
         function toggleTerimaKe() {
             var pembayaranSelect = document.getElementById("pembayaran");
@@ -347,7 +434,6 @@
             document.getElementById("id_customer").value = document.getElementById('id_cus').value
             document.getElementById("id_truk").value = document.getElementById('id_tr').value
             document.getElementById("tanggal").readOnly = true;
-            document.getElementById("id_invoice").readOnly = true;
             document.getElementById("id_cus").disabled = true;
             document.getElementById("id_tr").disabled = true;
             document.getElementById("jatuh_tempo").readOnly = true;
@@ -386,47 +472,6 @@
         return number.toString().padStart(length, '0');
     }
 
-    // Function to get or initialize the sequential number from local storage
-    function getSequentialNumber() {
-        var storedNumber = localStorage.getItem('sequentialNumber2');
-        return storedNumber ? parseInt(storedNumber) : 0;
-    }
-
-    // Function to save the updated sequential number to local storage
-    function saveSequentialNumber(number) {
-        localStorage.setItem('sequentialNumber2', number.toString());
-    }
-
-    // Function to generate the invoice number
-    function generateInvoice() {
-        // Get the selected date
-        var selectedDate = document.getElementById("tanggal").value;
-
-        // Extract month and year from the date (assuming dd/mm/yy format)
-        var mm = selectedDate.split('/')[0];
-        var yy = selectedDate.split('/')[2].slice(-2);
-
-        // Get the formatted sequential number with leading zeros
-        var sequentialNumber = getSequentialNumber();
-        var formattedSequentialNumber = formatNumberWithLeadingZeros(sequentialNumber, 4);
-
-        // Construct the invoice number
-        var invoiceNumber = 'PJ/' + mm + yy + '/' + formattedSequentialNumber;
-
-        // Set the generated invoice number to the input field
-        document.getElementById("id_invoice").value = invoiceNumber;
-
-        // Increment the sequential number and save it
-        saveSequentialNumber(sequentialNumber + 1);
-        return invoiceNumber;
-    }
-
-    // Attach the generateInvoice function to the change event of the tanggal field
-    function onTanggalChange() {
-        // Generate and set the invoice number when Tanggal is changed
-        var generatedInvoice = generateInvoice();
-        document.getElementById("id_invoice").value = generatedInvoice;
-    }
     function updateUOM() {
         var selectedBarang = document.getElementById("barang");
         var selectedBarangIndex = selectedBarang.selectedIndex;
@@ -473,7 +518,7 @@
                 continue;
             }
 
-            var bruto = parseFloat(row.cells[2].innerText.replace('Rp ', ''));
+            var bruto = parseFloat(row.cells[5].innerText.replace('Rp ', ''));
 
             totalBruto += bruto;
             totalNetto += bruto;
@@ -492,6 +537,8 @@
     <script>
         function addRowJasa(){
             var jasa = document.getElementById("jasa");
+            var pihakjasa = document.getElementById("pihakjasa");
+            var hargajasamodal = document.getElementById("hargajasamodal");
             var hargajasa = document.getElementById("hargajasa");
             var deskripsi = document.getElementById("deskripsi");
 
@@ -503,12 +550,15 @@
             var cell3 = row.insertCell(2);
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+            var cell8 = row.insertCell(7);
+
 
             // Disable the input fields after adding an item
             document.getElementById("id_customer").value = document.getElementById('id_cus').value
             document.getElementById("id_truk").value = document.getElementById('id_tr').value
             document.getElementById("tanggal").readOnly = true;
-            document.getElementById("id_invoice").readOnly = true;
             document.getElementById("id_cus").disabled = true;
             document.getElementById("id_tr").disabled = true;
             document.getElementById("jatuh_tempo").readOnly = true;
@@ -517,9 +567,13 @@
             cell1.innerHTML = jasa.options[jasa.selectedIndex].value;
             cell1.style.display = 'none'
             cell2.innerHTML = jasa.options[jasa.selectedIndex].text ;
-            cell3.innerHTML = 'Rp ' + hargajasa.value;
-            cell4.innerHTML = deskripsi.value;
-            cell5.innerHTML = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteRowJasa(this)">Delete</button>';
+            cell3.innerHTML = pihakjasa.options[pihakjasa.selectedIndex].value;
+            cell3.style.display = 'none'
+            cell4.innerHTML = pihakjasa.options[pihakjasa.selectedIndex].text;
+            cell5.innerHTML = 'Rp ' + hargajasamodal.value;
+            cell6.innerHTML = 'Rp ' + hargajasa.value;
+            cell7.innerHTML = deskripsi.value;
+            cell8.innerHTML = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteRowJasa(this)">Delete</button>';
 
             getTableData();
             updateTotals();

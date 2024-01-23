@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
+use App\Models\DetailJasa;
 use App\Models\Jasa;
 use Illuminate\Http\Request;
 
@@ -50,9 +51,9 @@ class JasasController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $requestData = $request->all();
-        
+
         Jasa::create($requestData);
 
         return redirect('admin/jasas')->with('flash_message', 'Jasa added!');
@@ -68,8 +69,8 @@ class JasasController extends Controller
     public function show($id)
     {
         $jasa = Jasa::findOrFail($id);
-
-        return view('admin.jasas.show', compact('jasa'));
+        $detailjasas = DetailJasa::where('id_jasa',$id)->get();
+        return view('admin.jasas.show', compact('jasa','detailjasas'));
     }
 
     /**
@@ -96,9 +97,9 @@ class JasasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $requestData = $request->all();
-        
+
         $jasa = Jasa::findOrFail($id);
         $jasa->update($requestData);
 

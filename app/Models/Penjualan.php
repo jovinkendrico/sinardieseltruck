@@ -9,7 +9,7 @@ class Penjualan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tanggal','id_supplier','id_truk','id_invoice','jatuh_tempo','netto','status'];
+    protected $fillable = ['tanggal','id_supplier','id_truk','pendapatanbarang','pendapatanjasa','id_invoice','jatuh_tempo','netto','status'];
 
     public function customer(){
         return $this->belongsTo(Customer::class,'id_customer','id');

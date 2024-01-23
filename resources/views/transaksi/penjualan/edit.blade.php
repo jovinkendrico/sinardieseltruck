@@ -349,7 +349,6 @@
             document.getElementById("id_customer").value = document.getElementById('id_cus').value
             document.getElementById("id_truk").value = document.getElementById('id_tr').value
             document.getElementById("tanggal").readOnly = true;
-            document.getElementById("id_invoice").readOnly = true;
             document.getElementById("id_cus").disabled = true;
             document.getElementById("id_tr").disabled = true;
             document.getElementById("jatuh_tempo").readOnly = true;
@@ -388,47 +387,6 @@
         return number.toString().padStart(length, '0');
     }
 
-    // Function to get or initialize the sequential number from local storage
-    function getSequentialNumber() {
-        var storedNumber = localStorage.getItem('sequentialNumber2');
-        return storedNumber ? parseInt(storedNumber) : 0;
-    }
-
-    // Function to save the updated sequential number to local storage
-    function saveSequentialNumber(number) {
-        localStorage.setItem('sequentialNumber2', number.toString());
-    }
-
-    // Function to generate the invoice number
-    function generateInvoice() {
-        // Get the selected date
-        var selectedDate = document.getElementById("tanggal").value;
-
-        // Extract month and year from the date (assuming dd/mm/yy format)
-        var mm = selectedDate.split('/')[0];
-        var yy = selectedDate.split('/')[2].slice(-2);
-
-        // Get the formatted sequential number with leading zeros
-        var sequentialNumber = getSequentialNumber();
-        var formattedSequentialNumber = formatNumberWithLeadingZeros(sequentialNumber, 4);
-
-        // Construct the invoice number
-        var invoiceNumber = 'PJ/' + mm + yy + '/' + formattedSequentialNumber;
-
-        // Set the generated invoice number to the input field
-        document.getElementById("id_invoice").value = invoiceNumber;
-
-        // Increment the sequential number and save it
-        saveSequentialNumber(sequentialNumber + 1);
-        return invoiceNumber;
-    }
-
-    // Attach the generateInvoice function to the change event of the tanggal field
-    function onTanggalChange() {
-        // Generate and set the invoice number when Tanggal is changed
-        var generatedInvoice = generateInvoice();
-        document.getElementById("id_invoice").value = generatedInvoice;
-    }
     function updateUOM() {
         var selectedBarang = document.getElementById("barang");
         var selectedBarangIndex = selectedBarang.selectedIndex;

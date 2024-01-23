@@ -15,8 +15,12 @@ return new class extends Migration
             $table->id();
             $table->integer('id_penjualan');
             $table->integer('id_jasa');
+            $table->integer('id_pihakjasa');
+            $table->bigInteger('harga_modal');
             $table->bigInteger('harga');
             $table->string('deskripsi');
+            $table->integer('id_akunmasuk')->nullable();
+            $table->bigInteger('paid');
             $table->timestamps();
         });
     }

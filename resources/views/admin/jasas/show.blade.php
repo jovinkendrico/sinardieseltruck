@@ -9,31 +9,34 @@
 
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Jasa {{ $jasa->id }}</div>
+                    <div class="card-header">
+                        <h3 class="card-title">Jasa {{$jasa->nama}} </h3>
+                    </div>
                     <div class="card-body">
-
-                        <a href="{{ url('/admin/jasas') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
-                        <a href="{{ url('/admin/jasas/' . $jasa->id . '/edit') }}" title="Edit Jasa"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
-
-                        <form method="POST" action="{{ url('admin/jasas' . '/' . $jasa->id) }}" accept-charset="UTF-8" style="display:inline">
-                            {{ method_field('DELETE') }}
-                            {{ csrf_field() }}
-                            <button type="submit" class="btn btn-danger btn-sm" title="Delete Jasa" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
-                        </form>
-                        <br/>
-                        <br/>
-
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <th>ID</th><td>{{ $jasa->id }}</td>
-                                    </tr>
-                                    <tr><th> Nama </th><td> {{ $jasa->nama }} </td></tr><tr><th> Harga </th><td> {{ $jasa->harga }} </td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Tanggal</th>
+                                    <th>Invoice</th>
+                                    <th>Pihak Jasa</th>
+                                    <th>Harga Modal</th>
+                                    <th>Harga</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($detailjasas as $detailjasa)
+                                <tr>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{\Carbon\Carbon::parse($detailjasa['penjualan']['tanggal'])->format('d-m-Y')}}</td>
+                                    <td>{{$detailjasa['penjualan']['id_invoice']}}</td>
+                                    <td>{{$detailjasa['pihakjasa']['nama']}}</td>
+                                    <td>Rp {{number_format($detailjasa->harga_modal, 2, '.', ',')}}</td>
+                                    <td>Rp {{number_format($detailjasa->harga, 2, '.', ',')}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->date('tanggal');
             $table->integer('id_customer');
             $table->integer('id_truk');
-            $table->bigInteger('pendapatan');
+            $table->bigInteger('pendapatanbarang')->nullable();
+            $table->bigInteger('pendapatanjasa')->nullable();
             $table->bigInteger('netto');
             $table->date('jatuh_tempo');
             $table->string('status');

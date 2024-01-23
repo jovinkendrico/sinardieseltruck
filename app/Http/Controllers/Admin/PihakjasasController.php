@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
+use App\Models\DetailJasa;
 use App\Models\Pihakjasa;
 use Illuminate\Http\Request;
 
@@ -51,9 +52,9 @@ class PihakjasasController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $requestData = $request->all();
-        
+
         Pihakjasa::create($requestData);
 
         return redirect('admin/pihakjasas')->with('flash_message', 'Pihakjasa added!');
@@ -69,8 +70,8 @@ class PihakjasasController extends Controller
     public function show($id)
     {
         $pihakjasa = Pihakjasa::findOrFail($id);
-
-        return view('admin.pihakjasas.show', compact('pihakjasa'));
+        $detailjasas = DetailJasa::where('id_pihakjasa',$id)->get();
+        return view('admin.pihakjasas.show', compact('pihakjasa', 'detailjasas'));
     }
 
     /**
@@ -97,9 +98,9 @@ class PihakjasasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $requestData = $request->all();
-        
+
         $pihakjasa = Pihakjasa::findOrFail($id);
         $pihakjasa->update($requestData);
 

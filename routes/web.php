@@ -16,6 +16,7 @@ use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PengecekanController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\SubAkunsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,7 +67,10 @@ route::controller(SubAkunsController::class)->group(function(){
     Route::post('/admin/subakuns/delete/{id}', 'destroy')->name('subakuns.delete')->middleware('auth');
     Route::get('/fetch-detail-subakun-data/{id}','fetchDetailSubakunData')->name('fetch.detail.subakun');
 });
-
+route::controller(UserController::class)->group(function(){
+    Route::get('/users', 'index')->name('users.index')->middleware('auth');
+    Route::post('/users/store','store')->name('users.store')->middleware('auth');
+});
 
 //transaksi
 

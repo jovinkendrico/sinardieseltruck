@@ -184,10 +184,10 @@ class PenjualanController extends Controller
             SubAkuns::where('id', $request->akunkeluar)->first()->decrement('saldo', ($totalNetto-$totaljasa-$pendapatanbarang));
 
             //tambahi pendapatan barang
-            SubAkuns::where('id', 7)->first()->decrement('saldo',$pendapatanbarang);
+            SubAkuns::where('id', 4)->first()->decrement('saldo',$pendapatanbarang);
 
             //tambahi pendapatan jasa
-            SubAkuns::where('id', 8)->first()->decrement('saldo',$pendapatanjasa);
+            SubAkuns::where('id', 5)->first()->decrement('saldo',$pendapatanjasa);
 
             //kurangi piutang karyawan
             SubAkuns::where('id', $request->akunkeluarjasa)->first()->decrement('saldo', $totaljasa-$pendapatanjasa);
@@ -209,7 +209,7 @@ class PenjualanController extends Controller
             //tambahi pendapatan barang
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
-                'id_subakun' => 7,
+                'id_subakun' => 4,
                 'id_bukti' => $penjualan->id_invoice,
                 'deskripsi' => $penjualan->id_invoice,
                 'debit' => 0,
@@ -219,7 +219,7 @@ class PenjualanController extends Controller
             //tambahi pendapatan jasa
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
-                'id_subakun' => 8,
+                'id_subakun' => 5,
                 'id_bukti' => $penjualan->id_invoice,
                 'deskripsi' => $penjualan->id_invoice,
                 'debit' => 0,
@@ -240,7 +240,7 @@ class PenjualanController extends Controller
             //tambahi saldo piutang
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
-                'id_subakun' => 18,
+                'id_subakun' => 1,
                 'id_bukti' => $penjualan->id_invoice,
                 'deskripsi' => $penjualan->id_invoice,
                 'debit' => $totalNetto,
@@ -261,16 +261,16 @@ class PenjualanController extends Controller
             SubAkuns::where('id', $request->akunkeluar)->first()->decrement('saldo', ($totalNetto-$totaljasa-$pendapatanbarang));
 
             //tambahi pendapatan barang
-            SubAkuns::where('id', 7)->first()->decrement('saldo',$pendapatanbarang);
+            SubAkuns::where('id', 4)->first()->decrement('saldo',$pendapatanbarang);
 
             //tambahi pendapatan jasa
-            SubAkuns::where('id', 8)->first()->decrement('saldo',$pendapatanjasa);
+            SubAkuns::where('id', 5)->first()->decrement('saldo',$pendapatanjasa);
 
             //kurangi piutang karyawan
             SubAkuns::where('id', $request->akunkeluarjasa)->first()->decrement('saldo', $totaljasa);
 
             //tambahi saldo piutang
-            SubAkuns::where('id', 18)->first()->increment('saldo', $totalNetto);
+            SubAkuns::where('id', 1)->first()->increment('saldo', $totalNetto);
 
 
             //kurangi aset barang
@@ -286,7 +286,7 @@ class PenjualanController extends Controller
             //kurangi pendapatan barang
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
-                'id_subakun' => 7,
+                'id_subakun' => 4,
                 'id_bukti' => $penjualan->id_invoice,
                 'deskripsi' => $penjualan->id_invoice,
                 'debit' => 0,
@@ -295,7 +295,7 @@ class PenjualanController extends Controller
                 //kurangi pendapatan jasa
                 DetailSubAkuns::create([
                     'tanggal' => $tanggal,
-                    'id_subakun' => 8,
+                    'id_subakun' => 5,
                     'id_bukti' => $penjualan->id_invoice,
                     'deskripsi' => $penjualan->id_invoice,
                     'debit' => 0,
@@ -317,7 +317,7 @@ class PenjualanController extends Controller
             //tambahi saldo piutang
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
-                'id_subakun' => 18,
+                'id_subakun' => 1,
                 'id_bukti' => $penjualan->id_invoice,
                 'deskripsi' => $penjualan->id_invoice,
                 'debit' => $totalNetto,
@@ -466,16 +466,16 @@ class PenjualanController extends Controller
         SubAkuns::where('id', $penjualan->id_akunkeluarbarang)->first()->increment('saldo', ($penjualan->netto-$penjualan->pendapatanbarang-$penjualan->total_jasa));
 
         //tambahi pendapatan barang
-        SubAkuns::where('id', 7)->first()->increment('saldo',$penjualan->pendapatanbarang);
+        SubAkuns::where('id', 4)->first()->increment('saldo',$penjualan->pendapatanbarang);
 
         //tambahi pendapatan jasa
-        SubAkuns::where('id', 8)->first()->increment('saldo',$penjualan->pendapatanjasa);
+        SubAkuns::where('id', 5)->first()->increment('saldo',$penjualan->pendapatanjasa);
 
         //kurangi piutang karyawan
         SubAkuns::where('id', $penjualan->id_akunkeluarjasa)->first()->increment('saldo', $penjualan->total_jasa);
 
         //tambahi saldo piutang
-        SubAkuns::where('id', 18)->first()->decrement('saldo', $penjualan->netto);
+        SubAkuns::where('id', 1)->first()->decrement('saldo', $penjualan->netto);
 
         DetailSubAkuns::where('id_bukti', $penjualan->id_invoice)->delete();
 
@@ -553,14 +553,14 @@ class PenjualanController extends Controller
         DetailSubAkuns::insert([
             'tanggal' => now(),
             //TODO GANTI
-            'id_subakun'=> 18,
+            'id_subakun'=> 1,
             'Deskripsi' => "Pelunasan Penjualan Barang",
             'debit' => 0,
             'kredit' => $totalprice,
         ]);
 
         $detailsubakun = DB::table('detail_sub_akuns')->latest('id')->first();
-        SubAkuns::where('id',18)->decrement('saldo',$totalprice);
+        SubAkuns::where('id',1)->decrement('saldo',$totalprice);
         foreach($selectedIdsArray as $item){
             $penjualan = Penjualan::where('id',$item)->first();
             DetailHistorySubAkuns::insert([

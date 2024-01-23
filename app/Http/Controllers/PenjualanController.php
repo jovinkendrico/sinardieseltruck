@@ -481,17 +481,36 @@ class PenjualanController extends Controller
 
         $detailPenjualans = DetailPenjualan::where('id_penjualan',$penjualan->id)->get();
 
-        DetailBarang::where('id_invoice',$penjualan->id_invoice)->delete();
-
         foreach($detailPenjualans as $detailPenjualan){
             $barang = Barang::where('id',$detailPenjualan->id_barang)->first();
+            $remainingqty = $detailPenjualan->jumlah;
+            $detailbarangs = DetailBarang::where('id_barang',$detailPenjualan->id_barang)->where('id','desc')->where('stokdetail','<','masuk')->get();
+            foreach($detailbarangs as $detailbarang){
+                $increaseqty = $detailbarang->masuk - $detailbarang->stokdetail;
+                if($increaseqty >= $remainingqty){
+                    $detailbarang->increment($remainingqty);
+                    $detailbarang->save();
+                    break;
+                }else{
+                    $detailbarang->increment('stokdetail',$increaseqty);
+                    $detailbarang->save();
+                    $remainingqty -= $increaseqty;
+                }
+                if($remainingqty == 0){
+                    break;
+                }
+            }
             if($detailPenjualan->uom == $barang->uombesar){
                 $barang->increment('stok',$detailPenjualan->jumlah * $barang->satuankecil);
+
             }
             else{
                 $barang->increment('stok',$detailPenjualan->jumlah);
             }
         }
+
+        DetailBarang::where('id_invoice',$penjualan->id_invoice)->delete();
+
 
         Penjualan::where('id',$id)->delete();
         DB::table('detail_penjualans')->where('id_penjualan', $id)->delete();

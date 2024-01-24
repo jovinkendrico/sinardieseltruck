@@ -109,9 +109,7 @@ class PembelianController extends Controller
                 'diskon' => $diskon,
                 'netto' => $netto
             ]);
-            Barang::findOrFail($item['id'])->update([
-                'harga' => $harga - ($diskon/$item['jumlah']),
-            ]);
+
             $barang = Barang::where('id',$item['id'])->first();
 
             $stoktambahdetail = 0;
@@ -119,11 +117,16 @@ class PembelianController extends Controller
 
                 $barang->increment('stok',$item['jumlah']*$barang->satuankecil);
                 $stoktambahdetail = $item['jumlah']*$barang->satuankecil;
+                $netto = $netto / $barang->satuankecil;
             }
             else{
                 $barang->increment('stok',$item['jumlah']);
                 $stoktambahdetail = $item['jumlah'];
             }
+
+            Barang::findOrFail($item['id'])->update([
+                'harga' => $netto,
+            ]);
 
             //tambah detail barang
             $barang = Barang::where('id',$item['id'])->first();
@@ -132,7 +135,7 @@ class PembelianController extends Controller
                 'id_barang' => $item['id'],
                 'id_invoice' => $pembelian->id_invoice,
                 'masuk' =>  $stoktambahdetail,
-                'harga_masuk' => $harga - ($diskon/$item['jumlah']),
+                'harga_masuk' => $netto,
                 'keluar' => 0,
                 'stokdetail' => $stoktambahdetail,
                 'stokakhir' => $barang->stok,
@@ -295,13 +298,15 @@ class PembelianController extends Controller
             if($item['uom'] == $barang->uombesar){
                 $barang->increment('stok',$item['jumlah']*$barang->satuankecil);
                 $stoktambahdetail = $item['jumlah']*$barang->satuankecil;
-                $harga = $harga / $barang->satuankecil;
+                $netto = $netto / $barang->satuankecil;
             }
             else{
                 $barang->increment('stok',$item['jumlah']);
                 $stoktambahdetail = $item['jumlah'];
             }
-
+            Barang::findOrFail($item['id'])->update([
+                'harga' => $netto,
+            ]);
             //tambah detail barang
             $barang = Barang::where('id',$item['id'])->first();
             DetailBarang::create([
@@ -309,7 +314,7 @@ class PembelianController extends Controller
                 'id_barang' => $item['id'],
                 'id_invoice' => $pembelian->id_invoice,
                 'masuk' =>  $stoktambahdetail,
-                'harga_masuk' => $harga -($diskon/$item['jumlah']),
+                'harga_masuk' => $netto,
                 'keluar' => 0,
                 'stokdetail' => $stoktambahdetail,
                 'stokakhir' => $barang->stok,

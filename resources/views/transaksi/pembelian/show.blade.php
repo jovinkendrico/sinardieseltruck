@@ -25,8 +25,8 @@
 
                 <div class="col-12">
                     <h4>
-                        <small>Tanggal: {{$pembelian->tanggal}}</small>
-                        <small class="float-right">Jatuh Tempo: {{$pembelian->jatuh_tempo}}</small>
+                        <small>Tanggal: {{\Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y')}}</small>
+                        <small class="float-right">Jatuh Tempo: {{\Carbon\Carbon::parse($pembelian->jatuh_tempo)->format('d-m-Y')}}</small>
 
                     </h4>
                 </div>
@@ -70,10 +70,10 @@
                         <td>{{$detailPembelian['barang']['nama']}}</td>
                         <td>{{$detailPembelian->jumlah}}</td>
                         <td>{{$detailPembelian->uom}}</td>
-                        <td>Rp. {{$detailPembelian->harga}}</td>
-                        <td>Rp. {{$detailPembelian->bruto}}</td>
-                        <td>Rp. {{$detailPembelian->diskon}}</td>
-                        <td>Rp. {{$detailPembelian->netto}}</td>
+                        <td>Rp. {{number_format($detailPembelian->harga, 2, '.', ',')}}</td>
+                        <td>Rp. {{number_format($detailPembelian->bruto, 2, '.', ',')}}</td>
+                        <td>Rp. {{number_format($detailPembelian->diskon, 2, '.', ',')}}</td>
+                        <td>Rp. {{number_format($detailPembelian->netto, 2, '.', ',')}}</td>
                     </tr>
                     @php
                         $i++;
@@ -104,15 +104,15 @@
                 <table class="table">
                     <tr>
                     <th style="width:50%">Total Bruto:</th>
-                    <td>Rp. {{$totalbruto}}</td>
+                    <td>Rp. {{number_format($totalbruto, 2, '.', ',')}}</td>
                   </tr>
                   <tr>
                     <th style="width:50%">Total Diskon:</th>
-                    <td>Rp. {{$totaldiskon}}</td>
+                    <td>Rp. {{number_format($totaldiskon, 2, '.', ',')}}</td>
                   </tr>
                   <tr>
                     <th style="width:50%">Total Netto:</th>
-                    <td>Rp. {{$totalnetto}}</td>
+                    <td>Rp. {{number_format($totalnetto, 2, '.', ',')}}</td>
                   </tr>
                 </table>
               </div>

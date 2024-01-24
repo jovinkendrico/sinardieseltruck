@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
 use App\Models\DetailJasa;
+use App\Models\DetailSubAkuns;
 use App\Models\Pihakjasa;
+use App\Models\SubAkuns;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PihakjasasController extends Controller
 {
@@ -20,6 +23,8 @@ class PihakjasasController extends Controller
     {
         $keyword = $request->get('search');
         $perPage = 25;
+
+
 
         if (!empty($keyword)) {
             $pihakjasas = Pihakjasa::where('nama', 'LIKE', "%$keyword%")
@@ -71,7 +76,8 @@ class PihakjasasController extends Controller
     {
         $pihakjasa = Pihakjasa::findOrFail($id);
         $detailjasas = DetailJasa::where('id_pihakjasa',$id)->get();
-        return view('admin.pihakjasas.show', compact('pihakjasa', 'detailjasas'));
+        $subakuns = SubAkuns::where('id_akun','<=',2)->get();
+        return view('admin.pihakjasas.show', compact('pihakjasa', 'detailjasas','subakuns'));
     }
 
     /**
@@ -123,6 +129,54 @@ class PihakjasasController extends Controller
 
     public function bayar(Request $request)
     {
+        $selectedIds = $request->input('selectedIds');
+        $selectedIdsArray = explode(',', $selectedIds);
 
+        //create array for store array invoice
+        $id_subakunpiutang = 0;
+        $id_pihakjasa = 0;
+        $totalbayar = (int) $request->totalBayar;
+        //Perubahan status transaksi
+        foreach($selectedIdsArray as $item){
+           $detailjasa =  DetailJasa::where('id',$item)->first();
+           $id_subakunpiutang = $detailjasa->id_akunmasuk;
+           $id_pihakjasa = $detailjasa->id_pihakjasa;
+           if($totalbayar > $detailjasa->harga_modal-$detailjasa->paid){
+            DetailJasa::where('id',$item)->increment('paid',$detailjasa->harga_modal-$detailjasa->paid);
+            $totalbayar -=$detailjasa->harga_modal-$detailjasa->paid;
+           }
+           else{
+            DetailJasa::where('id',$item)->increment('paid',$totalbayar);
+            break;
+           }
+        }
+
+
+        $totalbayar = (int) $request->totalBayar;
+        //Kurangi Saldo
+        SubAkuns::where('id',$request->subakuns)->decrement('saldo',$totalbayar);
+
+        //tambahin detail sub akun
+        DetailSubAkuns::insert([
+            'tanggal' => now(),
+            'id_subakun' => $request->subakuns,
+            'deskripsi' => "Pembayaran Piutang Jasa",
+            'debit' => 0,
+            'kredit' => $totalbayar,
+        ]);
+
+        DetailSubAkuns::insert([
+            'tanggal' => now(),
+            //TODO GANTI
+            'id_subakun'=> $id_subakunpiutang,
+            'Deskripsi' => "Pelunasan Piutang Jasa",
+            'debit' => $totalbayar,
+            'kredit' => 0
+        ]);
+
+        SubAkuns::where('id',$id_subakunpiutang)->increment('saldo',$totalbayar);
+
+
+        return redirect('/admin/pihakjasas/'.$id_pihakjasa);
     }
 }

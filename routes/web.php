@@ -48,6 +48,7 @@ Route::resource('/admin/customers',CustomersController::class)->middleware('auth
 Route::resource('/admin/truks',TruksController::class)->middleware('auth');
 
 Route::resource('/admin/pihakjasas',PihakjasasController::class)->middleware('auth');
+Route::post('/admin/pihakjasas/bayar',[App\Http\Controllers\Admin\PihakjasasController::class,'bayar'])->name('pihakjasa.bayar')->middleware('auth');
 
 Route::resource('/admin/jasas',JasasController::class)->middleware('auth');
 

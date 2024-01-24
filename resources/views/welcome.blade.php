@@ -122,7 +122,7 @@
         </div>
         <div class="col-md-4">
             <div class="info-box mb-3 bg-warning">
-                <span class="info-box-icon"><i class="fas fa-tag"></i></span>
+                <span class="info-box-icon"><i class="fas fa-money-bill"></i></span>
 
                 <div class="info-box-content">
                   <span class="info-box-text">Kas Masuk {{$bulan}}</span>
@@ -132,7 +132,7 @@
               </div>
               <!-- /.info-box -->
               <div class="info-box mb-3 bg-success">
-                <span class="info-box-icon"><i class="far fa-heart"></i></span>
+                <span class="info-box-icon"><i class="fas fa-money-bill"></i></span>
 
                 <div class="info-box-content">
                   <span class="info-box-text">Kas Keluar {{$bulan}}</span>
@@ -142,7 +142,7 @@
               </div>
               <!-- /.info-box -->
               <div class="info-box mb-3 bg-danger">
-                <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+                <span class="info-box-icon"><i class="fas fa-money-bill"></i></span>
 
                 <div class="info-box-content">
                   <span class="info-box-text">Pembelian {{$bulan}}</span>
@@ -152,11 +152,29 @@
               </div>
               <!-- /.info-box -->
               <div class="info-box mb-3 bg-info">
-                <span class="info-box-icon"><i class="far fa-comment"></i></span>
+                <span class="info-box-icon"><i class="fas fa-money-bill"></i></span>
 
                 <div class="info-box-content">
                   <span class="info-box-text">Penjualan {{$bulan}}</span>
                   <span class="info-box-number">Rp {{number_format($penjualankas, 2, '.', ',')}}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <div class="info-box mb-3 bg-warning">
+                <span class="info-box-icon"><i class="fas fa-money-bill"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Pendapatan Barang {{$bulan}}</span>
+                  <span class="info-box-number">Rp {{number_format($pendapatanbarang, 2, '.', ',')}}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <div class="info-box mb-3 bg-success">
+                <span class="info-box-icon"><i class="fas fa-money-bill"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">Pendapatan Jasa {{$bulan}}</span>
+                  <span class="info-box-number">Rp {{number_format($pendapatanjasa, 2, '.', ',')}}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>

@@ -33,8 +33,10 @@ class DashboardController extends Controller
         $kaskeluar = CashKeluar::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('total');
         $pembeliankas = Pembelian::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('netto');
         $penjualankas = Penjualan::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('netto');
+        $pendapatanbarang = Penjualan::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('pendapatanbarang');
+        $pendapatanjasa = Penjualan::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('pendapatanjasa');
         $bulan = now()->translatedFormat('F');;
-        return view('welcome',compact('jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale','penjualanjts','penjualanjtls','pembelianjts','pembelianjtls','penjualanlatest','kasmasuk','kaskeluar','pembeliankas','penjualankas','bulan'));
+        return view('welcome',compact('jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale','penjualanjts','penjualanjtls','pembelianjts','pembelianjtls','penjualanlatest','kasmasuk','kaskeluar','pembeliankas','penjualankas','bulan','pendapatanbarang','pendapatanjasa'));
     }
 
     /**

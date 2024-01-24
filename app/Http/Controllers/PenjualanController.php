@@ -46,6 +46,13 @@ class PenjualanController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function pendapatan()
+    {
+        //
+        $penjualans = Penjualan::all();
+        return view('transaksi.penjualan.pendapatan')->with('penjualans',$penjualans);
+    }
+
     public function index()
     {
         //
@@ -135,6 +142,7 @@ class PenjualanController extends Controller
                 'stokdetail' => 0,
                 'stokakhir' => $barang->stok,
             ]);
+
         }
         $tableDataJasa = json_decode($request->input('tableDataJasa'),true);
         $pendapatanjasa = 0;
@@ -168,6 +176,10 @@ class PenjualanController extends Controller
                 $detailbarangbeli->save();
                 $remainingqty -= $deductQuantity;
                 $pendapatanbarang += $deductQuantity * ($detailbarangjual->harga_keluar - $detailbarangbeli->harga_masuk);
+                $detailpenjualan = DB::table('detail_penjualans')->latest('id')->first();
+                DetailPenjualan::findOrFail($detailpenjualan->id)->update([
+                    'id_detailbarang' => $detailbarangbeli->id,
+                ]);
                 if($remainingqty == 0){
                     break;
                 }
@@ -484,11 +496,11 @@ class PenjualanController extends Controller
         foreach($detailPenjualans as $detailPenjualan){
             $barang = Barang::where('id',$detailPenjualan->id_barang)->first();
             $remainingqty = $detailPenjualan->jumlah;
-            $detailbarangs = DetailBarang::where('id_barang',$detailPenjualan->id_barang)->where('id','desc')->where('stokdetail','<','masuk')->get();
+            $detailbarangs = DetailBarang::where('id_barang',$detailPenjualan->id_barang)->where('id','<=',$detailPenjualan->id_detailbarang)->orderBy('id','desc')->get();
             foreach($detailbarangs as $detailbarang){
                 $increaseqty = $detailbarang->masuk - $detailbarang->stokdetail;
                 if($increaseqty >= $remainingqty){
-                    $detailbarang->increment($remainingqty);
+                    $detailbarang->increment('stokdetail',$remainingqty);
                     $detailbarang->save();
                     break;
                 }else{
@@ -499,6 +511,11 @@ class PenjualanController extends Controller
                 if($remainingqty == 0){
                     break;
                 }
+            }
+            $detailbarangs = DetailBarang::where('id_barang',$detailPenjualan->id_barang)->where('created_at','>=',$detailPenjualan->created_at)->orderBy('id','asc')->get();
+            foreach($detailbarangs as $detailbarang){
+                $detailbarang->increment('stokakhir',$remainingqty);
+                $detailbarang->save();
             }
             if($detailPenjualan->uom == $barang->uombesar){
                 $barang->increment('stok',$detailPenjualan->jumlah * $barang->satuankecil);

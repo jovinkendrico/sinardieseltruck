@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double('bruto');
             $table->double('diskon');
             $table->double('netto');
+            $table->integer('id_detailbarang');
             $table->timestamps();
         });
     }

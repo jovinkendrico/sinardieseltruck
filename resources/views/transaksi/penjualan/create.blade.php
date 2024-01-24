@@ -66,7 +66,7 @@
                                         <select class="form-control select2bs4" id="barang" name="barang" style="width: 100%;" onchange="updateUOM()">
                                             <option disabled selected value> -- select an item -- </option>
                                             @foreach ($barangs as $barang)
-                                                <option data-uombesar="{{ $barang->uombesar }}" data-uomkecil="{{ $barang->uomkecil }}" value="{{ $barang->id }}">{{ $barang->nama }}</option>
+                                                <option data-uombesar="{{ $barang->uombesar }}" data-uomkecil="{{ $barang->uomkecil }}" value="{{ $barang->id }}">{{ $barang->nama}} - <i>Stok:{{$barang->stok}}</i></option>
                                             @endforeach
                                         </select>
                                     </div>

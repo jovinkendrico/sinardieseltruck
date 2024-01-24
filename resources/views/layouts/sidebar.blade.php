@@ -119,6 +119,12 @@
                     <p>Penjualan Barang</p>
                   </a>
               </li>
+              <li class="nav-item">
+                <a href="/penjualan/pendapatan" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Penjualan Pendapatan</p>
+                </a>
+            </li>
             </ul>
           </li>
           <li class="nav-item">

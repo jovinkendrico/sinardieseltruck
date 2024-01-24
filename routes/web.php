@@ -32,7 +32,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\DashboardController::class,'index'])->middleware('auth');
 
-Auth::routes();
+Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -76,6 +79,7 @@ route::controller(UserController::class)->group(function(){
 
 Route::controller(PenjualanController::class)->group(function () {
     Route::get('/penjualan', 'index')->middleware('auth');
+    Route::get('/penjualan/pendapatan', 'pendapatan')->middleware('auth');
     Route::get('/penjualan/create','create')->name('penjualan.create')->middleware('auth');
     Route::post('/penjualan/store','store')->name('penjualan.store')->middleware('auth');
     Route::get('/penjualan/show/{id}','show')->name('penjualan.show')->middleware('auth');

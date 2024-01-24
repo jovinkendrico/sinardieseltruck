@@ -43,6 +43,10 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+        'restricted' => [
+            // Add your middleware here
+            \App\Http\Middleware\RestrictRoutes::class,
+        ],
     ];
 
     /**

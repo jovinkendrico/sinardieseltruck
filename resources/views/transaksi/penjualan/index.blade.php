@@ -27,7 +27,7 @@
                   <th style="width: 2%">Paid</th>
                   <th style="width: 8%">Metode</th>
                   <th style="width: 9%">Jatuh Tempo</th>
-                  <th style="width: 12%">Action</th>
+                  <th style="width: 8%">Action</th>
                   <th style="width: 3%"></th>
                 </tr>
                 </thead>
@@ -55,9 +55,9 @@
                         </a>
 
                         @if($penjualan->status == 'N')
-                            <a class="btn btn-info btn-sm" href="{{ route('penjualan.edit', $penjualan->id) }}">
+                            {{-- <a class="btn btn-info btn-sm" href="{{ route('penjualan.edit', $penjualan->id) }}">
                                 <i class="fas fa-pencil-alt"></i>
-                            </a>
+                            </a> --}}
                             <form method="post" action="{{route('penjualan.delete',$penjualan->id)}}" accept-charset="UTF-8" style="display:inline">
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm">
@@ -66,9 +66,9 @@
                             </form>
                         @else
                             <!-- If status is not 'N', show a disabled or alternative button -->
-                            <button class="btn btn-info btn-sm" disabled>
+                            {{-- <button class="btn btn-info btn-sm" disabled>
                                 <i class="fas fa-pencil-alt"></i>
-                            </button>
+                            </button> --}}
                             <button class="btn btn-danger btn-sm" disabled>
                                 <i class="fas fa-trash"></i>
                             </button>

@@ -109,10 +109,14 @@ class PembelianController extends Controller
                 'diskon' => $diskon,
                 'netto' => $netto
             ]);
+            Barang::findOrFail($item['id'])->update([
+                'harga' => $harga - ($diskon/$item['jumlah']),
+            ]);
             $barang = Barang::where('id',$item['id'])->first();
 
             $stoktambahdetail = 0;
             if($item['uom'] == $barang->uombesar){
+
                 $barang->increment('stok',$item['jumlah']*$barang->satuankecil);
                 $stoktambahdetail = $item['jumlah']*$barang->satuankecil;
             }

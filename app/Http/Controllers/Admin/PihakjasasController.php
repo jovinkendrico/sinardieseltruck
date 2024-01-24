@@ -120,4 +120,9 @@ class PihakjasasController extends Controller
 
         return redirect('admin/pihakjasas')->with('flash_message', 'Pihakjasa deleted!');
     }
+
+    public function bayar(Request $request)
+    {
+
+    }
 }

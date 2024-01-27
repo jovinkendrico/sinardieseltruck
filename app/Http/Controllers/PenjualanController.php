@@ -276,7 +276,7 @@ class PenjualanController extends Controller
             SubAkuns::where('id', 5)->first()->decrement('saldo',$pendapatanjasa);
 
             //kurangi piutang karyawan
-            SubAkuns::where('id', $request->akunkeluarjasa)->first()->decrement('saldo', $totaljasa);
+            SubAkuns::where('id', $request->akunkeluarjasa)->first()->decrement('saldo', $totaljasa -$pendapatanjasa);
 
             //tambahi saldo piutang
             SubAkuns::where('id', 1)->first()->increment('saldo', $totalNetto);

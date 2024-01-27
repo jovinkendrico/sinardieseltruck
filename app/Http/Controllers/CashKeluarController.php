@@ -93,6 +93,7 @@ class CashKeluarController extends Controller
             $jumlah = preg_replace('/[^0-9.]/', '', $item['jumlah']);
             DetailCashKeluar::insert([
                 'id_cashkeluar' => $cashkeluar->id,
+                'id_bukti' => $cashkeluar->id_bukti,
                 'id_akunmasuk' => $item['id'],
                 'deskripsi' => $item['deskripsi'],
                 'jumlah' => $jumlah
@@ -185,6 +186,7 @@ class CashKeluarController extends Controller
             DetailCashKeluar::insert([
                 'id_cashkeluar' => $cashkeluar->id,
                 'id_akunmasuk' => $item['id'],
+                'id_bukti' => $cashkeluar->id_bukti,
                 'deskripsi' => $item['deskripsi'],
                 'jumlah' => $jumlah
             ]);

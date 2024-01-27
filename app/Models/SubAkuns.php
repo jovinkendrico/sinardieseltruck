@@ -9,6 +9,6 @@ class SubAkuns extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama','id_akun', 'nomor_akun', 'debit', 'kredit','saldo'];
+    protected $fillable = ['nama','id_akun', 'nomor_akun', 'debit', 'kredit','saldo','saldo_awal'];
 
 }

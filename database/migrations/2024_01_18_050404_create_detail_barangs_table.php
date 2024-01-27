@@ -17,8 +17,9 @@ return new class extends Migration
             $table->integer('id_barang');
             $table->string('id_invoice');
             $table->integer('masuk');
-            $table->bigInteger('harga_masuk');
+            $table->bigInteger('harga_masuk')->nullable();
             $table->integer('keluar');
+            $table->bigInteger('harga_keluar')->nullable();
             $table->integer('stokdetail');
             $table->integer('stokakhir')->nullable();
             $table->timestamps();

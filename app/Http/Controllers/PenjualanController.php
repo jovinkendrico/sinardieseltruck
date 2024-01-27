@@ -246,10 +246,10 @@ class PenjualanController extends Controller
                     'debit' => 0,
                     'kredit' => $totaljasa-$pendapatanjasa
                 ]);
-            //tambahi saldo piutang
+            //tambahi saldo
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
-                'id_subakun' => 1,
+                'id_subakun' => $request->akunmasuk,
                 'id_bukti' => $penjualan->id_invoice,
                 'deskripsi' => $penjualan->id_invoice,
                 'debit' => $totalNetto,

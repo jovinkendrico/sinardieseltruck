@@ -21,6 +21,9 @@ return new class extends Migration
             $table->bigInteger('pendapatanjasa')->nullable();
             $table->bigInteger('netto');
             $table->date('jatuh_tempo');
+            $table->integer('id_akunkeluarbarang');
+            $table->integer('id_akunkeluarjasa');
+            $table->bigInteger('total_jasa')->nullable();
             $table->string('status');
             $table->string('metode')->nullable();
             $table->timestamps();

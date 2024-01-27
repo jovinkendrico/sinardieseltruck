@@ -235,4 +235,11 @@ class CashMasukController extends Controller
         return redirect('/cashmasuk');
 
     }
+
+    public function cetakpdf(string $id){
+        $cashmasuk = CashMasuk::where('id',$id)->first();
+        $detailcashmasuks = DetailCashMasuk::where('id_cashmasuk',$cashmasuk->id)->get();
+        return view('cash.cashmasuk.cetak')->with('cashmasuk',$cashmasuk)->with('detailcashmasuks',$detailcashmasuks);
+    }
+
 }

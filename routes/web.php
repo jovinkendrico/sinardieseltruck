@@ -122,6 +122,8 @@ Route::controller(CashMasukController::class)->group(function(){
     Route::get('/cashmasuk/edit/{id}','edit')->name('cashmasuk.edit')->middleware('auth');
     Route::post('/cashmasuk/update/{id}','update')->name('cashmasuk.update')->middleware('auth');
     Route::post('/cashmasuk/delete/{id}', 'destroy')->name('cashmasuk.delete')->middleware('auth');
+    Route::get('/cashmasuk/cetak/{id}','cetakpdf')->name('cashmasuk.cetak')->middleware('auth');
+
 });
 
 Route::controller(CashKeluarController::class)->group(function(){
@@ -132,6 +134,8 @@ Route::controller(CashKeluarController::class)->group(function(){
     Route::get('/cashkeluar/edit/{id}','edit')->name('cashkeluar.edit')->middleware('auth');
     Route::post('/cashkeluar/update/{id}','update')->name('cashkeluar.update')->middleware('auth');
     Route::post('/cashkeluar/delete/{id}', 'destroy')->name('cashkeluar.delete')->middleware('auth');
+    Route::get('/cashkeluar/cetak/{id}','cetakpdf')->name('cashkeluar.cetak')->middleware('auth');
+
 });
 
 Route::controller(HistoryPembelianController::class)->group(function(){

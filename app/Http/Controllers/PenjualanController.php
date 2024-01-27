@@ -237,8 +237,6 @@ class PenjualanController extends Controller
                 'debit' => 0,
                 'kredit' => $pendapatanjasa
             ]);
-
-            if($pendapatanjasa == $totaljasa){
             //kurangi piutang karyawan
                 DetailSubAkuns::create([
                     'tanggal' => $tanggal,
@@ -248,7 +246,6 @@ class PenjualanController extends Controller
                     'debit' => 0,
                     'kredit' => $totaljasa-$pendapatanjasa
                 ]);
-            }
             //tambahi saldo piutang
             DetailSubAkuns::create([
                 'tanggal' => $tanggal,
@@ -313,8 +310,6 @@ class PenjualanController extends Controller
                     'debit' => 0,
                     'kredit' => $pendapatanjasa
                 ]);
-            if($pendapatanjasa == $totaljasa){
-
                 //kurangi piutang karyawan
                 DetailSubAkuns::create([
                     'tanggal' => $tanggal,
@@ -324,7 +319,6 @@ class PenjualanController extends Controller
                     'debit' => 0,
                     'kredit' => $totaljasa-$pendapatanjasa
                 ]);
-            }
 
             //tambahi saldo piutang
             DetailSubAkuns::create([

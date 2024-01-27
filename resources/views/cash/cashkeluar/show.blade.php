@@ -61,7 +61,7 @@
                         <td>{{$i}}</td>
                         <td>{{$detailcashkeluar['akunmasuk']['nama']}}</td>
                         <td>{{$detailcashkeluar->deskripsi}}</td>
-                        <td>Rp {{number_format($detailcashkeluar->jumlah, 2, '.', ',')}}</td>
+                        <td>Rp. {{number_format($detailcashkeluar->jumlah, 2, '.', ',')}}</td>
                     </tr>
                     @php
                         $i++;
@@ -90,7 +90,7 @@
                 <table class="table">
                     <tr>
                     <th style="width:50%">Total Jumlah:</th>
-                    <td>Rp {{number_format($totaljumlah, 2, '.', ',')}}</td>
+                    <td>Rp. {{number_format($totaljumlah, 2, '.', ',')}}</td>
                   </tr>
                 </table>
               </div>
@@ -102,10 +102,10 @@
           <!-- this row will not appear when printing -->
           <div class="row no-print">
             <div class="col-12">
-                <form method="GET" target="_blank" action="">
-                        <input type="submit" class="btn btn-primary float-right" value="Generate PDF" style="margin-right: 5px;">
+                <form method="GET" target="_blank" action="{{route('cashkeluar.cetak',$cashkeluar->id)}}">
+                    <input type="submit" class="btn btn-primary float-right" value="Generate PDF" style="margin-right: 5px;">
 
-                          </input>
+                    </input>
                 </form>
 
             </div>

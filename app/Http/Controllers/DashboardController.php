@@ -10,6 +10,7 @@ use App\Models\Pembelian;
 use App\Models\Penjualan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -19,6 +20,26 @@ class DashboardController extends Controller
     public function index()
     {
         //
+
+        $pendapatanBarangPerMonth = [];
+        $pendapatanJasaPerMonth = [];
+
+
+        // Loop through each month from January to December
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the total income from goods for the current month
+            $pendapatanBarang = Penjualan::whereMonth('tanggal', $month)->whereYear('tanggal', now()->year)
+                                          ->sum('pendapatanbarang');
+            $pendapatanJasa = Penjualan::whereMonth('tanggal', $month)->whereYear('tanggal', now()->year)
+                                          ->sum('pendapatanjasa');
+
+            // Store the total income from goods for the current month in the array
+            $pendapatanBarangPerMonth[Carbon::create()->month($month)->translatedFormat('F')] = $pendapatanBarang;
+            $pendapatanJasaPerMonth[Carbon::create()->month($month)->translatedFormat('F')] = $pendapatanJasa;
+
+        }
+
+        $totalPendapatan = collect($pendapatanBarangPerMonth)->merge($pendapatanJasaPerMonth)->sum();
         $jumlahBarang = Barang::count();
         $jumlahPembelian = Pembelian::count();
         $jumlahPenjualan = Penjualan::count();
@@ -36,7 +57,7 @@ class DashboardController extends Controller
         $pendapatanbarang = Penjualan::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('pendapatanbarang');
         $pendapatanjasa = Penjualan::whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)->sum('pendapatanjasa');
         $bulan = now()->translatedFormat('F');;
-        return view('welcome',compact('jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale','penjualanjts','penjualanjtls','pembelianjts','pembelianjtls','penjualanlatest','kasmasuk','kaskeluar','pembeliankas','penjualankas','bulan','pendapatanbarang','pendapatanjasa'));
+        return view('welcome',compact('totalPendapatan','jumlahBarang', 'jumlahPembelian', 'jumlahPenjualan', 'jumlahCustomer','totalSale','penjualanjts','penjualanjtls','pembelianjts','pembelianjtls','penjualanlatest','kasmasuk','kaskeluar','pembeliankas','penjualankas','bulan','pendapatanbarang','pendapatanjasa','pendapatanBarangPerMonth','pendapatanJasaPerMonth'));
     }
 
     /**

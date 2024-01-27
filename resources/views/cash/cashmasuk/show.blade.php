@@ -25,7 +25,7 @@
 
                 <div class="col-12">
                     <h4>
-                        <small>Tanggal: {{$cashmasuk->tanggal}}</small>
+                        <small>Tanggal: {{ \Carbon\Carbon::parse($cashmasuk->tanggal)->format('d-m-Y')}}</small>
                     </h4>
                 </div>
             <div class="col-12">
@@ -61,7 +61,8 @@
                         <td>{{$i}}</td>
                         <td>{{$detailcashmasuk['akunkeluar']['nama']}}</td>
                         <td>{{$detailcashmasuk->deskripsi}}</td>
-                        <td>Rp {{$detailcashmasuk->jumlah}}</td>
+                        <td>Rp. {{number_format($detailcashmasuk->jumlah, 2, '.', ',')}}</td>
+
                     </tr>
                     @php
                         $i++;
@@ -90,7 +91,8 @@
                 <table class="table">
                     <tr>
                     <th style="width:50%">Total Jumlah:</th>
-                    <td>Rp. {{$totaljumlah}}</td>
+                    <td>Rp. {{number_format($totaljumlah, 2, '.', ',')}}</td>
+
                   </tr>
                 </table>
               </div>
@@ -102,7 +104,7 @@
           <!-- this row will not appear when printing -->
           <div class="row no-print">
             <div class="col-12">
-                <form method="GET" target="_blank" action="">
+                <form method="GET" target="_blank" action="{{route('cashmasuk.cetak',$id)}}">
                         <input type="submit" class="btn btn-primary float-right" value="Generate PDF" style="margin-right: 5px;">
 
                           </input>

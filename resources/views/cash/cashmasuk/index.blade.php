@@ -37,10 +37,10 @@
                   @foreach($cashmasuks as $cashmasuk)
                   <tr>
                         <td>{{$loop->iteration}}</td>
-                      <td>{{$cashmasuk->tanggal}}</td>
+                      <td>{{ \Carbon\Carbon::parse($cashmasuk->tanggal)->format('d-m-Y')}}</td>
                       <td>{{$cashmasuk->id_bukti}}</td>
                       <td>{{$cashmasuk['akunmasuk']['nomor_akun']}} - {{$cashmasuk['akunmasuk']['nama']}}</td>
-                      <td>Rp {{$cashmasuk->total}}</td>
+                      <td>Rp. {{number_format($cashmasuk->total, 2, '.', ',')}}</td>
 
 
                       <td class="project-actions text-right">

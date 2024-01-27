@@ -42,7 +42,7 @@
                       <td>{{$cashkeluar->id_bukti}}</td>
                       <td>{{$cashkeluar['akunkeluar']['nomor_akun']}} - {{$cashkeluar['akunkeluar']['nama']}}</td>
                       <td>{{$cashkeluar->deskripsi}}</td>
-                      <td>Rp {{$cashkeluar->total}}</td>
+                      <td>Rp. {{number_format($cashkeluar->total, 2, '.', ',')}}</td>
                       <td class="project-actions text-right">
                           <a class="btn btn-primary btn-sm" href="{{route('cashkeluar.show',$cashkeluar->id)}}">
                               <i class="fas fa-folder">

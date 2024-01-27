@@ -224,4 +224,10 @@ class CashKeluarController extends Controller
         Session::flash('success', 'Data has been successfully deleted.');
         return redirect('/cashkeluar');
     }
+
+    public function cetakpdf(string $id){
+        $cashkeluar = CashKeluar::where('id',$id)->first();
+        $detailcashkeluars = DetailCashKeluar::where('id_cashkeluar',$cashkeluar->id)->get();
+        return view('cash.cashkeluar.cetak')->with('cashkeluar',$cashkeluar)->with('detailcashkeluars',$detailcashkeluars);
+    }
 }

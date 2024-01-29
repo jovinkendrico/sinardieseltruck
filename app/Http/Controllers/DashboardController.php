@@ -24,7 +24,6 @@ class DashboardController extends Controller
         $pendapatanBarangPerMonth = [];
         $pendapatanJasaPerMonth = [];
 
-
         // Loop through each month from January to December
         for ($month = 1; $month <= 12; $month++) {
             // Get the total income from goods for the current month
@@ -32,14 +31,13 @@ class DashboardController extends Controller
                                           ->sum('pendapatanbarang');
             $pendapatanJasa = Penjualan::whereMonth('tanggal', $month)->whereYear('tanggal', now()->year)
                                           ->sum('pendapatanjasa');
-
             // Store the total income from goods for the current month in the array
             $pendapatanBarangPerMonth[Carbon::create()->month($month)->translatedFormat('F')] = $pendapatanBarang;
             $pendapatanJasaPerMonth[Carbon::create()->month($month)->translatedFormat('F')] = $pendapatanJasa;
-
         }
-
-        $totalPendapatan = collect($pendapatanBarangPerMonth)->merge($pendapatanJasaPerMonth)->sum();
+        $pendapatanTahunanBarang = Penjualan::whereYear('tanggal', now()->year)->sum('pendapatanbarang');
+        $pendapatanTahunanJasa = Penjualan::whereYear('tanggal', now()->year)->sum('pendapatanjasa');
+        $totalPendapatan = $pendapatanTahunanJasa + $pendapatanTahunanBarang;
         $jumlahBarang = Barang::count();
         $jumlahPembelian = Pembelian::count();
         $jumlahPenjualan = Penjualan::count();
